@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { PacienteService } from '../../../services/paciente';
 
 type TabType = 'estilo-vida' | 'medidas' | 'fotos' | 'dieta';
 
@@ -16,7 +17,7 @@ type TabType = 'estilo-vida' | 'medidas' | 'fotos' | 'dieta';
 export class ConsultaFormComponent implements OnInit {
   activeTab: TabType = 'estilo-vida';
   pacienteId?: number;
-  pacienteNome = 'Selecione um paciente'; // Valor padrão
+  pacienteNome = 'Selecione um paciente';
 
   estiloVidaForm: FormGroup;
   medidasForm: FormGroup;
@@ -33,7 +34,8 @@ export class ConsultaFormComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private pacienteService: PacienteService
   ) {
     this.estiloVidaForm = this.fb.group({
       objetivo: ['', Validators.required],
@@ -90,20 +92,23 @@ export class ConsultaFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Verificar se veio de /pacientes/:id/consulta
     const idFromRoute = this.route.snapshot.params['id'];
     if (idFromRoute) {
       this.pacienteId = Number(idFromRoute);
-      // TODO: Buscar nome do paciente via API
-      this.pacienteNome = 'Carregando...';
       this.carregarNomePaciente(this.pacienteId);
     }
   }
 
   carregarNomePaciente(id: number): void {
-    // TODO: Implementar chamada à API para buscar o nome do paciente
-    // Por enquanto, deixe o nome padrão
-    this.pacienteNome = `Paciente ${id}`;
+    this.pacienteService.buscarPorId(id).subscribe({
+      next: (paciente) => {
+        this.pacienteNome = paciente.nomeCompleto;
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar nome do paciente:', erro);
+        this.pacienteNome = `Paciente ${id}`;
+      }
+    });
   }
 
   setActiveTab(tab: TabType): void {
@@ -118,11 +123,8 @@ export class ConsultaFormComponent implements OnInit {
       };
       
       console.log('Dados da consulta:', consultaData);
-      
-      // Aqui você faria a chamada para o backend
       alert('Consulta salva com sucesso!');
       
-      // Voltar para a página correta
       if (this.pacienteId) {
         this.router.navigate(['/pacientes', this.pacienteId]);
       } else {
@@ -134,12 +136,9 @@ export class ConsultaFormComponent implements OnInit {
   }
 
   cancelar(): void {
-    // Se tem pacienteId, volta para detalhes do paciente
-    // Senão, usa o history.back() ou vai para dashboard
     if (this.pacienteId) {
       this.router.navigate(['/pacientes', this.pacienteId]);
     } else {
-      // Usar location.back() para voltar à página anterior
       this.location.back();
     }
   }

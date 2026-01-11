@@ -1,4 +1,3 @@
-<!-- src/app/pages/pacientes/paciente-details/paciente-details.html -->
 <div class="details-container">
   @if (error()) {
     <div class="alert alert-error">
@@ -61,14 +60,12 @@
           </svg>
           Editar
         </button>
-        <button class="btn-danger" (click)="confirmarExclusao()">
+        <button class="btn-primary" (click)="novaConsulta()">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            <line x1="10" y1="11" x2="10" y2="17"></line>
-            <line x1="14" y1="11" x2="14" y2="17"></line>
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
-          Excluir
+          Nova Consulta
         </button>
       </div>
     </div>
@@ -140,44 +137,33 @@
             <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
           <h2 class="card-title">Histórico de Consultas</h2>
-          <span class="badge-count" *ngIf="consultas().length > 0">
-            {{ consultas().length }} {{ consultas().length === 1 ? 'consulta' : 'consultas' }}
-          </span>
+          <span class="badge">{{ consultas().length }}</span>
         </div>
-        <button class="btn-primary-sm" (click)="novaConsulta()">
+        <button class="btn-new-consulta" (click)="novaConsulta()">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
-          Nova Consulta
+          <span>Nova Consulta</span>
         </button>
       </div>
 
       <div class="card-body">
         @if (consultas().length === 0) {
           <div class="empty-state">
-            <div class="empty-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-            </div>
-            <h3 class="empty-title">Nenhuma consulta registrada</h3>
-            <p class="empty-message">Crie a primeira consulta para começar o acompanhamento nutricional</p>
-            <button class="btn-primary-sm" (click)="novaConsulta()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-              Criar Primeira Consulta
-            </button>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <p>Nenhuma consulta registrada</p>
+            <button class="btn-primary-sm" (click)="novaConsulta()">Criar primeira consulta</button>
           </div>
         } @else {
           <div class="consultas-list">
             @for (consulta of consultas(); track consulta.id) {
-              <div class="consulta-item">
+              <div class="consulta-item" (click)="verConsulta(consulta.id)">
                 <div class="consulta-date">
                   <span class="date-day">{{ extrairDia(consulta.dataConsulta) }}</span>
                   <span class="date-month">{{ extrairMes(consulta.dataConsulta) }}</span>
@@ -196,16 +182,16 @@
                     }
                   </div>
                 </div>
-                <div class="consulta-status">
+                <div class="consulta-icons">
                   @if (consulta.temAvaliacaoFisica) {
-                    <span class="status-icon status-success" title="Tem avaliação física">
+                    <span class="status-icon" title="Tem avaliação física">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
                     </span>
                   }
                   @if (consulta.temFotos) {
-                    <span class="status-icon status-success" title="Tem fotos">
+                    <span class="status-icon" title="Tem fotos">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                         <circle cx="9" cy="9" r="2"></circle>
@@ -214,7 +200,7 @@
                     </span>
                   }
                 </div>
-                <button class="icon-button" (click)="verConsulta(consulta.id)">
+                <button class="icon-button" (click)="verConsulta(consulta.id); $event.stopPropagation()">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
@@ -225,32 +211,5 @@
         }
       </div>
     </div>
-
-    <!-- Modal de Confirmação de Exclusão -->
-    @if (mostrarModalExclusao()) {
-      <div class="modal-overlay" (click)="cancelarExclusao()">
-        <div class="modal-content" (click)="$event.stopPropagation()">
-          <div class="modal-header">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="modal-icon">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            <h2 class="modal-title">Confirmar Exclusão</h2>
-            <p class="modal-message">
-              Tem certeza que deseja excluir o paciente <strong>{{ paciente()!.nomeCompleto }}</strong>?
-              <br><br>
-              Esta ação não pode ser desfeita e todos os dados relacionados (consultas, avaliações, fotos) serão permanentemente removidos.
-            </p>
-          </div>
-          <div class="modal-actions">
-            <button class="btn-secondary" (click)="cancelarExclusao()">Cancelar</button>
-            <button class="btn-danger" (click)="excluirPaciente()">
-              Sim, Excluir Paciente
-            </button>
-          </div>
-        </div>
-      </div>
-    }
   }
 </div>
