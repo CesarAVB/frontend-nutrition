@@ -1,0 +1,54 @@
+<div class="header">
+  <h1>Pacientes</h1>
+  <p>Gerencie seus pacientes cadastrados</p>
+
+  <button class="btn-new">+ Novo Paciente</button>
+
+  <input 
+    type="text" 
+    placeholder="Buscar por nome ou CPF..."
+    (input)="busca.set($any($event.target).value)"
+  />
+</div>
+
+<div class="lista">
+  <table>
+    <thead>
+      <tr>
+        <th>Paciente</th>
+        <th>CPF</th>
+        <th>Telefone</th>
+        <th>Última Visita</th>
+        <th>Consultas</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (p of pacientesFiltrados(); track p.id) {
+      <tr>
+        <td class="col-paciente">
+          <div class="avatar">{{ getIniciais(p.nomeCompleto) }}</div>
+          <div>
+            <strong>{{ p.nomeCompleto }}</strong>
+            <span>{{ p.email }}</span>
+          </div>
+        </td>
+
+        <td>{{ p.cpf }}</td>
+
+        <td class="whats">
+          <span>📞 WhatsApp</span>
+        </td>
+
+        <td>{{ getUltimaVisita(p) }}</td>
+
+        <td>
+          <span class="badge">
+            {{ getConsultasCount(p) }} consultas
+          </span>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

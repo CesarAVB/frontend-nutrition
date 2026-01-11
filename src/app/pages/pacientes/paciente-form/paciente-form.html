@@ -1,0 +1,133 @@
+<div class="form-container">
+  <div class="form-header">
+    <button class="back-button" (click)="cancelar()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <div class="header-content">
+      <h1 class="page-title">{{ isEditMode ? 'Editar Paciente' : 'Novo Paciente' }}</h1>
+      <p class="page-subtitle">{{ isEditMode ? 'Atualize os dados do paciente' : 'Cadastre um novo paciente no sistema' }}</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="card-section">
+      <div class="section-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <h2 class="section-title">Dados Pessoais</h2>
+      </div>
+
+      <form [formGroup]="pacienteForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="nomeCompleto" class="form-label">
+              Nome Completo <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="nomeCompleto"
+              formControlName="nomeCompleto"
+              class="form-input"
+              [class.input-error]="pacienteForm.get('nomeCompleto')?.touched && pacienteForm.get('nomeCompleto')?.invalid"
+              placeholder="Digite o nome completo"
+            >
+            <span class="error-message" *ngIf="getCampoErro('nomeCompleto')">
+              {{ getCampoErro('nomeCompleto') }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cpf" class="form-label">
+              CPF <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="cpf"
+              formControlName="cpf"
+              class="form-input"
+              [class.input-error]="pacienteForm.get('cpf')?.touched && pacienteForm.get('cpf')?.invalid"
+              placeholder="000.000.000-00"
+              maxlength="14"
+              (input)="formatarCPF($event)"
+            >
+            <span class="error-message" *ngIf="getCampoErro('cpf')">
+              {{ getCampoErro('cpf') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="dataNascimento" class="form-label">
+              Data de Nascimento <span class="required">*</span>
+            </label>
+            <input
+              type="date"
+              id="dataNascimento"
+              formControlName="dataNascimento"
+              class="form-input"
+              [class.input-error]="pacienteForm.get('dataNascimento')?.touched && pacienteForm.get('dataNascimento')?.invalid"
+            >
+            <span class="error-message" *ngIf="getCampoErro('dataNascimento')">
+              {{ getCampoErro('dataNascimento') }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="telefoneWhatsapp" class="form-label">
+              Telefone (WhatsApp) <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="telefoneWhatsapp"
+              formControlName="telefoneWhatsapp"
+              class="form-input"
+              [class.input-error]="pacienteForm.get('telefoneWhatsapp')?.touched && pacienteForm.get('telefoneWhatsapp')?.invalid"
+              placeholder="(00) 00000-0000"
+              maxlength="15"
+              (input)="formatarTelefone($event)"
+            >
+            <span class="error-message" *ngIf="getCampoErro('telefoneWhatsapp')">
+              {{ getCampoErro('telefoneWhatsapp') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-input"
+              [class.input-error]="pacienteForm.get('email')?.touched && pacienteForm.get('email')?.invalid"
+              placeholder="email@exemplo.com"
+            >
+            <span class="error-message" *ngIf="getCampoErro('email')">
+              {{ getCampoErro('email') }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancelar()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="pacienteForm.invalid">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            {{ isEditMode ? 'Atualizar Paciente' : 'Salvar Paciente' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
