@@ -36,10 +36,13 @@ export class PacienteFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.pacienteId = Number(this.route.snapshot.params['id']);
-    if (this.pacienteId) {
-      this.isEditMode = true;
-      this.carregarPaciente(this.pacienteId);
+    // Verifica se é uma rota de edição
+    if (this.route.snapshot.url.some(segment => segment.path === 'editar')) {
+      this.pacienteId = Number(this.route.snapshot.paramMap.get('id'));
+      if (this.pacienteId) {
+        this.isEditMode = true;
+        this.carregarPaciente(this.pacienteId);
+      }
     }
   }
 
@@ -100,9 +103,10 @@ export class PacienteFormComponent implements OnInit {
         : this.pacienteService.cadastrar(pacienteData);
       
       operacao.subscribe({
-        next: () => {
+        next: (paciente) => {
           alert(this.isEditMode ? 'Paciente atualizado com sucesso!' : 'Paciente cadastrado com sucesso!');
-          this.router.navigate(['/pacientes']);
+          // Navega para a página de detalhes do paciente
+          this.router.navigate(['/pacientes', paciente.id]);
         },
         error: (erro) => {
           console.error('Erro ao salvar paciente:', erro);
@@ -116,7 +120,13 @@ export class PacienteFormComponent implements OnInit {
   }
 
   cancelar(): void {
-    this.router.navigate(['/pacientes']);
+    if (this.isEditMode && this.pacienteId) {
+      // Volta para os detalhes do paciente
+      this.router.navigate(['/pacientes', this.pacienteId]);
+    } else {
+      // Volta para a lista de pacientes
+      this.router.navigate(['/pacientes']);
+    }
   }
 
   private marcarCamposComoTocados(): void {

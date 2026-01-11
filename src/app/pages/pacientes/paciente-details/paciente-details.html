@@ -61,12 +61,14 @@
           </svg>
           Editar
         </button>
-        <button class="btn-primary" (click)="novaConsulta()">
+        <button class="btn-danger" (click)="confirmarExclusao()">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
           </svg>
-          Nova Consulta
+          Excluir
         </button>
       </div>
     </div>
@@ -139,7 +141,13 @@
           </svg>
           <h2 class="card-title">Histórico de Consultas</h2>
         </div>
-        <span class="badge">{{ consultas().length }} consultas</span>
+        <button class="btn-primary-sm" (click)="novaConsulta()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Nova Consulta
+        </button>
       </div>
 
       <div class="card-body">
@@ -205,5 +213,32 @@
         }
       </div>
     </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    @if (mostrarModalExclusao()) {
+      <div class="modal-overlay" (click)="cancelarExclusao()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="modal-icon">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h2 class="modal-title">Confirmar Exclusão</h2>
+            <p class="modal-message">
+              Tem certeza que deseja excluir o paciente <strong>{{ paciente()!.nomeCompleto }}</strong>?
+              <br><br>
+              Esta ação não pode ser desfeita e todos os dados relacionados (consultas, avaliações, fotos) serão permanentemente removidos.
+            </p>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-secondary" (click)="cancelarExclusao()">Cancelar</button>
+            <button class="btn-danger" (click)="excluirPaciente()">
+              Sim, Excluir Paciente
+            </button>
+          </div>
+        </div>
+      </div>
+    }
   }
 </div>

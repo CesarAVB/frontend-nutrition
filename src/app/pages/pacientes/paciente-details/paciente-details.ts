@@ -18,6 +18,7 @@ export class PacienteDetailsComponent implements OnInit {
   consultas = signal<ConsultaResumoDTO[]>([]);
   isLoading = signal(false);
   error = signal('');
+  mostrarModalExclusao = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -36,6 +37,7 @@ export class PacienteDetailsComponent implements OnInit {
 
   carregarPaciente(id: number): void {
     this.isLoading.set(true);
+    
     this.pacienteService.buscarPorId(id).subscribe({
       next: (paciente) => {
         this.paciente.set(paciente);
@@ -81,6 +83,34 @@ export class PacienteDetailsComponent implements OnInit {
   abrirWhatsApp(telefone: string): void {
     const numero = telefone.replace(/\D/g, '');
     window.open(`https://wa.me/55${numero}`, '_blank');
+  }
+
+  confirmarExclusao(): void {
+    this.mostrarModalExclusao.set(true);
+  }
+
+  cancelarExclusao(): void {
+    this.mostrarModalExclusao.set(false);
+  }
+
+  excluirPaciente(): void {
+    const pacienteId = this.paciente()?.id;
+    if (!pacienteId) return;
+
+    this.isLoading.set(true);
+    
+    this.pacienteService.deletar(pacienteId).subscribe({
+      next: () => {
+        console.log('Paciente excluído com sucesso');
+        this.router.navigate(['/pacientes']);
+      },
+      error: (erro) => {
+        console.error('Erro ao excluir paciente:', erro);
+        this.error.set('Erro ao excluir paciente. Tente novamente.');
+        this.isLoading.set(false);
+        this.mostrarModalExclusao.set(false);
+      }
+    });
   }
 
   voltar(): void {
