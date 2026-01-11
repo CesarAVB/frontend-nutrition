@@ -124,8 +124,8 @@
       font-weight: 600;
 
       &.badge-primary {
-        background: #10b981;
-        color: white;
+        background: #d1fae5;
+        color: #059669;
       }
     }
 
@@ -172,6 +172,7 @@
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #f3f4f6;
   transition: background-color 0.2s;
+  cursor: pointer;
 
   &:last-child {
     border-bottom: none;
@@ -235,6 +236,7 @@
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.2s, transform 0.2s;
+  flex-shrink: 0;
 
   &:hover {
     background: #a7f3d0;
@@ -243,6 +245,108 @@
 
   &:active {
     transform: scale(0.95);
+  }
+}
+
+// Estado Vazio Melhorado
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+
+    svg {
+      color: #10b981;
+      opacity: 0.6;
+    }
+  }
+
+  .empty-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .empty-message {
+    font-size: 0.938rem;
+    color: #6b7280;
+    margin: 0 0 1.5rem 0;
+    max-width: 300px;
+  }
+
+  .btn-primary-sm {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// Loading State
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #f3f4f6;
+    border-top-color: #10b981;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  p {
+    margin-top: 1rem;
+    color: #6b7280;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -262,6 +366,20 @@
   .consulta-info, .paciente-info {
     h3 {
       font-size: 0.875rem;
+    }
+  }
+
+  .empty-state {
+    padding: 2rem 1rem;
+
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+
+      svg {
+        width: 48px;
+        height: 48px;
+      }
     }
   }
 }

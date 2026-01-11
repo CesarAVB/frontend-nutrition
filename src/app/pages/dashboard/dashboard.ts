@@ -1,6 +1,6 @@
 // dashboard.component.ts
 import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common'; // ✅ Importar DatePipe
+import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { DashboardService, DashboardStats, ConsultaHoje } from '../../services/dashboard';
 import { PacienteDTO } from '../../models/paciente.model';
@@ -11,7 +11,7 @@ import { forkJoin } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
-    DatePipe  // ✅ Adicionar DatePipe aqui
+    DatePipe
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
@@ -76,6 +76,10 @@ export class DashboardComponent implements OnInit {
 
   verTodosPacientes(): void {
     this.router.navigate(['/pacientes']);
+  }
+
+  novoPaciente(): void {
+    this.router.navigate(['/pacientes/novo']);
   }
 
   ligarPaciente(telefone: string): void {
