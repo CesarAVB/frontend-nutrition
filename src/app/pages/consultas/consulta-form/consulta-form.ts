@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 type TabType = 'estilo-vida' | 'medidas' | 'fotos' | 'dieta';
 
@@ -15,7 +16,7 @@ type TabType = 'estilo-vida' | 'medidas' | 'fotos' | 'dieta';
 export class ConsultaFormComponent implements OnInit {
   activeTab: TabType = 'estilo-vida';
   pacienteId?: number;
-  pacienteNome = 'Maria Silva Santos';
+  pacienteNome = 'Selecione um paciente'; // Valor padrão
 
   estiloVidaForm: FormGroup;
   medidasForm: FormGroup;
@@ -31,7 +32,8 @@ export class ConsultaFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.estiloVidaForm = this.fb.group({
       objetivo: ['', Validators.required],
@@ -57,7 +59,6 @@ export class ConsultaFormComponent implements OnInit {
     });
 
     this.medidasForm = this.fb.group({
-      // Perímetros
       perimetroOmbro: [''],
       perimetroTorax: [''],
       perimetroCintura: [''],
@@ -73,7 +74,6 @@ export class ConsultaFormComponent implements OnInit {
       perimetroCoxaEsquerda: [''],
       perimetroPanturrilhaDireita: [''],
       perimetroPanturrilhaEsquerda: [''],
-      // Dobras
       dobraTriceps: [''],
       dobraPeito: [''],
       dobraAxilarMedia: [''],
@@ -81,7 +81,6 @@ export class ConsultaFormComponent implements OnInit {
       dobraAbdominal: [''],
       dobraSupraIliaca: [''],
       dobraCoxa: [''],
-      // Composição
       pesoAtual: ['', Validators.required],
       massaMagra: [''],
       massaGorda: [''],
@@ -91,7 +90,20 @@ export class ConsultaFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.pacienteId = this.route.snapshot.params['id'];
+    // Verificar se veio de /pacientes/:id/consulta
+    const idFromRoute = this.route.snapshot.params['id'];
+    if (idFromRoute) {
+      this.pacienteId = Number(idFromRoute);
+      // TODO: Buscar nome do paciente via API
+      this.pacienteNome = 'Carregando...';
+      this.carregarNomePaciente(this.pacienteId);
+    }
+  }
+
+  carregarNomePaciente(id: number): void {
+    // TODO: Implementar chamada à API para buscar o nome do paciente
+    // Por enquanto, deixe o nome padrão
+    this.pacienteNome = `Paciente ${id}`;
   }
 
   setActiveTab(tab: TabType): void {
@@ -109,13 +121,26 @@ export class ConsultaFormComponent implements OnInit {
       
       // Aqui você faria a chamada para o backend
       alert('Consulta salva com sucesso!');
-      this.router.navigate(['/pacientes', this.pacienteId]);
+      
+      // Voltar para a página correta
+      if (this.pacienteId) {
+        this.router.navigate(['/pacientes', this.pacienteId]);
+      } else {
+        this.router.navigate(['/dashboard']);
+      }
     } else {
       alert('Por favor, preencha todos os campos obrigatórios');
     }
   }
 
   cancelar(): void {
-    this.router.navigate(['/pacientes', this.pacienteId]);
+    // Se tem pacienteId, volta para detalhes do paciente
+    // Senão, usa o history.back() ou vai para dashboard
+    if (this.pacienteId) {
+      this.router.navigate(['/pacientes', this.pacienteId]);
+    } else {
+      // Usar location.back() para voltar à página anterior
+      this.location.back();
+    }
   }
 }
