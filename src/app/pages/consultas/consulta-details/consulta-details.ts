@@ -19,6 +19,7 @@ export class ConsultaDetailsComponent implements OnInit {
   consulta = signal<ConsultaDetalhadaDTO | null>(null);
   isLoading = signal(true);
   error = signal<string | null>(null);
+  mostrarModalExclusao = signal(false);
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
@@ -49,6 +50,34 @@ export class ConsultaDetailsComponent implements OnInit {
     } else {
       this.router.navigate(['/pacientes']);
     }
+  }
+
+  confirmarExclusao(): void {
+    this.mostrarModalExclusao.set(true);
+  }
+
+  cancelarExclusao(): void {
+    this.mostrarModalExclusao.set(false);
+  }
+
+  excluirConsulta(): void {
+    const consultaId = this.consulta()?.id;
+    if (!consultaId) return;
+
+    this.isLoading.set(true);
+    
+    this.consultaService.deletar(consultaId).subscribe({
+      next: () => {
+        console.log('Consulta excluída com sucesso');
+        this.voltar();
+      },
+      error: (erro) => {
+        console.error('Erro ao excluir consulta:', erro);
+        this.error.set('Erro ao excluir consulta. Tente novamente.');
+        this.isLoading.set(false);
+        this.mostrarModalExclusao.set(false);
+      }
+    });
   }
 
   formatarData(dataISO: string): string {

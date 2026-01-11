@@ -72,7 +72,7 @@ export class PacienteDetailsComponent implements OnInit {
   editarPaciente(): void {
     const pacienteId = this.paciente()?.id;
     if (pacienteId) {
-      this.router.navigate(['/pacientes', pacienteId]);
+      this.router.navigate(['/pacientes', pacienteId, 'editar']);
     }
   }
 
