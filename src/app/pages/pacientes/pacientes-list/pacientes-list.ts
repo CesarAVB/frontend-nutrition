@@ -1,17 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+// src/app/pages/pacientes/pacientes-list/pacientes-list.ts
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PacienteService } from '../../../services/paciente';
+import { PacienteDTO } from '../../../models/paciente.model';
 
-interface Paciente {
-  id: number;
+interface PacienteView extends PacienteDTO {
   iniciais: string;
-  nomeCompleto: string;
-  email: string;
-  cpf: string;
-  telefoneWhatsapp: string;
   ultimaVisita: string;
-  totalConsultas: number;
 }
 
 @Component({
@@ -22,80 +19,50 @@ interface Paciente {
   styleUrls: ['./pacientes-list.scss']
 })
 export class PacientesListComponent implements OnInit {
-  searchTerm = '';
-  pacientes: Paciente[] = [
-    {
-      id: 1,
-      iniciais: 'MS',
-      nomeCompleto: 'Maria Silva Santos',
-      email: 'maria.santos@email.com',
-      cpf: '123.456.789-00',
-      telefoneWhatsapp: '21999887766',
-      ultimaVisita: '07/01/2025',
-      totalConsultas: 5
-    },
-    {
-      id: 2,
-      iniciais: 'JP',
-      nomeCompleto: 'João Pedro Oliveira',
-      email: 'joao.oliveira@email.com',
-      cpf: '987.654.321-00',
-      telefoneWhatsapp: '21987654321',
-      ultimaVisita: '05/01/2025',
-      totalConsultas: 3
-    },
-    {
-      id: 3,
-      iniciais: 'AC',
-      nomeCompleto: 'Ana Carolina Lima',
-      email: 'ana.lima@email.com',
-      cpf: '456.789.123-00',
-      telefoneWhatsapp: '21976543210',
-      ultimaVisita: '09/01/2025',
-      totalConsultas: 2
-    },
-    {
-      id: 4,
-      iniciais: 'CE',
-      nomeCompleto: 'Carlos Eduardo Mendes',
-      email: 'carlos.mendes@email.com',
-      cpf: '321.654.987-00',
-      telefoneWhatsapp: '21965432109',
-      ultimaVisita: '04/01/2025',
-      totalConsultas: 4
-    },
-    {
-      id: 5,
-      iniciais: 'FC',
-      nomeCompleto: 'Fernanda Costa Ribeiro',
-      email: 'fernanda.ribeiro@email.com',
-      cpf: '789.123.456-00',
-      telefoneWhatsapp: '21954321098',
-      ultimaVisita: '08/01/2025',
-      totalConsultas: 1
-    }
-  ];
+  // Signals
+  searchTerm = signal('');
+  pacientes = signal<PacienteView[]>([]);
+  isLoading = signal(false);
+  error = signal('');
 
-  pacientesFiltrados: Paciente[] = [];
-
-  constructor(private router: Router) {}
-
-  ngOnInit(): void {
-    this.pacientesFiltrados = this.pacientes;
-  }
-
-  filtrarPacientes(): void {
-    const termo = this.searchTerm.toLowerCase().trim();
+  // Computed - Filtra pacientes baseado no searchTerm
+  pacientesFiltrados = computed(() => {
+    const termo = this.searchTerm().toLowerCase().trim();
+    const lista = this.pacientes();
     
-    if (!termo) {
-      this.pacientesFiltrados = this.pacientes;
-      return;
-    }
+    if (!termo) return lista;
 
-    this.pacientesFiltrados = this.pacientes.filter(p => 
+    return lista.filter(p => 
       p.nomeCompleto.toLowerCase().includes(termo) ||
       p.cpf.replace(/\D/g, '').includes(termo.replace(/\D/g, ''))
     );
+  });
+
+  constructor(
+    private pacienteService: PacienteService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.carregarPacientes();
+  }
+
+  carregarPacientes(): void {
+    this.isLoading.set(true);
+    this.error.set('');
+    
+    this.pacienteService.listarTodos().subscribe({
+      next: (pacientes) => {
+        const pacientesView = pacientes.map(p => this.mapearParaView(p));
+        this.pacientes.set(pacientesView);
+        this.isLoading.set(false);
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar pacientes:', erro);
+        this.error.set('Erro ao carregar pacientes. Tente novamente.');
+        this.isLoading.set(false);
+      }
+    });
   }
 
   novoPaciente(): void {
@@ -109,5 +76,30 @@ export class PacientesListComponent implements OnInit {
 
   verDetalhes(id: number): void {
     this.router.navigate(['/pacientes', id]);
+  }
+
+  private mapearParaView(paciente: PacienteDTO): PacienteView {
+    return {
+      ...paciente,
+      iniciais: this.getIniciais(paciente.nomeCompleto),
+      ultimaVisita: this.formatarData(paciente.ultimaConsulta)
+    };
+  }
+
+  private getIniciais(nome: string): string {
+    const partes = nome.split(' ').filter(p => p.length > 0);
+    if (partes.length === 0) return 'NN';
+    if (partes.length === 1) return partes[0].substring(0, 2).toUpperCase();
+    return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+  }
+
+  private formatarData(dataISO?: string): string {
+    if (!dataISO) return '-';
+    const data = new Date(dataISO);
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
   }
 }

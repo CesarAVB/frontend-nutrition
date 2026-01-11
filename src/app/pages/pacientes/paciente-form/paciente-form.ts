@@ -1,7 +1,10 @@
+// src/app/pages/pacientes/paciente-form/paciente-form.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { PacienteService } from '../../../services/paciente';
+import { PacienteDTO } from '../../../models/paciente.model';
 
 @Component({
   selector: 'app-paciente-form',
@@ -14,11 +17,14 @@ export class PacienteFormComponent implements OnInit {
   pacienteForm: FormGroup;
   isEditMode = false;
   pacienteId?: number;
+  isLoading = false;
+  isSaving = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private pacienteService: PacienteService
   ) {
     this.pacienteForm = this.fb.group({
       nomeCompleto: ['', [Validators.required, Validators.minLength(3)]],
@@ -30,7 +36,7 @@ export class PacienteFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.pacienteId = this.route.snapshot.params['id'];
+    this.pacienteId = Number(this.route.snapshot.params['id']);
     if (this.pacienteId) {
       this.isEditMode = true;
       this.carregarPaciente(this.pacienteId);
@@ -38,17 +44,25 @@ export class PacienteFormComponent implements OnInit {
   }
 
   carregarPaciente(id: number): void {
-    // Simula carregamento de dados do backend
-    // Aqui você faria uma chamada para o serviço HTTP
-    const pacienteMock = {
-      nomeCompleto: 'Maria Silva Santos',
-      cpf: '123.456.789-00',
-      dataNascimento: '1990-05-15',
-      telefoneWhatsapp: '(21) 99988-7766',
-      email: 'maria.santos@email.com'
-    };
+    this.isLoading = true;
     
-    this.pacienteForm.patchValue(pacienteMock);
+    this.pacienteService.buscarPorId(id).subscribe({
+      next: (paciente) => {
+        this.pacienteForm.patchValue({
+          nomeCompleto: paciente.nomeCompleto,
+          cpf: paciente.cpf,
+          dataNascimento: paciente.dataNascimento,
+          telefoneWhatsapp: paciente.telefoneWhatsapp,
+          email: paciente.email
+        });
+        this.isLoading = false;
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar paciente:', erro);
+        alert('Erro ao carregar dados do paciente');
+        this.router.navigate(['/pacientes']);
+      }
+    });
   }
 
   formatarCPF(event: Event): void {
@@ -78,18 +92,24 @@ export class PacienteFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.pacienteForm.valid) {
-      const formData = this.pacienteForm.value;
-      console.log('Dados do formulário:', formData);
+      this.isSaving = true;
+      const pacienteData: PacienteDTO = this.pacienteForm.value;
       
-      // Aqui você faria a chamada para o backend
-      // if (this.isEditMode) {
-      //   this.pacienteService.atualizar(this.pacienteId, formData).subscribe(...)
-      // } else {
-      //   this.pacienteService.cadastrar(formData).subscribe(...)
-      // }
+      const operacao = this.isEditMode
+        ? this.pacienteService.atualizar(this.pacienteId!, pacienteData)
+        : this.pacienteService.cadastrar(pacienteData);
       
-      alert(this.isEditMode ? 'Paciente atualizado com sucesso!' : 'Paciente cadastrado com sucesso!');
-      this.router.navigate(['/pacientes']);
+      operacao.subscribe({
+        next: () => {
+          alert(this.isEditMode ? 'Paciente atualizado com sucesso!' : 'Paciente cadastrado com sucesso!');
+          this.router.navigate(['/pacientes']);
+        },
+        error: (erro) => {
+          console.error('Erro ao salvar paciente:', erro);
+          alert('Erro ao salvar paciente. Verifique os dados e tente novamente.');
+          this.isSaving = false;
+        }
+      });
     } else {
       this.marcarCamposComoTocados();
     }

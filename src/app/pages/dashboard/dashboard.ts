@@ -1,125 +1,77 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+// dashboard.component.ts
+import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common'; // ✅ Importar DatePipe
 import { Router } from '@angular/router';
-
-interface Paciente {
-  id: number;
-  nomeCompleto: string;
-  iniciais: string;
-  ultimaVisita: string;
-  telefone: string;
-}
-
-interface Consulta {
-  paciente: Paciente;
-  tipo: string;
-  horario: string;
-}
-
-interface DashboardStats {
-  totalPacientes: number;
-  consultasHoje: number;
-  consultasMes: number;
-  proximaConsulta: string;
-}
+import { DashboardService, DashboardStats, ConsultaHoje } from '../../services/dashboard';
+import { PacienteDTO } from '../../models/paciente.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    DatePipe  // ✅ Adicionar DatePipe aqui
+  ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
 export class DashboardComponent implements OnInit {
-  stats: DashboardStats = {
-    totalPacientes: 5,
-    consultasHoje: 4,
-    consultasMes: 28,
-    proximaConsulta: '09:00'
-  };
+  stats = signal<DashboardStats>({
+    totalPacientes: 0,
+    consultasHoje: 0,
+    consultasMes: 0,
+    proximaConsulta: '-'
+  });
 
-  consultasHoje: Consulta[] = [
-    {
-      paciente: {
-        id: 1,
-        nomeCompleto: 'Maria Silva Santos',
-        iniciais: 'MS',
-        ultimaVisita: '07/01/2025',
-        telefone: '21999887766'
-      },
-      tipo: 'Retorno',
-      horario: '09:00'
-    },
-    {
-      paciente: {
-        id: 2,
-        nomeCompleto: 'João Pedro Oliveira',
-        iniciais: 'JP',
-        ultimaVisita: '05/01/2025',
-        telefone: '21987654321'
-      },
-      tipo: 'Avaliação',
-      horario: '10:30'
-    },
-    {
-      paciente: {
-        id: 3,
-        nomeCompleto: 'Ana Carolina Lima',
-        iniciais: 'AC',
-        ultimaVisita: '09/01/2025',
-        telefone: '21976543210'
-      },
-      tipo: 'Retorno',
-      horario: '14:00'
-    },
-    {
-      paciente: {
-        id: 4,
-        nomeCompleto: 'Carlos Eduardo Mendes',
-        iniciais: 'CE',
-        ultimaVisita: '04/01/2025',
-        telefone: '21965432109'
-      },
-      tipo: 'Primeira Consulta',
-      horario: '16:00'
-    }
-  ];
+  consultasHoje = signal<ConsultaHoje[]>([]);
+  pacientesRecentes = signal<PacienteDTO[]>([]);
+  isLoading = signal(false);
 
-  pacientesRecentes: Paciente[] = [
-    {
-      id: 1,
-      nomeCompleto: 'Maria Silva Santos',
-      iniciais: 'MS',
-      ultimaVisita: '07/01/2025',
-      telefone: '21999887766'
-    },
-    {
-      id: 2,
-      nomeCompleto: 'João Pedro Oliveira',
-      iniciais: 'JP',
-      ultimaVisita: '05/01/2025',
-      telefone: '21987654321'
-    },
-    {
-      id: 3,
-      nomeCompleto: 'Ana Carolina Lima',
-      iniciais: 'AC',
-      ultimaVisita: '09/01/2025',
-      telefone: '21976543210'
-    },
-    {
-      id: 4,
-      nomeCompleto: 'Carlos Eduardo Mendes',
-      iniciais: 'CE',
-      ultimaVisita: '04/01/2025',
-      telefone: '21965432109'
-    }
-  ];
-
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private dashboardService: DashboardService
+  ) {}
 
   ngOnInit(): void {
-    // Dados carregados no construtor para este exemplo
+    this.carregarDados();
+  }
+
+  carregarDados(): void {
+    this.isLoading.set(true);
+    
+    forkJoin({
+      stats: this.dashboardService.buscarEstatisticas(),
+      consultas: this.dashboardService.buscarConsultasHoje(),
+      pacientes: this.dashboardService.buscarPacientesRecentes()
+    }).subscribe({
+      next: (resultado) => {
+        this.stats.set(resultado.stats);
+        this.consultasHoje.set(resultado.consultas);
+        this.pacientesRecentes.set(resultado.pacientes);
+        this.isLoading.set(false);
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar dados:', erro);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  getIniciais(nome: string): string {
+    const partes = nome.split(' ').filter(p => p.length > 0);
+    if (partes.length === 0) return 'NN';
+    if (partes.length === 1) return partes[0].substring(0, 2).toUpperCase();
+    return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+  }
+
+  formatarData(dataISO?: string): string {
+    if (!dataISO) return '-';
+    return new Date(dataISO).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
   }
 
   verTodosPacientes(): void {
@@ -127,6 +79,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ligarPaciente(telefone: string): void {
+    if (!telefone) return;
     window.open(`https://wa.me/55${telefone.replace(/\D/g, '')}`, '_blank');
   }
 

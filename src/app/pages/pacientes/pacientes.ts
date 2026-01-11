@@ -1,7 +1,8 @@
+// src/app/pages/pacientes/pacientes.ts
 import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PacienteService } from '../../services/paciente';
-import { Paciente } from '../../models/paciente.model';
+import { PacienteDTO } from '../../models/paciente.model';
 
 @Component({
   selector: 'app-pacientes',
@@ -14,7 +15,7 @@ import { Paciente } from '../../models/paciente.model';
 export class Pacientes {
   private service = inject(PacienteService);
 
-  pacientes = signal<Paciente[]>([]);
+  pacientes = signal<PacienteDTO[]>([]);
   busca = signal('');
 
   pacientesFiltrados = computed(() => {
@@ -26,19 +27,16 @@ export class Pacientes {
   });
 
   constructor() {
-    this.service.getAll().subscribe(res => this.pacientes.set(res));
+    this.service.listarTodos().subscribe(res => this.pacientes.set(res));
   }
 
-  getUltimaVisita(p: Paciente) {
-    if (!p.consultas || p.consultas.length === 0) return '-';
-    const sorted = [...p.consultas].sort(
-      (a, b) => new Date(b.dataConsulta).getTime() - new Date(a.dataConsulta).getTime()
-    );
-    return new Date(sorted[0].dataConsulta).toLocaleDateString('pt-BR');
+  getUltimaVisita(p: PacienteDTO) {
+    if (!p.ultimaConsulta) return '-';
+    return new Date(p.ultimaConsulta).toLocaleDateString('pt-BR');
   }
 
-  getConsultasCount(p: Paciente) {
-    return p.consultas?.length ?? 0;
+  getConsultasCount(p: PacienteDTO) {
+    return p.totalConsultas ?? 0;
   }
 
   getIniciais(nome: string) {

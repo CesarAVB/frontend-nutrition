@@ -9,7 +9,7 @@
     <div class="stat-card">
       <div class="stat-content">
         <span class="stat-label">Total Pacientes</span>
-        <span class="stat-value">{{ stats.totalPacientes }}</span>
+        <span class="stat-value">{{ stats().totalPacientes }}</span>
       </div>
       <div class="stat-icon stat-icon-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -24,7 +24,7 @@
     <div class="stat-card">
       <div class="stat-content">
         <span class="stat-label">Consultas Hoje</span>
-        <span class="stat-value">{{ stats.consultasHoje }}</span>
+        <span class="stat-value">{{ stats().consultasHoje }}</span>
       </div>
       <div class="stat-icon stat-icon-secondary">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -39,7 +39,7 @@
     <div class="stat-card">
       <div class="stat-content">
         <span class="stat-label">Este Mês</span>
-        <span class="stat-value">{{ stats.consultasMes }}</span>
+        <span class="stat-value">{{ stats().consultasMes }}</span>
       </div>
       <div class="stat-icon stat-icon-success">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -51,7 +51,7 @@
     <div class="stat-card">
       <div class="stat-content">
         <span class="stat-label">Próxima Consulta</span>
-        <span class="stat-value">{{ stats.proximaConsulta }}</span>
+        <span class="stat-value">{{ stats().proximaConsulta }}</span>
       </div>
       <div class="stat-icon stat-icon-warning">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -68,21 +68,26 @@
     <div class="content-card">
       <div class="card-header">
         <h2 class="card-title">Consultas de Hoje</h2>
-        <span class="badge badge-primary">{{ consultasHoje.length }} agendadas</span>
+        <span class="badge badge-primary">{{ consultasHoje().length }} agendadas</span>
       </div>
       <div class="card-body">
         <div class="consulta-list">
-          <div class="consulta-item" *ngFor="let consulta of consultasHoje">
+          <div class="consulta-item" *ngFor="let consulta of consultasHoje()">
             <div class="consulta-avatar">
-              <span>{{ consulta.paciente.iniciais }}</span>
+              <span>{{ consulta.iniciais }}</span>
             </div>
             <div class="consulta-info">
-              <h3 class="consulta-nome">{{ consulta.paciente.nomeCompleto }}</h3>
-              <p class="consulta-tipo">{{ consulta.tipo }}</p>
+              <h3 class="consulta-nome">{{ consulta.nomePaciente }}</h3>
+              <p class="consulta-tipo">{{ consulta.objetivo || 'Consulta nutricional' }}</p>
             </div>
             <div class="consulta-horario">
-              <span>{{ consulta.horario }}</span>
+              <span>{{ consulta.horario | date: 'HH:mm' }}</span>
             </div>
+          </div>
+
+          <!-- Mensagem quando não houver consultas -->
+          <div *ngIf="consultasHoje().length === 0" class="empty-state">
+            <p>Nenhuma consulta agendada para hoje</p>
           </div>
         </div>
       </div>
@@ -101,22 +106,33 @@
       </div>
       <div class="card-body">
         <div class="paciente-list">
-          <div class="paciente-item" *ngFor="let paciente of pacientesRecentes">
+          <div class="paciente-item" *ngFor="let paciente of pacientesRecentes()">
             <div class="paciente-avatar">
-              <span>{{ paciente.iniciais }}</span>
+              <span>{{ getIniciais(paciente.nomeCompleto) }}</span>
             </div>
             <div class="paciente-info">
               <h3 class="paciente-nome">{{ paciente.nomeCompleto }}</h3>
-              <p class="paciente-data">Última visita: {{ paciente.ultimaVisita }}</p>
+              <p class="paciente-data">Última visita: {{ formatarData(paciente.ultimaConsulta) }}</p>
             </div>
-            <button class="icon-button" (click)="ligarPaciente(paciente.telefone)">
+            <button class="icon-button" (click)="ligarPaciente(paciente.telefoneWhatsapp)">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
               </svg>
             </button>
           </div>
+
+          <!-- Mensagem quando não houver pacientes -->
+          <div *ngIf="pacientesRecentes().length === 0" class="empty-state">
+            <p>Nenhum paciente cadastrado</p>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Carregando dados...</p>
   </div>
 </div>
