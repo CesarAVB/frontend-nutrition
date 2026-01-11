@@ -96,7 +96,14 @@ export class PacienteFormComponent implements OnInit {
   onSubmit(): void {
     if (this.pacienteForm.valid) {
       this.isSaving = true;
-      const pacienteData: PacienteDTO = this.pacienteForm.value;
+      const formValue = this.pacienteForm.value;
+      
+      // Remove máscaras antes de enviar
+      const pacienteData: PacienteDTO = {
+        ...formValue,
+        cpf: this.removerMascara(formValue.cpf),
+        telefoneWhatsapp: this.removerMascara(formValue.telefoneWhatsapp)
+      };
       
       const operacao = this.isEditMode
         ? this.pacienteService.atualizar(this.pacienteId!, pacienteData)
@@ -117,6 +124,10 @@ export class PacienteFormComponent implements OnInit {
     } else {
       this.marcarCamposComoTocados();
     }
+  }
+
+  private removerMascara(valor: string): string {
+    return valor ? valor.replace(/\D/g, '') : '';
   }
 
   cancelar(): void {
