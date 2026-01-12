@@ -121,24 +121,3 @@ export const environment = {
   apiUrl: 'http://localhost:8080/api'
 };
 ```
-
-## 🎨 Padrões de Código
-
-O projeto segue as melhores práticas do Angular:
-- Change Detection OnPush
-- Uso de `inject()` ao invés de constructor injection
-- Control flow nativo (`@if`, `@for`, `@switch`)
-- Reactive Forms
-- Single Responsibility Principle
-
-## 📄 Licença
-
-Este projeto está sob a licença [especificar licença].
-
-## 👥 Contribuindo
-
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
-
-## 📞 Contato
-
-[Suas informações de contato ou da equipe]
