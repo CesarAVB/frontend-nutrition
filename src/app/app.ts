@@ -1,17 +1,19 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar';
+import { ToastComponent } from './components/toast/toast';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent],
+  imports: [RouterOutlet, NavbarComponent, ToastComponent],
   template: `
     <div class="app-container">
       <app-navbar></app-navbar>
       <main class="main-content">
         <router-outlet></router-outlet>
       </main>
+      <app-toast></app-toast>
     </div>
   `,
   styles: [`

@@ -1,236 +1,326 @@
 <div class="consulta-details-container">
   @if (isLoading()) {
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p>Carregando consulta...</p>
-    </div>
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Carregando consulta...</p>
+  </div>
   } @else if (error()) {
-    <div class="error-state">
-      <p>{{ error() }}</p>
-      <button class="btn-primary" (click)="voltar()">Voltar</button>
-    </div>
+  <div class="error-state">
+    <p>{{ error() }}</p>
+    <button class="btn-primary" (click)="voltar()">Voltar</button>
+  </div>
   } @else if (consulta()) {
-    <div class="header">
-      <button class="back-button" (click)="voltar()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"></polyline>
+  <div class="header">
+    <button class="back-button" (click)="voltar()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <div class="header-content">
+      <h1>Consulta - {{ consulta()?.nomePaciente }}</h1>
+      <p>{{ formatarData(consulta()!.dataConsulta) }}</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="abrirModalRemarcar()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
         </svg>
+        Remarcar
       </button>
-      <div class="header-content">
-        <h1>Consulta - {{ consulta()?.nomePaciente }}</h1>
-        <p>{{ formatarData(consulta()!.dataConsulta) }}</p>
-      </div>
       <button class="btn-danger" (click)="confirmarExclusao()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <polyline points="3 6 5 6 21 6"></polyline>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <path
+            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+          ></path>
           <line x1="10" y1="11" x2="10" y2="17"></line>
           <line x1="14" y1="11" x2="14" y2="17"></line>
         </svg>
-        Remover Consulta
+        Remover
       </button>
     </div>
+  </div>
 
-    <div class="content-grid">
-      <!-- Card de Avaliação Física -->
-      @if (consulta()?.avaliacaoFisica) {
-        <div class="info-card">
-          <h2>Avaliação Física</h2>
-          <div class="info-row">
-            <span>Peso:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.pesoAtual }} kg</strong>
-          </div>
-          <div class="info-row">
-            <span>% Gordura:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.percentualGordura }}%</strong>
-          </div>
-          <div class="info-row">
-            <span>IMC:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.imc }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Massa Magra:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.massaMagra }} kg</strong>
-          </div>
-          <div class="info-row">
-            <span>Massa Gorda:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.massaGorda }} kg</strong>
-          </div>
-        </div>
+  <div class="content-grid">
+    <!-- Card de Avaliação Física -->
+    @if (consulta()?.avaliacaoFisica) {
+    <div class="info-card">
+      <h2>Avaliação Física</h2>
+      <div class="info-row">
+        <span>Peso:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.pesoAtual }} kg</strong>
+      </div>
+      <div class="info-row">
+        <span>% Gordura:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.percentualGordura }}%</strong>
+      </div>
+      <div class="info-row">
+        <span>IMC:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.imc }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Massa Magra:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.massaMagra }} kg</strong>
+      </div>
+      <div class="info-row">
+        <span>Massa Gorda:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.massaGorda }} kg</strong>
+      </div>
+    </div>
 
-        <div class="info-card">
-          <h2>Perímetros (cm)</h2>
-          <div class="info-row">
-            <span>Cintura:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.perimetroCintura || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Quadril:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.perimetroQuadril || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Tórax:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.perimetroTorax || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Braço D (contraído):</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.perimetroBracoDireitoContr || '-' }}</strong>
-          </div>
-        </div>
+    <div class="info-card">
+      <h2>Perímetros (cm)</h2>
+      <div class="info-row">
+        <span>Cintura:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.perimetroCintura || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Quadril:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.perimetroQuadril || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Tórax:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.perimetroTorax || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Braço D (contraído):</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.perimetroBracoDireitoContr || '-' }}</strong>
+      </div>
+    </div>
 
-        <div class="info-card">
-          <h2>Dobras Cutâneas (mm)</h2>
-          <div class="info-row">
-            <span>Tríceps:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.dobraTriceps || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Abdominal:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.dobraAbdominal || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Subescapular:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.dobraSubescapular || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Supra-ilíaca:</span>
-            <strong>{{ consulta()?.avaliacaoFisica?.dobraSupraIliaca || '-' }}</strong>
-          </div>
-        </div>
-      } @else {
-        <div class="info-card empty">
-          <p>Nenhuma avaliação física registrada</p>
-        </div>
-      }
+    <div class="info-card">
+      <h2>Dobras Cutâneas (mm)</h2>
+      <div class="info-row">
+        <span>Tríceps:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.dobraTriceps || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Abdominal:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.dobraAbdominal || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Subescapular:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.dobraSubescapular || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Supra-ilíaca:</span>
+        <strong>{{ consulta()?.avaliacaoFisica?.dobraSupraIliaca || '-' }}</strong>
+      </div>
+    </div>
+    } @else {
+    <div class="info-card empty">
+      <p>Nenhuma avaliação física registrada</p>
+    </div>
+    }
 
-      <!-- Card de Questionário -->
-      @if (consulta()?.questionario) {
-        <div class="info-card">
-          <h2>Estilo de Vida</h2>
-          <div class="info-row">
-            <span>Objetivo:</span>
-            <strong>{{ consulta()?.questionario?.objetivo || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Frequência de Treino:</span>
-            <strong>{{ consulta()?.questionario?.frequenciaTreino || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Tempo de Treino:</span>
-            <strong>{{ consulta()?.questionario?.tempoTreino || '-' }}</strong>
-          </div>
-        </div>
+    <!-- Card de Questionário -->
+    @if (consulta()?.questionario) {
+    <div class="info-card">
+      <h2>Estilo de Vida</h2>
+      <div class="info-row">
+        <span>Objetivo:</span>
+        <strong>{{ consulta()?.questionario?.objetivo || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Frequência de Treino:</span>
+        <strong>{{ consulta()?.questionario?.frequenciaTreino || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Tempo de Treino:</span>
+        <strong>{{ consulta()?.questionario?.tempoTreino || '-' }}</strong>
+      </div>
+    </div>
 
-        <div class="info-card">
-          <h2>Hábitos</h2>
-          <div class="info-row">
-            <span>Fuma:</span>
-            <strong>{{ consulta()?.questionario?.fuma ? 'Sim' : 'Não' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Álcool:</span>
-            <strong>{{ consulta()?.questionario?.frequenciaAlcool || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Intestino:</span>
-            <strong>{{ consulta()?.questionario?.funcionamentoIntestino || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Sono:</span>
-            <strong>{{ consulta()?.questionario?.qualidadeSono || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Água (L/dia):</span>
-            <strong>{{ consulta()?.questionario?.ingestaoAguaDiaria || '-' }}</strong>
-          </div>
-        </div>
+    <div class="info-card">
+      <h2>Hábitos</h2>
+      <div class="info-row">
+        <span>Fuma:</span>
+        <strong>{{ consulta()?.questionario?.fuma ? 'Sim' : 'Não' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Álcool:</span>
+        <strong>{{ consulta()?.questionario?.frequenciaAlcool || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Intestino:</span>
+        <strong>{{ consulta()?.questionario?.funcionamentoIntestino || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Sono:</span>
+        <strong>{{ consulta()?.questionario?.qualidadeSono || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Água (L/dia):</span>
+        <strong>{{ consulta()?.questionario?.ingestaoAguaDiaria || '-' }}</strong>
+      </div>
+    </div>
 
-        <div class="info-card">
-          <h2>Preferências Alimentares</h2>
-          <div class="info-row">
-            <span>Refeições desejadas:</span>
-            <strong>{{ consulta()?.questionario?.numeroRefeicoesDesejadas || '-' }}</strong>
-          </div>
-          <div class="info-row">
-            <span>Horário de maior fome:</span>
-            <strong>{{ consulta()?.questionario?.horarioMaiorFome || '-' }}</strong>
-          </div>
-          @if (consulta()?.questionario?.alimentosNaoGosta) {
-            <div class="info-row full-width">
-              <span>Alimentos que não gosta:</span>
-              <p>{{ consulta()?.questionario?.alimentosNaoGosta }}</p>
-            </div>
-          }
-          @if (consulta()?.questionario?.intolerancias) {
-            <div class="info-row full-width">
-              <span>Intolerâncias:</span>
-              <p>{{ consulta()?.questionario?.intolerancias }}</p>
-            </div>
-          }
-        </div>
-      } @else {
-        <div class="info-card empty">
-          <p>Nenhum questionário registrado</p>
-        </div>
-      }
-
-      <!-- Card de Fotos -->
-      @if (consulta()?.registroFotografico) {
-        <div class="info-card fotos-card">
-          <h2>Registro Fotográfico</h2>
-          <div class="fotos-grid">
-            @if (consulta()?.registroFotografico?.fotoAnterior) {
-              <div class="foto-item">
-                <span>Anterior</span>
-                <div class="foto-placeholder">📷</div>
-              </div>
-            }
-            @if (consulta()?.registroFotografico?.fotoPosterior) {
-              <div class="foto-item">
-                <span>Posterior</span>
-                <div class="foto-placeholder">📷</div>
-              </div>
-            }
-            @if (consulta()?.registroFotografico?.fotoLateralEsquerda) {
-              <div class="foto-item">
-                <span>Lateral Esquerda</span>
-                <div class="foto-placeholder">📷</div>
-              </div>
-            }
-            @if (consulta()?.registroFotografico?.fotoLateralDireita) {
-              <div class="foto-item">
-                <span>Lateral Direita</span>
-                <div class="foto-placeholder">📷</div>
-              </div>
-            }
-          </div>
-        </div>
+    <div class="info-card">
+      <h2>Preferências Alimentares</h2>
+      <div class="info-row">
+        <span>Refeições desejadas:</span>
+        <strong>{{ consulta()?.questionario?.numeroRefeicoesDesejadas || '-' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>Horário de maior fome:</span>
+        <strong>{{ consulta()?.questionario?.horarioMaiorFome || '-' }}</strong>
+      </div>
+      @if (consulta()?.questionario?.alimentosNaoGosta) {
+      <div class="info-row full-width">
+        <span>Alimentos que não gosta:</span>
+        <p>{{ consulta()?.questionario?.alimentosNaoGosta }}</p>
+      </div>
+      } @if (consulta()?.questionario?.intolerancias) {
+      <div class="info-row full-width">
+        <span>Intolerâncias:</span>
+        <p>{{ consulta()?.questionario?.intolerancias }}</p>
+      </div>
       }
     </div>
+    } @else {
+    <div class="info-card empty">
+      <p>Nenhum questionário registrado</p>
+    </div>
+    }
+
+    <!-- Card de Fotos -->
+    @if (consulta()?.registroFotografico) {
+    <div class="info-card fotos-card">
+      <h2>Registro Fotográfico</h2>
+      <div class="fotos-grid">
+        @if (consulta()?.registroFotografico?.fotoAnterior) {
+        <div class="foto-item">
+          <span>Anterior</span>
+          <div class="foto-placeholder">📷</div>
+        </div>
+        } @if (consulta()?.registroFotografico?.fotoPosterior) {
+        <div class="foto-item">
+          <span>Posterior</span>
+          <div class="foto-placeholder">📷</div>
+        </div>
+        } @if (consulta()?.registroFotografico?.fotoLateralEsquerda) {
+        <div class="foto-item">
+          <span>Lateral Esquerda</span>
+          <div class="foto-placeholder">📷</div>
+        </div>
+        } @if (consulta()?.registroFotografico?.fotoLateralDireita) {
+        <div class="foto-item">
+          <span>Lateral Direita</span>
+          <div class="foto-placeholder">📷</div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
   }
 
   <!-- Modal de confirmação de exclusão -->
   @if (mostrarModalExclusao()) {
-    <div class="modal-overlay" (click)="cancelarExclusao()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h2>Confirmar Exclusão</h2>
-          <button class="close-button" (click)="cancelarExclusao()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>Tem certeza que deseja excluir esta consulta?</p>
-          <p class="warning-text">Esta ação não pode ser desfeita.</p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn-secondary" (click)="cancelarExclusao()">Cancelar</button>
-          <button class="btn-danger" (click)="excluirConsulta()">Excluir Consulta</button>
-        </div>
+  <div class="modal-overlay" (click)="cancelarExclusao()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Confirmar Exclusão</h2>
+        <button class="close-button" (click)="cancelarExclusao()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza que deseja excluir esta consulta?</p>
+        <p class="warning-text">Esta ação não pode ser desfeita.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="cancelarExclusao()">Cancelar</button>
+        <button class="btn-danger" (click)="excluirConsulta()">Excluir Consulta</button>
       </div>
     </div>
-  }
+  </div>
+  <!-- Modal de Remarcação -->
+  @if (mostrarModalRemarcar()) {
+  <div class="modal-overlay" (click)="cancelarRemarcar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Remarcar Consulta</h2>
+        <button class="close-button" (click)="cancelarRemarcar()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="novaData">Nova Data e Hora:</label>
+          <input
+            type="datetime-local"
+            id="novaData"
+            class="form-control"
+            [value]="novaData()"
+            (input)="novaData.set($any($event.target).value)"
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="cancelarRemarcar()">Cancelar</button>
+        <button class="btn-primary" (click)="remarcarConsulta()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+  } }
 </div>

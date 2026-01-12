@@ -1,10 +1,11 @@
 // src/app/pages/pacientes/paciente-details/paciente-details.ts
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PacienteService } from '../../../services/paciente';
 import { ConsultaService } from '../../../services/consulta';
 import { PacienteDTO, ConsultaResumoDTO } from '../../../models/paciente.model';
+import { ToastService } from '../../../services/toast';
 
 @Component({
   selector: 'app-paciente-details',
@@ -14,6 +15,7 @@ import { PacienteDTO, ConsultaResumoDTO } from '../../../models/paciente.model';
   styleUrls: ['./paciente-details.scss']
 })
 export class PacienteDetailsComponent implements OnInit {
+  private toastService = inject(ToastService);
   paciente = signal<PacienteDTO | null>(null);
   consultas = signal<ConsultaResumoDTO[]>([]);
   isLoading = signal(false);
@@ -70,9 +72,20 @@ export class PacienteDetailsComponent implements OnInit {
   }
 
   editarPaciente(): void {
-    const pacienteId = this.paciente()?.id;
+    console.log('Método editarPaciente chamado');
+    const pacienteAtual = this.paciente();
+    console.log('Paciente atual:', pacienteAtual);
+    
+    const pacienteId = pacienteAtual?.id;
+    console.log('ID do paciente:', pacienteId);
+    
     if (pacienteId) {
-      this.router.navigate(['/pacientes', pacienteId, 'editar']);
+      const rota = ['/pacientes', pacienteId, 'editar'];
+      console.log('Navegando para:', rota);
+      this.router.navigate(rota);
+    } else {
+      console.error('ID do paciente não encontrado');
+      this.toastService.error('Erro: não foi possível identificar o paciente para edição.');
     }
   }
 

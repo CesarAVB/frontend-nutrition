@@ -4,7 +4,8 @@ import { PacientesListComponent } from './pages/pacientes/pacientes-list/pacient
 import { PacienteFormComponent } from './pages/pacientes/paciente-form/paciente-form';
 import { PacienteDetailsComponent } from './pages/pacientes/paciente-details/paciente-details';
 import { ConsultaFormComponent } from './pages/consultas/consulta-form/consulta-form';
-import { ConsultaDetailsComponent } from './pages/consultas/consulta-details/consulta-details'; // ✅ Adicione
+import { ConsultaDetailsComponent } from './pages/consultas/consulta-details/consulta-details';
+import { ConsultasListComponent } from './pages/consultas/consultas-list/consultas-list';
 
 export const routes: Routes = [
   {
@@ -48,8 +49,13 @@ export const routes: Routes = [
     title: 'Nova Consulta - NutriControl'
   },
   {
-    path: 'consultas/:id',  // ✅ Adicione esta rota
+    path: 'consultas/:id',
     component: ConsultaDetailsComponent,
     title: 'Detalhes da Consulta - NutriControl'
-  }
+  },
+  {
+    path: 'consultas',
+    component: ConsultasListComponent,
+    title: 'Consultas - NutriControl'
+  },
 ];

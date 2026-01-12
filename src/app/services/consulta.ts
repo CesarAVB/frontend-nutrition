@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import {
   ConsultaResumoDTO,
   ConsultaDetalhadaDTO,
-  ComparativoConsultasDTO
+  ComparativoConsultasDTO,
 } from '../models/consulta.model';
 
 @Injectable({
@@ -27,15 +27,29 @@ export class ConsultaService {
     return this.http.get<ConsultaDetalhadaDTO>(`${this.apiUrl}/${id}`);
   }
 
-  comparar(pacienteId: number, consultaInicialId: number, consultaFinalId: number): Observable<ComparativoConsultasDTO> {
+  comparar(
+    pacienteId: number,
+    consultaInicialId: number,
+    consultaFinalId: number
+  ): Observable<ComparativoConsultasDTO> {
     const params = new HttpParams()
       .set('consultaInicialId', consultaInicialId.toString())
       .set('consultaFinalId', consultaFinalId.toString());
-    
-    return this.http.get<ComparativoConsultasDTO>(`${this.apiUrl}/comparar/${pacienteId}`, { params });
+
+    return this.http.get<ComparativoConsultasDTO>(`${this.apiUrl}/comparar/${pacienteId}`, {
+      params,
+    });
   }
 
   deletar(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  listarTodas(): Observable<ConsultaResumoDTO[]> {
+    return this.http.get<ConsultaResumoDTO[]>(`${this.apiUrl}`);
+  }
+
+  atualizarData(id: number, novaData: string): Observable<ConsultaResumoDTO> {
+    return this.http.put<ConsultaResumoDTO>(`${this.apiUrl}/${id}/data?novaData=${novaData}`, {});
   }
 }

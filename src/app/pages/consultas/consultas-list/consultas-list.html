@@ -1,0 +1,97 @@
+<div class="consultas-list-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Consultas</h1>
+      <p class="page-subtitle">Visualize e gerencie todas as consultas do sistema</p>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Carregando consultas...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-container">
+      <div class="error-icon">⚠️</div>
+      <h3>Erro ao carregar consultas</h3>
+      <p>{{ error() }}</p>
+      <button class="btn btn-primary" (click)="carregarConsultas()">
+        Tentar novamente
+      </button>
+    </div>
+  }
+
+  @if (!isLoading() && !error()) {
+    @if (consultas().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <h3>Nenhuma consulta encontrada</h3>
+        <p>Ainda não há consultas cadastradas no sistema.</p>
+      </div>
+    } @else {
+      <div class="consultas-grid">
+        @for (consulta of consultas(); track consulta.id) {
+          <div class="consulta-card" (click)="verDetalhes(consulta.id)">
+            <div class="card-header">
+              <div class="consulta-id">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span>Consulta #{{ consulta.id }}</span>
+              </div>
+              <div class="consulta-status">
+                <span class="status-badge">Ativa</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="info-row">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <div class="info-content">
+                  <span class="info-label">Paciente</span>
+                  <span class="info-value">ID: {{ consulta.pacienteId }}</span>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <div class="info-content">
+                  <span class="info-label">Data da Consulta</span>
+                  <span class="info-value">{{ formatarData(consulta.dataConsulta) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <button class="btn-ver-detalhes">
+                Ver detalhes
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

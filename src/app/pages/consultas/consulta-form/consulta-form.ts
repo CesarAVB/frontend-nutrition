@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+// src/app/pages/consultas/consulta-form/consulta-form.ts
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { PacienteService } from '../../../services/paciente';
+import { ToastService } from '../../../services/toast';
 
 type TabType = 'estilo-vida' | 'medidas' | 'fotos' | 'dieta';
 
@@ -15,6 +17,9 @@ type TabType = 'estilo-vida' | 'medidas' | 'fotos' | 'dieta';
   styleUrls: ['./consulta-form.scss']
 })
 export class ConsultaFormComponent implements OnInit {
+
+  private toastService = inject(ToastService);
+
   activeTab: TabType = 'estilo-vida';
   pacienteId?: number;
   pacienteNome = 'Selecione um paciente';
@@ -36,6 +41,7 @@ export class ConsultaFormComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private pacienteService: PacienteService
+    
   ) {
     this.estiloVidaForm = this.fb.group({
       objetivo: ['', Validators.required],
@@ -116,14 +122,21 @@ export class ConsultaFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log('onSubmit chamado!');
+    console.log('Estilo de vida válido?', this.estiloVidaForm.valid);
+    console.log('Valores do formulário estilo de vida:', this.estiloVidaForm.value);
+    console.log('Medidas válido?', this.medidasForm.valid);
+    console.log('Valores do formulário medidas:', this.medidasForm.value);
+    
     if (this.estiloVidaForm.valid && this.medidasForm.valid) {
       const consultaData = {
+        pacienteId: this.pacienteId,
         estiloVida: this.estiloVidaForm.value,
         medidas: this.medidasForm.value
       };
       
-      console.log('Dados da consulta:', consultaData);
-      alert('Consulta salva com sucesso!');
+      console.log('Dados da consulta a serem salvos:', consultaData);
+      this.toastService.success('Consulta salva com sucesso!');
       
       if (this.pacienteId) {
         this.router.navigate(['/pacientes', this.pacienteId]);
@@ -131,7 +144,26 @@ export class ConsultaFormComponent implements OnInit {
         this.router.navigate(['/dashboard']);
       }
     } else {
-      alert('Por favor, preencha todos os campos obrigatórios');
+      console.log('Formulários inválidos');
+      
+      // Marcar campos como tocados para exibir erros
+      Object.keys(this.estiloVidaForm.controls).forEach(key => {
+        const control = this.estiloVidaForm.get(key);
+        if (control?.invalid) {
+          console.log(`Campo inválido no estilo de vida: ${key}`, control.errors);
+          control.markAsTouched();
+        }
+      });
+      
+      Object.keys(this.medidasForm.controls).forEach(key => {
+        const control = this.medidasForm.get(key);
+        if (control?.invalid) {
+          console.log(`Campo inválido nas medidas: ${key}`, control.errors);
+          control.markAsTouched();
+        }
+      });
+      
+      this.toastService.warning('Por favor, preencha todos os campos obrigatórios');
     }
   }
 
