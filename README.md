@@ -1,6 +1,18 @@
 # Sistema de Gestão de Pacientes e Consultas
 
 Sistema web para gerenciamento de pacientes e consultas médicas desenvolvido com Angular 19.
+## 📸 Screenshots
+
+### Dashboard
+![Dashboard principal com estatísticas e consultas recentes](./public/images/screenshots/Screenshot_1.png)
+
+### Gestão de Pacientes
+![Listagem de pacientes com busca e filtros](./public/images/screenshots/Screenshot_1.png)
+![Formulário de cadastro/edição de paciente](./public/images/screenshots/Screenshot_1.png)
+
+### Gestão de Consultas
+![Agendamento de consultas](./public/images/screenshots/Screenshot_1.png)
+![Histórico de consultas do paciente](./public/images/screenshots/Screenshot_1.png)
 
 ## 📋 Sobre o Projeto
 
