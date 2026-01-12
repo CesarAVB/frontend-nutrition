@@ -1,22 +1,6 @@
 # Sistema de Gestão de Pacientes e Consultas
 
-Sistema web para gerenciamento de pacientes e consultas médicas desenvolvido com Angular 19.
-## 📸 Screenshots
-
-### Dashboard
-![Dashboard principal com estatísticas e consultas recentes](./public/images/screenshots/Screenshot_1.png)
-
-### Gestão de Pacientes
-![Listagem de pacientes com busca e filtros](./public/images/screenshots/Screenshot_1.png)
-![Formulário de cadastro/edição de paciente](./public/images/screenshots/Screenshot_1.png)
-
-### Gestão de Consultas
-![Agendamento de consultas](./public/images/screenshots/Screenshot_1.png)
-![Histórico de consultas do paciente](./public/images/screenshots/Screenshot_1.png)
-
-## 📋 Sobre o Projeto
-
-Aplicação frontend moderna para controle de pacientes e agendamento de consultas, oferecendo interface intuitiva e responsiva para profissionais da saúde gerenciarem seus atendimentos de forma eficiente.
+Sistema web para controle de pacientes e agendamento de consultas, oferecendo interface intuitiva e responsiva para profissionais da saúde gerenciarem seus atendimentos de forma eficiente.
 
 ## ✨ Funcionalidades
 
@@ -26,16 +10,23 @@ Aplicação frontend moderna para controle de pacientes e agendamento de consult
 - Visualização detalhada do perfil do paciente
 - Edição e remoção de registros
 
+![Listagem de pacientes com busca e filtros](./public/images/screenshots/Screenshot_1.png)
+![Formulário de cadastro/edição de paciente](./public/images/screenshots/Screenshot_3.png)
+
 ### Gestão de Consultas
 - Agendamento de consultas vinculadas a pacientes
 - Visualização por data e horário
 - Registro de objetivos e observações da consulta
 - Histórico completo de consultas por paciente
 
+![Histórico de consultas do paciente](./public/images/screenshots/Screenshot_4.png)
+
 ### Dashboard
 - Visão geral de estatísticas e métricas
 - Consultas recentes
 - Indicadores de atividade
+
+![Dashboard principal com estatísticas e consultas recentes](./public/images/screenshots/Screenshot_2.png)
 
 ## 🚀 Tecnologias Utilizadas
 
