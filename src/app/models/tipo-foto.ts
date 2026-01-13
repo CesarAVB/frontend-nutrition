@@ -1,0 +1,1 @@
+export type TipoFoto = 'ANTERIOR' | 'POSTERIOR' | 'LATERAL_ESQUERDA' | 'LATERAL_DIREITA';

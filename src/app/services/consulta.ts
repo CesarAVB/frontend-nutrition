@@ -7,6 +7,9 @@ import {
   ConsultaDetalhadaDTO,
   ComparativoConsultasDTO,
 } from '../models/consulta.model';
+import { CriarConsultaDTO } from '../models/consulta-create.model';
+import { TipoFoto } from '../models/tipo-foto';
+
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +17,13 @@ import {
 export class ConsultaService {
   private http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/api/v1/consultas`;
+  private readonly apiPhotoUrl = `${environment.apiUrl}/api/v1/registro-fotografico`;
 
-  criar(pacienteId: number): Observable<ConsultaResumoDTO> {
-    return this.http.post<ConsultaResumoDTO>(`${this.apiUrl}/paciente/${pacienteId}`, {});
+  criar(pacienteId: number, dto: CriarConsultaDTO): Observable<ConsultaDetalhadaDTO> {
+    return this.http.post<ConsultaDetalhadaDTO>(
+      `${this.apiUrl}/paciente/${pacienteId}`,
+      dto
+    );
   }
 
   listarPorPaciente(pacienteId: number): Observable<ConsultaResumoDTO[]> {
@@ -52,4 +59,20 @@ export class ConsultaService {
   atualizarData(id: number, novaData: string): Observable<ConsultaResumoDTO> {
     return this.http.put<ConsultaResumoDTO>(`${this.apiUrl}/${id}/data?novaData=${novaData}`, {});
   }
+
+  uploadFotos(consultaId: number, fotos: Record<TipoFoto, File | null>) {
+  const formData = new FormData();
+
+  if (fotos.ANTERIOR) formData.append('fotoAnterior', fotos.ANTERIOR);
+  if (fotos.POSTERIOR) formData.append('fotoPosterior', fotos.POSTERIOR);
+  if (fotos.LATERAL_ESQUERDA) formData.append('fotoLateralEsquerda', fotos.LATERAL_ESQUERDA);
+  if (fotos.LATERAL_DIREITA) formData.append('fotoLateralDireita', fotos.LATERAL_DIREITA);
+
+  return this.http.post<void>(
+    `${this.apiPhotoUrl}/consulta/${consultaId}`,
+    formData
+  );
+}
+
+
 }
