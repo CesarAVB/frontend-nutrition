@@ -68,27 +68,32 @@
     <div class="content-card">
       <div class="card-header">
         <h2 class="card-title">Consultas de Hoje</h2>
-        <span class="badge badge-primary" *ngIf="consultasHoje().length > 0">
-          {{ consultasHoje().length }} {{ consultasHoje().length === 1 ? 'consulta' : 'consultas' }}
-        </span>
+        @if (consultasHoje().length > 0) {
+          <span class="badge badge-primary">
+            {{ consultasHoje().length }} {{ consultasHoje().length === 1 ? 'consulta' : 'consultas' }}
+          </span>
+        }
       </div>
       <div class="card-body">
         <div class="consulta-list">
-          <div class="consulta-item" *ngFor="let consulta of consultasHoje()">
-            <div class="consulta-avatar">
-              <span>{{ consulta.iniciais }}</span>
+          @for (consulta of consultasHoje(); track consulta.id) {
+            <div class="consulta-item">
+              <div class="consulta-avatar">
+                <span>{{ consulta.iniciais }}</span>
+              </div>
+              <div class="consulta-info">
+                <h3 class="consulta-nome">{{ consulta.nomePaciente }}</h3>
+                <p class="consulta-tipo">{{ consulta.objetivo || 'Consulta nutricional' }}</p>
+              </div>
+              <div class="consulta-horario">
+                <span>{{ consulta.horario | date: 'HH:mm' }}</span>
+              </div>
             </div>
-            <div class="consulta-info">
-              <h3 class="consulta-nome">{{ consulta.nomePaciente }}</h3>
-              <p class="consulta-tipo">{{ consulta.objetivo || 'Consulta nutricional' }}</p>
-            </div>
-            <div class="consulta-horario">
-              <span>{{ consulta.horario | date: 'HH:mm' }}</span>
-            </div>
-          </div>
+          }
 
           <!-- Estado Vazio Melhorado -->
-          <div *ngIf="consultasHoje().length === 0" class="empty-state">
+          @if (consultasHoje().length === 0) {
+            <div class="empty-state">
             <div class="empty-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -100,6 +105,7 @@
             <h3 class="empty-title">Nenhuma consulta agendada</h3>
             <p class="empty-message">Você não tem consultas agendadas para hoje</p>
           </div>
+          }
         </div>
       </div>
     </div>
@@ -117,23 +123,26 @@
       </div>
       <div class="card-body">
         <div class="paciente-list">
-          <div class="paciente-item" *ngFor="let paciente of pacientesRecentes()" (click)="verDetalhesPaciente(paciente.id!)">
-            <div class="paciente-avatar">
-              <span>{{ getIniciais(paciente.nomeCompleto) }}</span>
-            </div>
-            <div class="paciente-info">
-              <h3 class="paciente-nome">{{ paciente.nomeCompleto }}</h3>
-              <p class="paciente-data">Última visita: {{ formatarData(paciente.ultimaConsulta) }}</p>
-            </div>
-            <button class="icon-button" (click)="ligarPaciente(paciente.telefoneWhatsapp); $event.stopPropagation()">
+          @for (paciente of pacientesRecentes(); track paciente.id) {
+            <div class="paciente-item" (click)="verDetalhesPaciente(paciente.id!)">
+              <div class="paciente-avatar">
+                <span>{{ getIniciais(paciente.nomeCompleto) }}</span>
+              </div>
+              <div class="paciente-info">
+                <h3 class="paciente-nome">{{ paciente.nomeCompleto }}</h3>
+                <p class="paciente-data">Última visita: {{ formatarData(paciente.ultimaConsulta) }}</p>
+              </div>
+              <button class="icon-button" (click)="ligarPaciente(paciente.telefoneWhatsapp); $event.stopPropagation()">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
               </svg>
             </button>
           </div>
+          }
 
           <!-- Estado Vazio Melhorado -->
-          <div *ngIf="pacientesRecentes().length === 0" class="empty-state">
+          @if (pacientesRecentes().length === 0) {
+            <div class="empty-state">
             <div class="empty-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -152,14 +161,17 @@
               Cadastrar Paciente
             </button>
           </div>
+          }
         </div>
       </div>
     </div>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="isLoading()" class="loading-overlay">
-    <div class="spinner"></div>
-    <p>Carregando dados...</p>
-  </div>
+  @if (isLoading()) {
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Carregando dados...</p>
+    </div>
+  }
 </div>
