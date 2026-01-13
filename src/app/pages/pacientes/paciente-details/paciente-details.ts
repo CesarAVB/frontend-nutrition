@@ -47,8 +47,9 @@ export class PacienteDetailsComponent implements OnInit {
       },
       error: (erro) => {
         console.error('Erro ao carregar paciente:', erro);
-        this.error.set('Erro ao carregar dados do paciente');
+        this.toastService.error('Erro ao carregar dados do paciente');
         this.isLoading.set(false);
+        this.router.navigate(['/pacientes']);
       }
     });
   }
@@ -60,6 +61,7 @@ export class PacienteDetailsComponent implements OnInit {
       },
       error: (erro) => {
         console.error('Erro ao carregar consultas:', erro);
+        this.toastService.error('Erro ao carregar histórico de consultas');
       }
     });
   }
@@ -114,12 +116,12 @@ export class PacienteDetailsComponent implements OnInit {
     
     this.pacienteService.deletar(pacienteId).subscribe({
       next: () => {
-        console.log('Paciente excluído com sucesso');
+        this.toastService.success('Paciente excluído com sucesso!');
         this.router.navigate(['/pacientes']);
       },
       error: (erro) => {
         console.error('Erro ao excluir paciente:', erro);
-        this.error.set('Erro ao excluir paciente. Tente novamente.');
+        this.toastService.error('Erro ao excluir paciente. Tente novamente.');
         this.isLoading.set(false);
         this.mostrarModalExclusao.set(false);
       }

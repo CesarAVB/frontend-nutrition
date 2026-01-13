@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaService } from '../../../services/consulta';
+import { ToastService } from '../../../services/toast';
 import { ConsultaDetalhadaDTO } from '../../../models/consulta.model';
 import { TipoFoto } from '../../../models/tipo-foto';
 
@@ -17,6 +18,7 @@ export class ConsultaDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private consultaService = inject(ConsultaService);
+  private toastService = inject(ToastService);
 
   consulta = signal<ConsultaDetalhadaDTO | null>(null);
   fotos = signal<Record<TipoFoto, string | null>>({
@@ -55,8 +57,9 @@ export class ConsultaDetailsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao carregar consulta:', err);
-        this.error.set('Erro ao carregar dados da consulta');
+        this.toastService.error('Erro ao carregar dados da consulta');
         this.isLoading.set(false);
+        this.voltar();
       }
     });
   }
@@ -100,12 +103,12 @@ export class ConsultaDetailsComponent implements OnInit {
     
     this.consultaService.deletar(consultaId).subscribe({
       next: () => {
-        alert('Consulta excluída com sucesso!');
+        this.toastService.success('Consulta excluída com sucesso!');
         this.voltar();
       },
       error: (erro) => {
         console.error('Erro ao excluir consulta:', erro);
-        this.error.set('Erro ao excluir consulta. Tente novamente.');
+        this.toastService.error('Erro ao excluir consulta. Tente novamente.');
         this.isLoading.set(false);
         this.mostrarModalExclusao.set(false);
       }
@@ -133,7 +136,7 @@ export class ConsultaDetailsComponent implements OnInit {
     const data = this.novaData();
     
     if (!consultaId || !data) {
-      alert('Por favor, selecione uma data válida.');
+      this.toastService.warning('Por favor, selecione uma data válida.');
       return;
     }
 
@@ -144,15 +147,16 @@ export class ConsultaDetailsComponent implements OnInit {
 
     this.consultaService.atualizarData(consultaId, dataISO).subscribe({
       next: () => {
-        alert('Consulta remarcada com sucesso!');
+        this.toastService.success('Consulta remarcada com sucesso!');
         this.carregarConsulta(consultaId);
         this.mostrarModalRemarcar.set(false);
         this.novaData.set('');
       },
       error: (err) => {
         console.error('Erro ao remarcar consulta:', err);
-        this.error.set('Erro ao remarcar consulta. Tente novamente.');
+        this.toastService.error('Erro ao remarcar consulta. Tente novamente.');
         this.isLoading.set(false);
+        this.mostrarModalRemarcar.set(false);
       }
     });
   }

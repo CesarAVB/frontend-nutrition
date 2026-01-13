@@ -1,10 +1,11 @@
 // src/app/pages/pacientes/pacientes-list/pacientes-list.ts
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PacienteService } from '../../../services/paciente';
 import { PacienteDTO } from '../../../models/paciente.model';
+import { ToastService } from '../../../services/toast';
 
 interface PacienteView extends PacienteDTO {
   iniciais: string;
@@ -43,6 +44,8 @@ export class PacientesListComponent implements OnInit {
     private router: Router
   ) {}
 
+  private toastService = inject(ToastService);
+
   ngOnInit(): void {
     this.carregarPacientes();
   }
@@ -59,7 +62,7 @@ export class PacientesListComponent implements OnInit {
       },
       error: (erro) => {
         console.error('Erro ao carregar pacientes:', erro);
-        this.error.set('Erro ao carregar pacientes. Tente novamente.');
+        this.toastService.error('Erro ao carregar pacientes. Tente novamente.');
         this.isLoading.set(false);
       }
     });

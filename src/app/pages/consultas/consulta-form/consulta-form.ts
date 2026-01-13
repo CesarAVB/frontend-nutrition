@@ -209,45 +209,156 @@ export class ConsultaFormComponent implements OnInit {
   // Load Fotos Existentes
   // ============================================
   private loadFotos(consultaId: number): void {
-  this.consultaService.getFotos(consultaId).subscribe({
-    next: (fotos) => {
-      (Object.keys(fotos) as TipoFoto[]).forEach((tipo) => {
-        this.fotos[tipo].preview = fotos[tipo]; // preview é a URL da foto
-      });
-    },
-    error: (err) => {
-      console.error('Erro ao carregar fotos:', err);
-    },
-  });
-}
+    this.consultaService.getFotos(consultaId).subscribe({
+      next: (fotos) => {
+        (Object.keys(fotos) as TipoFoto[]).forEach((tipo) => {
+          this.fotos[tipo].preview = fotos[tipo]; // preview é a URL da foto
+        });
+      },
+      error: (err) => {
+        console.error('Erro ao carregar fotos:', err);
+      },
+    });
+  }
 
   // ============================================
   // Submit Consulta
   // ============================================
   onSubmit(): void {
+    console.log('='.repeat(60));
+    console.log('🚀 INICIANDO SALVAMENTO DE CONSULTA');
+    console.log('='.repeat(60));
+
     if (!this.estiloVidaForm.valid || !this.medidasForm.valid) {
+      console.log('❌ Formulários inválidos:');
+      console.log('  - Estilo de Vida válido?', this.estiloVidaForm.valid);
+      console.log('  - Medidas válido?', this.medidasForm.valid);
+      console.log('  - Erros no Estilo de Vida:', this.estiloVidaForm.errors);
+      console.log('  - Erros nas Medidas:', this.medidasForm.errors);
+
       this.toastService.warning('Preencha todos os campos obrigatórios');
-      Object.keys(this.estiloVidaForm.controls).forEach((k) => this.estiloVidaForm.get(k)?.markAsTouched());
-      Object.keys(this.medidasForm.controls).forEach((k) => this.medidasForm.get(k)?.markAsTouched());
+      Object.keys(this.estiloVidaForm.controls).forEach((k) =>
+        this.estiloVidaForm.get(k)?.markAsTouched()
+      );
+      Object.keys(this.medidasForm.controls).forEach((k) =>
+        this.medidasForm.get(k)?.markAsTouched()
+      );
       return;
     }
 
     if (!this.pacienteId) {
+      console.log('❌ Paciente não identificado');
       this.toastService.error('Paciente não identificado');
       return;
     }
 
+    console.log('✅ Validações OK');
+    console.log('📋 Paciente ID:', this.pacienteId);
+    console.log('📋 Nome do Paciente:', this.pacienteNome);
+    console.log('');
+
+    console.log('📊 DADOS DO QUESTIONÁRIO DE ESTILO DE VIDA:');
+    console.log('-'.repeat(60));
+    let questionarioData = { ...this.estiloVidaForm.value };
+    Object.keys(questionarioData).forEach((key) => {
+      console.log(`  ${key}:`, questionarioData[key]);
+    });
+    console.log('');
+
+    console.log('📏 DADOS DA AVALIAÇÃO FÍSICA:');
+    console.log('-'.repeat(60));
+    let avaliacaoData = { ...this.medidasForm.value };
+    Object.keys(avaliacaoData).forEach((key) => {
+      console.log(`  ${key}:`, avaliacaoData[key]);
+    });
+    console.log('');
+
+    // ✅ CORREÇÕES CRÍTICAS ✅
+
+    // 1️⃣ Remover consultaId (vem na URL, não no body)
+    delete questionarioData.consultaId;
+    delete avaliacaoData.consultaId;
+
+    // 2️⃣ Remover campo intolerancias (não existe no backend)
+    delete questionarioData.intolerancias;
+
+    // 3️⃣ Corrigir ingestaoAguaDiaria (remover letras, converter para número)
+    if (questionarioData.ingestaoAguaDiaria) {
+      const valor = questionarioData.ingestaoAguaDiaria.toString().replace(/[^0-9.]/g, ''); // Remove tudo que não é número ou ponto
+
+      questionarioData.ingestaoAguaDiaria = valor ? parseFloat(valor) : null;
+      console.log('✅ ingestaoAguaDiaria corrigida:', questionarioData.ingestaoAguaDiaria);
+    }
+
     const payload: CriarConsultaDTO = {
-      avaliacaoFisica: this.medidasForm.value,
-      questionarioEstiloVida: this.estiloVidaForm.value,
+      avaliacaoFisica: avaliacaoData,
+      questionarioEstiloVida: questionarioData,
     };
 
+    console.log('📦 PAYLOAD CORRIGIDO ENVIADO AO BACKEND:');
+    console.log('-'.repeat(60));
+    console.log(JSON.stringify(payload, null, 2));
+    console.log('');
+    console.log('🌐 Endpoint:', `POST /api/v1/consultas/paciente/${this.pacienteId}`);
+    console.log('');
+
+    // 1️⃣ Criar consulta
     this.consultaService.criar(this.pacienteId, payload).subscribe({
       next: (consulta) => {
+        console.log('✅ RESPOSTA DO BACKEND:');
+        console.log('-'.repeat(60));
+        console.log('Consulta criada com ID:', consulta.id);
+        console.log('');
+
         this.toastService.success('Consulta salva com sucesso!');
-        this.uploadFotos(consulta.id);
+
+        // 2️⃣ Depois de criar consulta, salvar questionário e avaliação em paralelo
+        console.log('💾 Salvando avaliação e questionário em paralelo...');
+        console.log('');
+
+        forkJoin([
+          this.consultaService.salvarAvaliacao(consulta.id, avaliacaoData),
+          this.consultaService.salvarQuestionario(consulta.id, questionarioData),
+        ]).subscribe({
+          next: (results) => {
+            console.log('✅ Avaliação e Questionário salvos com sucesso!');
+            console.log('Avaliação:', results[0]);
+            console.log('Questionário:', results[1]);
+            console.log('');
+
+            // 3️⃣ Upload de fotos
+            const fotosParaUpload = Object.values(this.fotos).filter(
+              (f) => f.arquivo !== null
+            ).length;
+            if (fotosParaUpload > 0) {
+              console.log(`📸 Iniciando upload de ${fotosParaUpload} foto(s)...`);
+              this.uploadFotos(consulta.id);
+            } else {
+              console.log('✅ Sem fotos para upload');
+              this.router.navigate(['/consultas', consulta.id]);
+              console.log('='.repeat(60));
+            }
+          },
+          error: (error) => {
+            console.error('❌ ERRO AO SALVAR AVALIAÇÃO/QUESTIONÁRIO:');
+            console.error('-'.repeat(60));
+            console.error('Status:', error.status);
+            console.error('Mensagem:', error.message);
+            console.error('Erro completo:', error);
+            console.error('='.repeat(60));
+            this.toastService.error('Erro ao salvar dados adicionais da consulta');
+          },
+        });
       },
-      error: (err) => this.toastService.error('Erro ao salvar consulta'),
+      error: (err) => {
+        console.error('❌ ERRO AO SALVAR CONSULTA:');
+        console.error('-'.repeat(60));
+        console.error('Status:', err.status);
+        console.error('Mensagem:', err.message);
+        console.error('Erro completo:', err);
+        console.error('='.repeat(60));
+        this.toastService.error('Erro ao salvar consulta');
+      },
     });
   }
 
@@ -257,21 +368,20 @@ export class ConsultaFormComponent implements OnInit {
   }
 
   // Adicione dentro da classe ConsultaFormComponent
-isFieldInvalid(form: FormGroup, fieldName: string): boolean {
-  const field = form.get(fieldName);
-  return !!(field && field.invalid && (field.touched || field.dirty));
-}
+  isFieldInvalid(form: FormGroup, fieldName: string): boolean {
+    const field = form.get(fieldName);
+    return !!(field && field.invalid && (field.touched || field.dirty));
+  }
 
-getFieldError(form: FormGroup, fieldName: string): string | null {
-  const field = form.get(fieldName);
-  if (!field || !field.errors) return null;
+  getFieldError(form: FormGroup, fieldName: string): string | null {
+    const field = form.get(fieldName);
+    if (!field || !field.errors) return null;
 
-  if (field.errors['required']) return 'Campo obrigatório';
-  if (field.errors['minlength'])
-    return `Mínimo de ${field.errors['minlength'].requiredLength} caracteres`;
-  if (field.errors['maxlength'])
-    return `Máximo de ${field.errors['maxlength'].requiredLength} caracteres`;
-  return 'Campo inválido';
-}
-
+    if (field.errors['required']) return 'Campo obrigatório';
+    if (field.errors['minlength'])
+      return `Mínimo de ${field.errors['minlength'].requiredLength} caracteres`;
+    if (field.errors['maxlength'])
+      return `Máximo de ${field.errors['maxlength'].requiredLength} caracteres`;
+    return 'Campo inválido';
+  }
 }

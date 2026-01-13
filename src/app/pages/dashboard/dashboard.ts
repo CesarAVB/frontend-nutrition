@@ -1,9 +1,10 @@
 // dashboard.component.ts
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { DashboardService, DashboardStats, ConsultaHoje } from '../../services/dashboard';
 import { PacienteDTO } from '../../models/paciente.model';
+import { ToastService } from '../../services/toast';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -17,6 +18,8 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./dashboard.scss']
 })
 export class DashboardComponent implements OnInit {
+  private toastService = inject(ToastService);
+  
   stats = signal<DashboardStats>({
     totalPacientes: 0,
     consultasHoje: 0,
@@ -53,6 +56,7 @@ export class DashboardComponent implements OnInit {
       },
       error: (erro) => {
         console.error('Erro ao carregar dados:', erro);
+        this.toastService.error('Erro ao carregar dados do dashboard');
         this.isLoading.set(false);
       }
     });

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ConsultaService } from '../../../services/consulta';
 import { ConsultaResumoDTO } from '../../../models/consulta.model';
+import { ToastService } from '../../../services/toast';
 
 @Component({
   selector: 'app-consultas-list',
@@ -14,6 +15,7 @@ import { ConsultaResumoDTO } from '../../../models/consulta.model';
 export class ConsultasListComponent implements OnInit {
   private router = inject(Router);
   private consultaService = inject(ConsultaService);
+  private toastService = inject(ToastService);
 
   consultas = signal<ConsultaResumoDTO[]>([]);
   isLoading = signal(true);
@@ -34,7 +36,7 @@ export class ConsultasListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao carregar consultas:', err);
-        this.error.set('Erro ao carregar consultas. Tente novamente.');
+        this.toastService.error('Erro ao carregar consultas. Tente novamente.');
         this.isLoading.set(false);
       }
     });

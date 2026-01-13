@@ -13,19 +13,24 @@
     </button>
   </div>
 
-  @if (error()) {
-    <div class="alert alert-error">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="8" x2="12" y2="12"></line>
-        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-      </svg>
-      {{ error() }}
-      <button (click)="carregarPacientes()">Tentar novamente</button>
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Carregando pacientes...</p>
     </div>
-  }
-
-  <div class="search-container">
+  } @else if (pacientes().length === 0) {
+    <div class="empty-state-container">
+      <div class="empty-content">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <h3>Nenhum paciente encontrado</h3>
+        <p>Ainda não há pacientes cadastrados no sistema.</p>
+      </div>
+    </div>
+  } @else {
+    <div class="search-container">
     <div class="search-input-wrapper">
       <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"></circle>
@@ -41,12 +46,6 @@
     </div>
   </div>
 
-  @if (isLoading()) {
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p>Carregando pacientes...</p>
-    </div>
-  } @else {
     <div class="table-container">
       <table class="pacientes-table">
         <thead>
@@ -98,11 +97,12 @@
             <tr>
               <td colspan="6" class="empty-state">
                 <div class="empty-content">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.35-4.35"></path>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
                   </svg>
-                  <p>Nenhum paciente encontrado</p>
+                  <h3>Nenhum paciente encontrado</h3>
+                  <p>Nenhum paciente corresponde à sua busca.</p>
                 </div>
               </td>
             </tr>

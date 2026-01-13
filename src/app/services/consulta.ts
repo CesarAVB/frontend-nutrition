@@ -9,6 +9,7 @@ import {
 } from '../models/consulta.model';
 import { CriarConsultaDTO } from '../models/consulta-create.model';
 import { TipoFoto } from '../models/tipo-foto';
+import { AvaliacaoFisicaDTO, QuestionarioEstiloVidaDTO } from '../models/paciente.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,10 +23,7 @@ export class ConsultaService {
   // CRUD Consultas
   // ===============================
   criar(pacienteId: number, dto: CriarConsultaDTO): Observable<ConsultaDetalhadaDTO> {
-    return this.http.post<ConsultaDetalhadaDTO>(
-      `${this.apiUrl}/paciente/${pacienteId}`,
-      dto
-    );
+    return this.http.post<ConsultaDetalhadaDTO>(`${this.apiUrl}/paciente/${pacienteId}`, dto);
   }
 
   listarPorPaciente(pacienteId: number): Observable<ConsultaResumoDTO[]> {
@@ -80,19 +78,44 @@ export class ConsultaService {
   // Buscar Fotos
   // ===============================
   getFotos(consultaId: number): Observable<Record<TipoFoto, string | null>> {
-    return this.http.get<Record<string, string | null>>(
-      `${this.apiPhotoUrl}/consulta/${consultaId}`
-    ).pipe(
-      map((res) => {
-      const fotos = {
-        ANTERIOR: res['fotoAnterior'] || null,
-        POSTERIOR: res['fotoPosterior'] || null,
-        LATERAL_ESQUERDA: res['fotoLateralEsquerda'] || null,
-        LATERAL_DIREITA: res['fotoLateralDireita'] || null,
-      };
-      console.log('Fotos carregadas:', fotos);
-      return fotos;
-      })
+    return this.http
+      .get<Record<string, string | null>>(`${this.apiPhotoUrl}/consulta/${consultaId}`)
+      .pipe(
+        map((res) => {
+          const fotos = {
+            ANTERIOR: res['fotoAnterior'] || null,
+            POSTERIOR: res['fotoPosterior'] || null,
+            LATERAL_ESQUERDA: res['fotoLateralEsquerda'] || null,
+            LATERAL_DIREITA: res['fotoLateralDireita'] || null,
+          };
+          console.log('Fotos carregadas:', fotos);
+          return fotos;
+        })
+      );
+  }
+
+  // ===============================
+  // Salvar Questionário de Estilo de Vida
+  // ===============================
+  salvarQuestionario(
+    consultaId: number,
+    questionario: QuestionarioEstiloVidaDTO
+  ): Observable<QuestionarioEstiloVidaDTO> {
+    const apiUrl = `${environment.apiUrl}/api/v1/questionario`;
+    return this.http.post<QuestionarioEstiloVidaDTO>(
+      `${apiUrl}/consulta/${consultaId}`,
+      questionario
     );
+  }
+
+  // ===============================
+  // Salvar Avaliação Física
+  // ===============================
+  salvarAvaliacao(
+    consultaId: number,
+    avaliacao: AvaliacaoFisicaDTO
+  ): Observable<AvaliacaoFisicaDTO> {
+    const apiUrl = `${environment.apiUrl}/api/v1/avaliacoes`;
+    return this.http.post<AvaliacaoFisicaDTO>(`${apiUrl}/consulta/${consultaId}`, avaliacao);
   }
 }
