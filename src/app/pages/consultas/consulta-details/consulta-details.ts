@@ -32,6 +32,8 @@ export class ConsultaDetailsComponent implements OnInit {
   mostrarModalExclusao = signal(false);
   mostrarModalRemarcar = signal(false);
   novaData = signal('');
+  fotoAmpliada = signal<string | null>(null);
+  tituloFotoAmpliada = signal<string>('');
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
@@ -159,6 +161,18 @@ export class ConsultaDetailsComponent implements OnInit {
         this.mostrarModalRemarcar.set(false);
       }
     });
+  }
+
+  ampliarFoto(url: string, titulo: string): void {
+    console.log('ampliarFoto chamado:', url, titulo);
+    this.fotoAmpliada.set(url);
+    this.tituloFotoAmpliada.set(titulo);
+    console.log('fotoAmpliada signal:', this.fotoAmpliada());
+  }
+
+  fecharFotoAmpliada(): void {
+    this.fotoAmpliada.set(null);
+    this.tituloFotoAmpliada.set('');
   }
 
   formatarData(dataISO: string): string {

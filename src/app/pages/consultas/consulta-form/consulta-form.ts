@@ -335,7 +335,7 @@ export class ConsultaFormComponent implements OnInit {
               this.uploadFotos(consulta.id);
             } else {
               console.log('✅ Sem fotos para upload');
-              this.router.navigate(['/consultas', consulta.id]);
+              this.router.navigate(['/pacientes', this.pacienteId]);
               console.log('='.repeat(60));
             }
           },

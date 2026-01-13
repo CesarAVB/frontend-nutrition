@@ -224,25 +224,41 @@
         @if (fotos()['ANTERIOR']) {
         <div class="foto-item">
           <span>Anterior</span>
-          <img [src]="fotos()['ANTERIOR']" alt="Foto Anterior" class="foto-img">
+          <img 
+            [src]="fotos()['ANTERIOR']" 
+            alt="Foto Anterior" 
+            class="foto-img"
+            (click)="ampliarFoto(fotos()['ANTERIOR']!, 'Foto Anterior')">
         </div>
         }
         @if (fotos()['POSTERIOR']) {
         <div class="foto-item">
           <span>Posterior</span>
-          <img [src]="fotos()['POSTERIOR']" alt="Foto Posterior" class="foto-img">
+          <img 
+            [src]="fotos()['POSTERIOR']" 
+            alt="Foto Posterior" 
+            class="foto-img"
+            (click)="ampliarFoto(fotos()['POSTERIOR']!, 'Foto Posterior')">
         </div>
         }
         @if (fotos()['LATERAL_ESQUERDA']) {
         <div class="foto-item">
           <span>Lateral Esquerda</span>
-          <img [src]="fotos()['LATERAL_ESQUERDA']" alt="Foto Lateral Esquerda" class="foto-img">
+          <img 
+            [src]="fotos()['LATERAL_ESQUERDA']" 
+            alt="Foto Lateral Esquerda" 
+            class="foto-img"
+            (click)="ampliarFoto(fotos()['LATERAL_ESQUERDA']!, 'Foto Lateral Esquerda')">
         </div>
         }
         @if (fotos()['LATERAL_DIREITA']) {
         <div class="foto-item">
           <span>Lateral Direita</span>
-          <img [src]="fotos()['LATERAL_DIREITA']" alt="Foto Lateral Direita" class="foto-img">
+          <img 
+            [src]="fotos()['LATERAL_DIREITA']" 
+            alt="Foto Lateral Direita" 
+            class="foto-img"
+            (click)="ampliarFoto(fotos()['LATERAL_DIREITA']!, 'Foto Lateral Direita')">
         </div>
         }
         @if (!fotos()['ANTERIOR'] && !fotos()['POSTERIOR'] && !fotos()['LATERAL_ESQUERDA'] && !fotos()['LATERAL_DIREITA']) {
@@ -287,6 +303,8 @@
       </div>
     </div>
   </div>
+  }
+
   <!-- Modal de Remarcação -->
   @if (mostrarModalRemarcar()) {
   <div class="modal-overlay" (click)="cancelarRemarcar()">
@@ -328,5 +346,35 @@
       </div>
     </div>
   </div>
-  } }
+  }
+
+  <!-- Modal de foto ampliada -->
+  @if (fotoAmpliada()) {
+  <div class="modal-overlay" (click)="fecharFotoAmpliada()">
+    <div class="modal-foto" (click)="$event.stopPropagation()">
+      <div class="modal-foto-header">
+        <h3>{{ tituloFotoAmpliada() }}</h3>
+        <button class="close-button" (click)="fecharFotoAmpliada()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-foto-body">
+        <img [src]="fotoAmpliada()!" [alt]="tituloFotoAmpliada()">
+      </div>
+    </div>
+  </div>
+  }
 </div>
