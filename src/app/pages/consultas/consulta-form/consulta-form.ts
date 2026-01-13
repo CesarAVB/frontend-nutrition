@@ -8,7 +8,7 @@ import { PacienteService } from '../../../services/paciente';
 import { ToastService } from '../../../services/toast';
 import { ConsultaService } from '../../../services/consulta';
 import { CriarConsultaDTO } from '../../../models/consulta-create.model';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { TipoFoto } from '../../../models/tipo-foto';
 
 type TabType = 'estilo-vida' | 'medidas' | 'fotos' | 'dieta';
@@ -30,6 +30,7 @@ export class ConsultaFormComponent implements OnInit {
   activeTab: TabType = 'estilo-vida';
   pacienteId?: number;
   pacienteNome = 'Selecione um paciente';
+  consultaId?: number;
 
   estiloVidaForm: FormGroup;
   medidasForm: FormGroup;
@@ -125,6 +126,12 @@ export class ConsultaFormComponent implements OnInit {
       this.pacienteId = Number(idFromRoute);
       this.carregarNomePaciente(this.pacienteId);
     }
+
+    const consultaIdFromRoute = this.route.snapshot.queryParams['consultaId'];
+    if (consultaIdFromRoute) {
+      this.consultaId = Number(consultaIdFromRoute);
+      this.loadFotos(this.consultaId);
+    }
   }
 
   carregarNomePaciente(id: number): void {
@@ -143,110 +150,26 @@ export class ConsultaFormComponent implements OnInit {
     this.activeTab = tab;
   }
 
-  onSubmit(): void {
-    console.log('onSubmit chamado!');
-    console.log('Estilo de vida válido?', this.estiloVidaForm.valid);
-    console.log('Valores do formulário estilo de vida:', this.estiloVidaForm.value);
-    console.log('Medidas válido?', this.medidasForm.valid);
-    console.log('Valores do formulário medidas:', this.medidasForm.value);
-
-    if (this.estiloVidaForm.valid && this.medidasForm.valid) {
-      if (!this.pacienteId) {
-        this.toastService.error('Paciente não identificado');
-        return;
-      }
-
-      const payload: CriarConsultaDTO = {
-        avaliacaoFisica: this.medidasForm.value,
-        questionarioEstiloVida: this.estiloVidaForm.value,
-      };
-
-      this.consultaService.criar(this.pacienteId!, payload).subscribe({
-        next: (consulta) => {
-          this.toastService.success('Consulta salva com sucesso!');
-
-          // Fazer upload das fotos se houver alguma selecionada
-          this.uploadFotos(consulta.id);
-        },
-        error: (error) => {
-          console.error('Erro ao salvar consulta:', error);
-          this.toastService.error('Erro ao salvar a consulta');
-        },
-      });
-    } else {
-      console.log('Formulários inválidos');
-
-      // Marcar campos como tocados para exibir erros
-      Object.keys(this.estiloVidaForm.controls).forEach((key) => {
-        const control = this.estiloVidaForm.get(key);
-        if (control?.invalid) {
-          console.log(`Campo inválido no estilo de vida: ${key}`, control.errors);
-          control.markAsTouched();
-        }
-      });
-
-      Object.keys(this.medidasForm.controls).forEach((key) => {
-        const control = this.medidasForm.get(key);
-        if (control?.invalid) {
-          console.log(`Campo inválido nas medidas: ${key}`, control.errors);
-          control.markAsTouched();
-        }
-      });
-
-      this.toastService.warning('Por favor, preencha todos os campos obrigatórios');
-    }
-  }
-
-  cancelar(): void {
-    if (this.pacienteId) {
-      this.router.navigate(['/pacientes', this.pacienteId]);
-    } else {
-      this.location.back();
-    }
-  }
-
-  isFieldInvalid(form: FormGroup, fieldName: string): boolean {
-    const field = form.get(fieldName);
-    return !!(field && field.invalid && field.touched);
-  }
-
-  getFieldError(form: FormGroup, fieldName: string): string {
-    const field = form.get(fieldName);
-    if (field && field.errors && field.touched) {
-      if (field.errors['required']) {
-        return 'Este campo é obrigatório';
-      }
-    }
-    return '';
-  }
-
   // ============================================
-  // Métodos para Upload de Fotos
+  // Upload de Fotos
   // ============================================
-
   onFileSelected(event: Event, tipoFoto: TipoFoto): void {
     const input = event.target as HTMLInputElement;
-
     if (input.files && input.files[0]) {
       const arquivo = input.files[0];
 
-      // Validar tipo de arquivo
       if (!arquivo.type.startsWith('image/')) {
-        this.toastService.error('Por favor, selecione apenas arquivos de imagem');
+        this.toastService.error('Selecione apenas arquivos de imagem');
         return;
       }
 
-      // Validar tamanho (max 5MB)
-      const maxSize = 5 * 1024 * 1024; // 5MB
-      if (arquivo.size > maxSize) {
+      if (arquivo.size > 5 * 1024 * 1024) {
         this.toastService.error('A imagem deve ter no máximo 5MB');
         return;
       }
 
-      // Armazenar arquivo
       this.fotos[tipoFoto].arquivo = arquivo;
 
-      // Criar preview
       const reader = new FileReader();
       reader.onload = (e) => {
         this.fotos[tipoFoto].preview = e.target?.result as string;
@@ -256,23 +179,16 @@ export class ConsultaFormComponent implements OnInit {
   }
 
   removerFoto(tipoFoto: TipoFoto): void {
-    this.fotos[tipoFoto] = {
-      arquivo: null,
-      preview: null,
-      uploading: false,
-    };
+    this.fotos[tipoFoto] = { arquivo: null, preview: null, uploading: false };
   }
 
   triggerFileInput(tipoFoto: TipoFoto): void {
     const inputId = `file-${tipoFoto.toLowerCase().replace(/_/g, '-')}`;
     const input = document.getElementById(inputId) as HTMLInputElement;
-    if (input) {
-      input.click();
-    }
+    if (input) input.click();
   }
 
   private uploadFotos(consultaId: number): void {
-    // Extrair apenas os arquivos do Record
     const arquivos: Record<TipoFoto, File | null> = {
       ANTERIOR: this.fotos.ANTERIOR.arquivo,
       POSTERIOR: this.fotos.POSTERIOR.arquivo,
@@ -280,21 +196,82 @@ export class ConsultaFormComponent implements OnInit {
       LATERAL_DIREITA: this.fotos.LATERAL_DIREITA.arquivo,
     };
 
-    const hasFotos = Object.values(arquivos).some((file) => file !== null);
-    if (!hasFotos) {
-      this.router.navigate(['/pacientes', this.pacienteId]);
+    const hasFotos = Object.values(arquivos).some((f) => f !== null);
+    if (!hasFotos) return;
+
+    this.consultaService.uploadFotos(consultaId, arquivos).subscribe({
+      next: () => this.toastService.success('Fotos enviadas com sucesso!'),
+      error: (err) => this.toastService.error('Erro ao enviar fotos'),
+    });
+  }
+
+  // ============================================
+  // Load Fotos Existentes
+  // ============================================
+  private loadFotos(consultaId: number): void {
+  this.consultaService.getFotos(consultaId).subscribe({
+    next: (fotos) => {
+      (Object.keys(fotos) as TipoFoto[]).forEach((tipo) => {
+        this.fotos[tipo].preview = fotos[tipo]; // preview é a URL da foto
+      });
+    },
+    error: (err) => {
+      console.error('Erro ao carregar fotos:', err);
+    },
+  });
+}
+
+  // ============================================
+  // Submit Consulta
+  // ============================================
+  onSubmit(): void {
+    if (!this.estiloVidaForm.valid || !this.medidasForm.valid) {
+      this.toastService.warning('Preencha todos os campos obrigatórios');
+      Object.keys(this.estiloVidaForm.controls).forEach((k) => this.estiloVidaForm.get(k)?.markAsTouched());
+      Object.keys(this.medidasForm.controls).forEach((k) => this.medidasForm.get(k)?.markAsTouched());
       return;
     }
 
-    this.consultaService.uploadFotos(consultaId, arquivos).subscribe({
-      next: () => {
-        this.toastService.success('Fotos enviadas com sucesso!');
-        this.router.navigate(['/pacientes', this.pacienteId]);
+    if (!this.pacienteId) {
+      this.toastService.error('Paciente não identificado');
+      return;
+    }
+
+    const payload: CriarConsultaDTO = {
+      avaliacaoFisica: this.medidasForm.value,
+      questionarioEstiloVida: this.estiloVidaForm.value,
+    };
+
+    this.consultaService.criar(this.pacienteId, payload).subscribe({
+      next: (consulta) => {
+        this.toastService.success('Consulta salva com sucesso!');
+        this.uploadFotos(consulta.id);
       },
-      error: (error) => {
-        console.error('Erro ao enviar fotos:', error);
-        this.toastService.error('Erro ao enviar algumas fotos');
-      },
+      error: (err) => this.toastService.error('Erro ao salvar consulta'),
     });
   }
+
+  cancelar(): void {
+    if (this.pacienteId) this.router.navigate(['/pacientes', this.pacienteId]);
+    else this.location.back();
+  }
+
+  // Adicione dentro da classe ConsultaFormComponent
+isFieldInvalid(form: FormGroup, fieldName: string): boolean {
+  const field = form.get(fieldName);
+  return !!(field && field.invalid && (field.touched || field.dirty));
+}
+
+getFieldError(form: FormGroup, fieldName: string): string | null {
+  const field = form.get(fieldName);
+  if (!field || !field.errors) return null;
+
+  if (field.errors['required']) return 'Campo obrigatório';
+  if (field.errors['minlength'])
+    return `Mínimo de ${field.errors['minlength'].requiredLength} caracteres`;
+  if (field.errors['maxlength'])
+    return `Máximo de ${field.errors['maxlength'].requiredLength} caracteres`;
+  return 'Campo inválido';
+}
+
 }

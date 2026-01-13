@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaService } from '../../../services/consulta';
 import { ConsultaDetalhadaDTO } from '../../../models/consulta.model';
+import { TipoFoto } from '../../../models/tipo-foto';
 
 @Component({
   selector: 'app-consulta-details',
@@ -18,6 +19,12 @@ export class ConsultaDetailsComponent implements OnInit {
   private consultaService = inject(ConsultaService);
 
   consulta = signal<ConsultaDetalhadaDTO | null>(null);
+  fotos = signal<Record<TipoFoto, string | null>>({
+    ANTERIOR: null,
+    POSTERIOR: null,
+    LATERAL_ESQUERDA: null,
+    LATERAL_DIREITA: null
+  });
   isLoading = signal(true);
   error = signal<string | null>(null);
   mostrarModalExclusao = signal(false);
@@ -38,11 +45,31 @@ export class ConsultaDetailsComponent implements OnInit {
     this.consultaService.buscarCompleta(id).subscribe({
       next: (consulta) => {
         this.consulta.set(consulta);
-        this.isLoading.set(false);
+        
+        // Carregar fotos se houver registro fotográfico
+        if (consulta.registroFotografico) {
+          this.carregarFotos(id);
+        } else {
+          this.isLoading.set(false);
+        }
       },
       error: (err) => {
         console.error('Erro ao carregar consulta:', err);
         this.error.set('Erro ao carregar dados da consulta');
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  carregarFotos(consultaId: number): void {
+    this.consultaService.getFotos(consultaId).subscribe({
+      next: (fotos) => {
+        this.fotos.set(fotos);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Erro ao carregar fotos:', err);
+        // Não exibir erro, apenas continuar sem fotos
         this.isLoading.set(false);
       }
     });

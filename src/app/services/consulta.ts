@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   ConsultaResumoDTO,
@@ -10,7 +10,6 @@ import {
 import { CriarConsultaDTO } from '../models/consulta-create.model';
 import { TipoFoto } from '../models/tipo-foto';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -19,6 +18,9 @@ export class ConsultaService {
   private readonly apiUrl = `${environment.apiUrl}/api/v1/consultas`;
   private readonly apiPhotoUrl = `${environment.apiUrl}/api/v1/registro-fotografico`;
 
+  // ===============================
+  // CRUD Consultas
+  // ===============================
   criar(pacienteId: number, dto: CriarConsultaDTO): Observable<ConsultaDetalhadaDTO> {
     return this.http.post<ConsultaDetalhadaDTO>(
       `${this.apiUrl}/paciente/${pacienteId}`,
@@ -60,19 +62,37 @@ export class ConsultaService {
     return this.http.put<ConsultaResumoDTO>(`${this.apiUrl}/${id}/data?novaData=${novaData}`, {});
   }
 
-  uploadFotos(consultaId: number, fotos: Record<TipoFoto, File | null>) {
-  const formData = new FormData();
+  // ===============================
+  // Upload de Fotos
+  // ===============================
+  uploadFotos(consultaId: number, fotos: Record<TipoFoto, File | null>): Observable<void> {
+    const formData = new FormData();
 
-  if (fotos.ANTERIOR) formData.append('fotoAnterior', fotos.ANTERIOR);
-  if (fotos.POSTERIOR) formData.append('fotoPosterior', fotos.POSTERIOR);
-  if (fotos.LATERAL_ESQUERDA) formData.append('fotoLateralEsquerda', fotos.LATERAL_ESQUERDA);
-  if (fotos.LATERAL_DIREITA) formData.append('fotoLateralDireita', fotos.LATERAL_DIREITA);
+    if (fotos.ANTERIOR) formData.append('fotoAnterior', fotos.ANTERIOR);
+    if (fotos.POSTERIOR) formData.append('fotoPosterior', fotos.POSTERIOR);
+    if (fotos.LATERAL_ESQUERDA) formData.append('fotoLateralEsquerda', fotos.LATERAL_ESQUERDA);
+    if (fotos.LATERAL_DIREITA) formData.append('fotoLateralDireita', fotos.LATERAL_DIREITA);
 
-  return this.http.post<void>(
-    `${this.apiPhotoUrl}/consulta/${consultaId}`,
-    formData
-  );
-}
+    return this.http.post<void>(`${this.apiPhotoUrl}/consulta/${consultaId}`, formData);
+  }
 
-
+  // ===============================
+  // Buscar Fotos
+  // ===============================
+  getFotos(consultaId: number): Observable<Record<TipoFoto, string | null>> {
+    return this.http.get<Record<string, string | null>>(
+      `${this.apiPhotoUrl}/consulta/${consultaId}`
+    ).pipe(
+      map((res) => {
+      const fotos = {
+        ANTERIOR: res['fotoAnterior'] || null,
+        POSTERIOR: res['fotoPosterior'] || null,
+        LATERAL_ESQUERDA: res['fotoLateralEsquerda'] || null,
+        LATERAL_DIREITA: res['fotoLateralDireita'] || null,
+      };
+      console.log('Fotos carregadas:', fotos);
+      return fotos;
+      })
+    );
+  }
 }

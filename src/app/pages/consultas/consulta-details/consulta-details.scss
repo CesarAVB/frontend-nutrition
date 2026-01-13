@@ -168,6 +168,30 @@
       justify-content: center;
       font-size: 3rem;
     }
+
+    .foto-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #e5e7eb;
+      transition: all 0.2s;
+      cursor: pointer;
+
+      &:hover {
+        border-color: #10b981;
+        transform: scale(1.02);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  .no-photos {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #9ca3af;
+    padding: 2rem;
+    font-size: 0.938rem;
   }
 }
 

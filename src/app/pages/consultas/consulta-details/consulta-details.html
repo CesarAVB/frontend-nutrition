@@ -221,26 +221,32 @@
     <div class="info-card fotos-card">
       <h2>Registro Fotográfico</h2>
       <div class="fotos-grid">
-        @if (consulta()?.registroFotografico?.fotoAnterior) {
+        @if (fotos()['ANTERIOR']) {
         <div class="foto-item">
           <span>Anterior</span>
-          <div class="foto-placeholder">📷</div>
+          <img [src]="fotos()['ANTERIOR']" alt="Foto Anterior" class="foto-img">
         </div>
-        } @if (consulta()?.registroFotografico?.fotoPosterior) {
+        }
+        @if (fotos()['POSTERIOR']) {
         <div class="foto-item">
           <span>Posterior</span>
-          <div class="foto-placeholder">📷</div>
+          <img [src]="fotos()['POSTERIOR']" alt="Foto Posterior" class="foto-img">
         </div>
-        } @if (consulta()?.registroFotografico?.fotoLateralEsquerda) {
+        }
+        @if (fotos()['LATERAL_ESQUERDA']) {
         <div class="foto-item">
           <span>Lateral Esquerda</span>
-          <div class="foto-placeholder">📷</div>
+          <img [src]="fotos()['LATERAL_ESQUERDA']" alt="Foto Lateral Esquerda" class="foto-img">
         </div>
-        } @if (consulta()?.registroFotografico?.fotoLateralDireita) {
+        }
+        @if (fotos()['LATERAL_DIREITA']) {
         <div class="foto-item">
           <span>Lateral Direita</span>
-          <div class="foto-placeholder">📷</div>
+          <img [src]="fotos()['LATERAL_DIREITA']" alt="Foto Lateral Direita" class="foto-img">
         </div>
+        }
+        @if (!fotos()['ANTERIOR'] && !fotos()['POSTERIOR'] && !fotos()['LATERAL_ESQUERDA'] && !fotos()['LATERAL_DIREITA']) {
+        <p class="no-photos">Nenhuma foto disponível</p>
         }
       </div>
     </div>
