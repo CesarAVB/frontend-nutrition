@@ -31,7 +31,7 @@
       <p>{{ formatarData(consulta()!.dataConsulta) }}</p>
     </div>
     <div class="header-actions">
-      <button class="btn-primary" (click)="editarConsulta()">
+      <button class="btn-edit" (click)="editarConsulta()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -48,7 +48,7 @@
         </svg>
         Editar
       </button>
-      <button class="btn-secondary" (click)="abrirModalRemarcar()">
+      <button class="btn-warning" (click)="abrirModalRemarcar()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
