@@ -130,8 +130,80 @@ export class ConsultaFormComponent implements OnInit {
     const consultaIdFromRoute = this.route.snapshot.queryParams['consultaId'];
     if (consultaIdFromRoute) {
       this.consultaId = Number(consultaIdFromRoute);
-      this.loadFotos(this.consultaId);
+      this.carregarConsulta(this.consultaId);
     }
+  }
+
+  carregarConsulta(consultaId: number): void {
+    this.consultaService.buscarCompleta(consultaId).subscribe({
+      next: (consulta) => {
+        console.log('Consulta carregada:', consulta);
+        
+        // Preencher formulário de estilo de vida
+        if (consulta.questionario) {
+          this.estiloVidaForm.patchValue({
+            objetivo: consulta.questionario.objetivo || '',
+            frequenciaTreino: consulta.questionario.frequenciaTreino || '',
+            tempoTreino: consulta.questionario.tempoTreino || '',
+            cirurgias: consulta.questionario.cirurgias || '',
+            doencas: consulta.questionario.doencas || '',
+            historicoFamiliar: consulta.questionario.historicoFamiliar || '',
+            medicamentos: consulta.questionario.medicamentos || '',
+            suplementos: consulta.questionario.suplementos || '',
+            usoAnabolizantes: consulta.questionario.usoAnabolizantes || '',
+            fuma: consulta.questionario.fuma || false,
+            frequenciaAlcool: consulta.questionario.frequenciaAlcool || '',
+            funcionamentoIntestino: consulta.questionario.funcionamentoIntestino || '',
+            qualidadeSono: consulta.questionario.qualidadeSono || '',
+            ingestaoAguaDiaria: consulta.questionario.ingestaoAguaDiaria || '',
+            alimentosNaoGosta: consulta.questionario.alimentosNaoGosta || '',
+            frutasPreferidas: consulta.questionario.frutasPreferidas || '',
+            numeroRefeicoesDesejadas: consulta.questionario.numeroRefeicoesDesejadas || '',
+            horarioMaiorFome: consulta.questionario.horarioMaiorFome || '',
+            pressaoArterial: consulta.questionario.pressaoArterial || '',
+          });
+        }
+
+        // Preencher formulário de medidas
+        if (consulta.avaliacaoFisica) {
+          this.medidasForm.patchValue({
+            perimetroOmbro: consulta.avaliacaoFisica.perimetroOmbro || '',
+            perimetroTorax: consulta.avaliacaoFisica.perimetroTorax || '',
+            perimetroCintura: consulta.avaliacaoFisica.perimetroCintura || '',
+            perimetroAbdominal: consulta.avaliacaoFisica.perimetroAbdominal || '',
+            perimetroQuadril: consulta.avaliacaoFisica.perimetroQuadril || '',
+            perimetroBracoDireitoRelax: consulta.avaliacaoFisica.perimetroBracoDireitoRelax || '',
+            perimetroBracoDireitoContr: consulta.avaliacaoFisica.perimetroBracoDireitoContr || '',
+            perimetroBracoEsquerdoRelax: consulta.avaliacaoFisica.perimetroBracoEsquerdoRelax || '',
+            perimetroBracoEsquerdoContr: consulta.avaliacaoFisica.perimetroBracoEsquerdoContr || '',
+            perimetroCoxaDireita: consulta.avaliacaoFisica.perimetroCoxaDireita || '',
+            perimetroCoxaEsquerda: consulta.avaliacaoFisica.perimetroCoxaEsquerda || '',
+            perimetroPanturrilhaDireita: consulta.avaliacaoFisica.perimetroPanturrilhaDireita || '',
+            perimetroPanturrilhaEsquerda: consulta.avaliacaoFisica.perimetroPanturrilhaEsquerda || '',
+            dobraTriceps: consulta.avaliacaoFisica.dobraTriceps || '',
+            dobraAxilarMedia: consulta.avaliacaoFisica.dobraAxilarMedia || '',
+            dobraSubescapular: consulta.avaliacaoFisica.dobraSubescapular || '',
+            dobraAbdominal: consulta.avaliacaoFisica.dobraAbdominal || '',
+            dobraSupraIliaca: consulta.avaliacaoFisica.dobraSupraIliaca || '',
+            dobraCoxa: consulta.avaliacaoFisica.dobraCoxa || '',
+            pesoAtual: consulta.avaliacaoFisica.pesoAtual || '',
+            massaMagra: consulta.avaliacaoFisica.massaMagra || '',
+            massaGorda: consulta.avaliacaoFisica.massaGorda || '',
+            percentualGordura: consulta.avaliacaoFisica.percentualGordura || '',
+            imc: consulta.avaliacaoFisica.imc || '',
+          });
+        }
+
+        // Carregar fotos se houver
+        if (consulta.registroFotografico) {
+          this.loadFotos(consultaId);
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao carregar consulta:', err);
+        this.toastService.error('Erro ao carregar dados da consulta');
+      }
+    });
   }
 
   carregarNomePaciente(id: number): void {

@@ -1,5 +1,6 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConsultaService } from '../../../services/consulta';
 import { ConsultaResumoDTO } from '../../../models/consulta.model';
@@ -8,9 +9,9 @@ import { ToastService } from '../../../services/toast';
 @Component({
   selector: 'app-consultas-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './consultas-list.html',
-  styleUrls: ['./consultas-list.scss']
+  styleUrl: './consultas-list.scss'
 })
 export class ConsultasListComponent implements OnInit {
   private router = inject(Router);
@@ -18,8 +19,21 @@ export class ConsultasListComponent implements OnInit {
   private toastService = inject(ToastService);
 
   consultas = signal<ConsultaResumoDTO[]>([]);
+  searchTerm = signal('');
   isLoading = signal(true);
   error = signal<string | null>(null);
+
+  consultasFiltradas = computed(() => {
+    const termo = this.searchTerm().toLowerCase().trim();
+    const lista = this.consultas();
+    
+    if (!termo) return lista;
+
+    return lista.filter(c => 
+      c.nomePaciente.toLowerCase().includes(termo) ||
+      c.id.toString().includes(termo)
+    );
+  });
 
   ngOnInit(): void {
     this.carregarConsultas();

@@ -89,6 +89,16 @@ export class ConsultaDetailsComponent implements OnInit {
     }
   }
 
+  editarConsulta(): void {
+    const consultaId = this.consulta()?.id;
+    const pacienteId = this.consulta()?.pacienteId;
+    if (consultaId && pacienteId) {
+      this.router.navigate(['/pacientes', pacienteId, 'consulta'], {
+        queryParams: { consultaId }
+      });
+    }
+  }
+
   confirmarExclusao(): void {
     this.mostrarModalExclusao.set(true);
   }
