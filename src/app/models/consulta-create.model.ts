@@ -66,7 +66,7 @@ export interface CriarQuestionarioEstiloVidaDTO {
   medicamentos?: string;
   suplementos?: string;
 
-  usoAnabolizantes: boolean;
+  usoAnabolizantes: string;
   cicloAnabolizantes?: string;
   duracaoAnabolizantes?: string;
 

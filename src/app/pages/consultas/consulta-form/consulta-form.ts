@@ -8,6 +8,7 @@ import { PacienteService } from '../../../services/paciente';
 import { ToastService } from '../../../services/toast';
 import { ConsultaService } from '../../../services/consulta';
 import { CriarConsultaDTO } from '../../../models/consulta-create.model';
+import { ConsultaDetalhadaDTO } from '../../../models/paciente.model';
 import { forkJoin } from 'rxjs';
 import { TipoFoto } from '../../../models/tipo-foto';
 
@@ -90,6 +91,7 @@ export class ConsultaFormComponent implements OnInit {
     });
 
     this.medidasForm = this.fb.group({
+      altura: [''],
       perimetroOmbro: [''],
       perimetroTorax: [''],
       perimetroCintura: [''],
@@ -136,7 +138,7 @@ export class ConsultaFormComponent implements OnInit {
 
   carregarConsulta(consultaId: number): void {
     this.consultaService.buscarCompleta(consultaId).subscribe({
-      next: (consulta) => {
+      next: (consulta: ConsultaDetalhadaDTO) => {
         console.log('Consulta carregada:', consulta);
         
         // Preencher formulário de estilo de vida
@@ -167,6 +169,7 @@ export class ConsultaFormComponent implements OnInit {
         // Preencher formulário de medidas
         if (consulta.avaliacaoFisica) {
           this.medidasForm.patchValue({
+            altura: consulta.avaliacaoFisica.altura || '',
             perimetroOmbro: consulta.avaliacaoFisica.perimetroOmbro || '',
             perimetroTorax: consulta.avaliacaoFisica.perimetroTorax || '',
             perimetroCintura: consulta.avaliacaoFisica.perimetroCintura || '',

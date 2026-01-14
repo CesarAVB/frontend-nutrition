@@ -60,7 +60,7 @@ export interface QuestionarioEstiloVidaDTO {
   historicoFamiliar?: string;
   medicamentos?: string;
   suplementos?: string;
-  usoAnabolizantes?: boolean;
+  usoAnabolizantes?: string;
   cicloAnabolizantes?: string;
   duracaoAnabolizantes?: string;
   fuma?: boolean;

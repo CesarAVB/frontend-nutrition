@@ -36,6 +36,7 @@ export interface ConsultaDetalhadaDTO {
 export interface AvaliacaoFisicaDTO {
   id?: number;
   consultaId: number;
+  altura?: number;
   
   // Perímetros (cm)
   perimetroOmbro?: number;
@@ -87,7 +88,7 @@ export interface QuestionarioEstiloVidaDTO {
   historicoFamiliar?: string;
   medicamentos?: string;
   suplementos?: string;
-  usoAnabolizantes?: boolean;
+  usoAnabolizantes?: string;
   cicloAnabolizantes?: string;
   duracaoAnabolizantes?: string;
   
