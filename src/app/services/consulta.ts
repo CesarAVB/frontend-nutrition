@@ -92,7 +92,6 @@ export class ConsultaService {
             LATERAL_ESQUERDA: res['fotoLateralEsquerda'] || null,
             LATERAL_DIREITA: res['fotoLateralDireita'] || null,
           };
-          console.log('Fotos carregadas:', fotos);
           return fotos;
         })
       );
@@ -121,11 +120,6 @@ export class ConsultaService {
   ): Observable<AvaliacaoFisicaDTO> {
     const apiUrl = `${environment.apiUrl}/api/v1/avaliacoes`;
     const url = `${apiUrl}/consulta/${consultaId}`;
-    
-    console.log('📤 ConsultaService.salvarAvaliacao()');
-    console.log('   URL:', url);
-    console.log('   Payload:', JSON.stringify(avaliacao, null, 2));
-    
     return this.http.post<AvaliacaoFisicaDTO>(url, avaliacao);
   }
 }

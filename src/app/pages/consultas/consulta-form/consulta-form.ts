@@ -139,8 +139,6 @@ export class ConsultaFormComponent implements OnInit {
   carregarConsulta(consultaId: number): void {
     this.consultaService.buscarCompleta(consultaId).subscribe({
       next: (consulta: ConsultaDetalhadaDTO) => {
-        console.log('Consulta carregada:', consulta);
-        
         // Preencher formulário de estilo de vida
         if (consulta.questionario) {
           this.estiloVidaForm.patchValue({
@@ -203,7 +201,7 @@ export class ConsultaFormComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Erro ao carregar consulta:', err);
+
         this.toastService.error('Erro ao carregar dados da consulta');
       }
     });
@@ -215,7 +213,6 @@ export class ConsultaFormComponent implements OnInit {
         this.pacienteNome = paciente.nomeCompleto;
       },
       error: (erro) => {
-        console.error('Erro ao carregar nome do paciente:', erro);
         this.pacienteNome = `Paciente ${id}`;
       },
     });
@@ -277,17 +274,12 @@ export class ConsultaFormComponent implements OnInit {
     this.consultaService.uploadFotos(consultaId, arquivos).subscribe({
       next: () => {
         this.toastService.success('Fotos enviadas com sucesso!');
-        console.log('✅ Upload de fotos concluído. Redirecionando...');
         this.router.navigate(['/pacientes', this.pacienteId]);
-        console.log('='.repeat(60));
       },
       error: (err) => {
         this.toastService.error('Erro ao enviar fotos');
-        console.error('❌ Erro ao fazer upload das fotos:', err);
         // Mesmo com erro no upload de fotos, redirecionar para a página do paciente
-        console.log('⚠️ Redirecionando mesmo com erro no upload...');
         this.router.navigate(['/pacientes', this.pacienteId]);
-        console.log('='.repeat(60));
       },
     });
   }
@@ -303,7 +295,7 @@ export class ConsultaFormComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('Erro ao carregar fotos:', err);
+        // Silenciosamente ignorar erros de carregamento de fotos
       },
     });
   }
@@ -312,17 +304,7 @@ export class ConsultaFormComponent implements OnInit {
   // Submit Consulta
   // ============================================
   onSubmit(): void {
-    console.log('='.repeat(60));
-    console.log('🚀 INICIANDO SALVAMENTO DE CONSULTA');
-    console.log('='.repeat(60));
-
     if (!this.estiloVidaForm.valid || !this.medidasForm.valid) {
-      console.log('❌ Formulários inválidos:');
-      console.log('  - Estilo de Vida válido?', this.estiloVidaForm.valid);
-      console.log('  - Medidas válido?', this.medidasForm.valid);
-      console.log('  - Erros no Estilo de Vida:', this.estiloVidaForm.errors);
-      console.log('  - Erros nas Medidas:', this.medidasForm.errors);
-
       this.toastService.warning('Preencha todos os campos obrigatórios');
       Object.keys(this.estiloVidaForm.controls).forEach((k) =>
         this.estiloVidaForm.get(k)?.markAsTouched()
@@ -334,31 +316,12 @@ export class ConsultaFormComponent implements OnInit {
     }
 
     if (!this.pacienteId) {
-      console.log('❌ Paciente não identificado');
       this.toastService.error('Paciente não identificado');
       return;
     }
 
-    console.log('✅ Validações OK');
-    console.log('📋 Paciente ID:', this.pacienteId);
-    console.log('📋 Nome do Paciente:', this.pacienteNome);
-    console.log('');
-
-    console.log('📊 DADOS DO QUESTIONÁRIO DE ESTILO DE VIDA:');
-    console.log('-'.repeat(60));
     let questionarioData = { ...this.estiloVidaForm.value };
-    Object.keys(questionarioData).forEach((key) => {
-      console.log(`  ${key}:`, questionarioData[key]);
-    });
-    console.log('');
-
-    console.log('📏 DADOS DA AVALIAÇÃO FÍSICA:');
-    console.log('-'.repeat(60));
     let avaliacaoData = { ...this.medidasForm.value };
-    Object.keys(avaliacaoData).forEach((key) => {
-      console.log(`  ${key}:`, avaliacaoData[key]);
-    });
-    console.log('');
 
     // ✅ CORREÇÕES CRÍTICAS ✅
 
@@ -369,31 +332,19 @@ export class ConsultaFormComponent implements OnInit {
     // 2️⃣ Remover campo intolerancias (não existe no backend)
     delete questionarioData.intolerancias;
 
-    // 3️⃣ Corrigir ingestaoAguaDiaria (remover letras, converter para número)
+    // Corrigir ingestaoAguaDiaria (remover letras, converter para número)
     if (questionarioData.ingestaoAguaDiaria) {
-      const valor = questionarioData.ingestaoAguaDiaria.toString().replace(/[^0-9.]/g, ''); // Remove tudo que não é número ou ponto
-
+      const valor = questionarioData.ingestaoAguaDiaria.toString().replace(/[^0-9.]/g, '');
       questionarioData.ingestaoAguaDiaria = valor ? parseFloat(valor) : null;
-      console.log('✅ ingestaoAguaDiaria corrigida:', questionarioData.ingestaoAguaDiaria);
     }
 
     const payload: CriarConsultaDTO = {
       avaliacaoFisica: avaliacaoData,
       questionarioEstiloVida: questionarioData,
     };
-
-    console.log('📦 PAYLOAD CORRIGIDO ENVIADO AO BACKEND:');
-    console.log('-'.repeat(60));
-    console.log(JSON.stringify(payload, null, 2));
-    console.log('');
     
     // Verificar se é edição ou criação
     const isEdicao = !!this.consultaId;
-    const endpoint = isEdicao 
-      ? `PUT /api/v1/consultas/${this.consultaId}` 
-      : `POST /api/v1/consultas/paciente/${this.pacienteId}`;
-    console.log('🌐 Endpoint:', endpoint);
-    console.log('');
 
     // 1️⃣ Criar ou atualizar consulta
     const consultaRequest$ = isEdicao 
@@ -402,92 +353,36 @@ export class ConsultaFormComponent implements OnInit {
 
     consultaRequest$.subscribe({
       next: (consulta) => {
-        console.log('✅ RESPOSTA DO BACKEND:');
-        console.log('-'.repeat(60));
-        console.log(isEdicao ? 'Consulta atualizada com ID:' : 'Consulta criada com ID:', consulta.id);
-        console.log('');
-
         this.toastService.success(isEdicao ? 'Consulta atualizada com sucesso!' : 'Consulta salva com sucesso!');
 
         // 2️⃣ Apenas para criação (não para edição), salvar questionário e avaliação em paralelo
         // Em modo de edição, esses dados já foram atualizados no PUT
         if (!isEdicao) {
-          console.log('💾 Salvando avaliação e questionário em paralelo...');
-          console.log('');
-          
-          console.log('🔍 DEBUG - Dados da avaliação a enviar:');
-          console.log(JSON.stringify(avaliacaoData, null, 2));
-          console.log('');
-          console.log('🔍 DEBUG - Dados do questionário a enviar:');
-          console.log(JSON.stringify(questionarioData, null, 2));
-          console.log('');
-
           forkJoin([
             this.consultaService.salvarAvaliacao(consulta.id, avaliacaoData),
             this.consultaService.salvarQuestionario(consulta.id, questionarioData),
           ]).subscribe({
-            next: (results) => {
-              console.log('✅ Avaliação e Questionário salvos com sucesso!');
-              console.log('Avaliação:', results[0]);
-              console.log('Questionário:', results[1]);
-              console.log('');
-
+            next: () => {
               // 3️⃣ Upload de fotos
               const fotosParaUpload = Object.values(this.fotos).filter(
                 (f) => f.arquivo !== null
               ).length;
               if (fotosParaUpload > 0) {
-                console.log(`📸 Iniciando upload de ${fotosParaUpload} foto(s)...`);
                 this.uploadFotos(consulta.id);
               } else {
-                console.log('✅ Sem fotos para upload');
                 this.router.navigate(['/pacientes', this.pacienteId]);
-                console.log('='.repeat(60));
               }
             },
             error: (error) => {
-              console.error('❌ ERRO AO SALVAR AVALIAÇÃO/QUESTIONÁRIO:');
-              console.error('-'.repeat(60));
-              console.error('Status:', error.status);
-              console.error('Mensagem:', error.message);
-              console.error('Status Text:', error.statusText);
-              console.error('URL:', error.url);
-              
-              // Tentar extrair resposta do erro
-              if (error.error) {
-                console.error('Resposta do erro:', error.error);
-                if (typeof error.error === 'string') {
-                  console.error('Texto da resposta:', error.error);
-                } else if (error.error.message) {
-                  console.error('Mensagem de erro:', error.error.message);
-                }
-              }
-              
-              // Log do payload que foi enviado
-              console.error('');
-              console.error('📤 Dados enviados para a avaliação:');
-              console.error(JSON.stringify(avaliacaoData, null, 2));
-              console.error('');
-              
-              console.error('Erro completo:', error);
-              console.error('='.repeat(60));
               this.toastService.error('Erro ao salvar dados adicionais da consulta');
             },
           });
         } else {
           // Em modo de edição, apenas redirecionar
-          console.log('✅ Edição concluída. Redirecionando...');
           this.router.navigate(['/pacientes', this.pacienteId]);
-          console.log('='.repeat(60));
         }
       },
       error: (err) => {
-        console.error('❌ ERRO AO SALVAR CONSULTA:');
-        console.error('-'.repeat(60));
-        console.error('Status:', err.status);
-        console.error('Mensagem:', err.message);
-        console.error('Erro completo:', err);
-        console.error('='.repeat(60));
         this.toastService.error('Erro ao salvar consulta');
       },
     });
