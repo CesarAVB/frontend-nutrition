@@ -348,8 +348,8 @@ export class ConsultaFormComponent implements OnInit {
 
     // 1️⃣ Criar ou atualizar consulta
     const consultaRequest$ = isEdicao 
-      ? this.consultaService.atualizar(this.consultaId, payload)
-      : this.consultaService.criar(this.pacienteId, payload);
+      ? this.consultaService.atualizar(this.consultaId!, payload)
+      : this.consultaService.criar(this.pacienteId!, payload);
 
     consultaRequest$.subscribe({
       next: (consulta) => {
