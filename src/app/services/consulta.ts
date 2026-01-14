@@ -60,6 +60,10 @@ export class ConsultaService {
     return this.http.put<ConsultaResumoDTO>(`${this.apiUrl}/${id}/data?novaData=${novaData}`, {});
   }
 
+  atualizar(id: number, dto: CriarConsultaDTO): Observable<ConsultaDetalhadaDTO> {
+    return this.http.put<ConsultaDetalhadaDTO>(`${this.apiUrl}/${id}`, dto);
+  }
+
   // ===============================
   // Upload de Fotos
   // ===============================

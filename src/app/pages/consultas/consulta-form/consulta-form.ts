@@ -275,8 +275,20 @@ export class ConsultaFormComponent implements OnInit {
     if (!hasFotos) return;
 
     this.consultaService.uploadFotos(consultaId, arquivos).subscribe({
-      next: () => this.toastService.success('Fotos enviadas com sucesso!'),
-      error: (err) => this.toastService.error('Erro ao enviar fotos'),
+      next: () => {
+        this.toastService.success('Fotos enviadas com sucesso!');
+        console.log('✅ Upload de fotos concluído. Redirecionando...');
+        this.router.navigate(['/pacientes', this.pacienteId]);
+        console.log('='.repeat(60));
+      },
+      error: (err) => {
+        this.toastService.error('Erro ao enviar fotos');
+        console.error('❌ Erro ao fazer upload das fotos:', err);
+        // Mesmo com erro no upload de fotos, redirecionar para a página do paciente
+        console.log('⚠️ Redirecionando mesmo com erro no upload...');
+        this.router.navigate(['/pacientes', this.pacienteId]);
+        console.log('='.repeat(60));
+      },
     });
   }
 
@@ -374,82 +386,100 @@ export class ConsultaFormComponent implements OnInit {
     console.log('-'.repeat(60));
     console.log(JSON.stringify(payload, null, 2));
     console.log('');
-    console.log('🌐 Endpoint:', `POST /api/v1/consultas/paciente/${this.pacienteId}`);
+    
+    // Verificar se é edição ou criação
+    const isEdicao = !!this.consultaId;
+    const endpoint = isEdicao 
+      ? `PUT /api/v1/consultas/${this.consultaId}` 
+      : `POST /api/v1/consultas/paciente/${this.pacienteId}`;
+    console.log('🌐 Endpoint:', endpoint);
     console.log('');
 
-    // 1️⃣ Criar consulta
-    this.consultaService.criar(this.pacienteId, payload).subscribe({
+    // 1️⃣ Criar ou atualizar consulta
+    const consultaRequest$ = isEdicao 
+      ? this.consultaService.atualizar(this.consultaId, payload)
+      : this.consultaService.criar(this.pacienteId, payload);
+
+    consultaRequest$.subscribe({
       next: (consulta) => {
         console.log('✅ RESPOSTA DO BACKEND:');
         console.log('-'.repeat(60));
-        console.log('Consulta criada com ID:', consulta.id);
+        console.log(isEdicao ? 'Consulta atualizada com ID:' : 'Consulta criada com ID:', consulta.id);
         console.log('');
 
-        this.toastService.success('Consulta salva com sucesso!');
+        this.toastService.success(isEdicao ? 'Consulta atualizada com sucesso!' : 'Consulta salva com sucesso!');
 
-        // 2️⃣ Depois de criar consulta, salvar questionário e avaliação em paralelo
-        console.log('💾 Salvando avaliação e questionário em paralelo...');
-        console.log('');
-        
-        console.log('🔍 DEBUG - Dados da avaliação a enviar:');
-        console.log(JSON.stringify(avaliacaoData, null, 2));
-        console.log('');
-        console.log('🔍 DEBUG - Dados do questionário a enviar:');
-        console.log(JSON.stringify(questionarioData, null, 2));
-        console.log('');
+        // 2️⃣ Apenas para criação (não para edição), salvar questionário e avaliação em paralelo
+        // Em modo de edição, esses dados já foram atualizados no PUT
+        if (!isEdicao) {
+          console.log('💾 Salvando avaliação e questionário em paralelo...');
+          console.log('');
+          
+          console.log('🔍 DEBUG - Dados da avaliação a enviar:');
+          console.log(JSON.stringify(avaliacaoData, null, 2));
+          console.log('');
+          console.log('🔍 DEBUG - Dados do questionário a enviar:');
+          console.log(JSON.stringify(questionarioData, null, 2));
+          console.log('');
 
-        forkJoin([
-          this.consultaService.salvarAvaliacao(consulta.id, avaliacaoData),
-          this.consultaService.salvarQuestionario(consulta.id, questionarioData),
-        ]).subscribe({
-          next: (results) => {
-            console.log('✅ Avaliação e Questionário salvos com sucesso!');
-            console.log('Avaliação:', results[0]);
-            console.log('Questionário:', results[1]);
-            console.log('');
+          forkJoin([
+            this.consultaService.salvarAvaliacao(consulta.id, avaliacaoData),
+            this.consultaService.salvarQuestionario(consulta.id, questionarioData),
+          ]).subscribe({
+            next: (results) => {
+              console.log('✅ Avaliação e Questionário salvos com sucesso!');
+              console.log('Avaliação:', results[0]);
+              console.log('Questionário:', results[1]);
+              console.log('');
 
-            // 3️⃣ Upload de fotos
-            const fotosParaUpload = Object.values(this.fotos).filter(
-              (f) => f.arquivo !== null
-            ).length;
-            if (fotosParaUpload > 0) {
-              console.log(`📸 Iniciando upload de ${fotosParaUpload} foto(s)...`);
-              this.uploadFotos(consulta.id);
-            } else {
-              console.log('✅ Sem fotos para upload');
-              this.router.navigate(['/pacientes', this.pacienteId]);
-              console.log('='.repeat(60));
-            }
-          },
-          error: (error) => {
-            console.error('❌ ERRO AO SALVAR AVALIAÇÃO/QUESTIONÁRIO:');
-            console.error('-'.repeat(60));
-            console.error('Status:', error.status);
-            console.error('Mensagem:', error.message);
-            console.error('Status Text:', error.statusText);
-            console.error('URL:', error.url);
-            
-            // Tentar extrair resposta do erro
-            if (error.error) {
-              console.error('Resposta do erro:', error.error);
-              if (typeof error.error === 'string') {
-                console.error('Texto da resposta:', error.error);
-              } else if (error.error.message) {
-                console.error('Mensagem de erro:', error.error.message);
+              // 3️⃣ Upload de fotos
+              const fotosParaUpload = Object.values(this.fotos).filter(
+                (f) => f.arquivo !== null
+              ).length;
+              if (fotosParaUpload > 0) {
+                console.log(`📸 Iniciando upload de ${fotosParaUpload} foto(s)...`);
+                this.uploadFotos(consulta.id);
+              } else {
+                console.log('✅ Sem fotos para upload');
+                this.router.navigate(['/pacientes', this.pacienteId]);
+                console.log('='.repeat(60));
               }
-            }
-            
-            // Log do payload que foi enviado
-            console.error('');
-            console.error('📤 Dados enviados para a avaliação:');
-            console.error(JSON.stringify(avaliacaoData, null, 2));
-            console.error('');
-            
-            console.error('Erro completo:', error);
-            console.error('='.repeat(60));
-            this.toastService.error('Erro ao salvar dados adicionais da consulta');
-          },
-        });
+            },
+            error: (error) => {
+              console.error('❌ ERRO AO SALVAR AVALIAÇÃO/QUESTIONÁRIO:');
+              console.error('-'.repeat(60));
+              console.error('Status:', error.status);
+              console.error('Mensagem:', error.message);
+              console.error('Status Text:', error.statusText);
+              console.error('URL:', error.url);
+              
+              // Tentar extrair resposta do erro
+              if (error.error) {
+                console.error('Resposta do erro:', error.error);
+                if (typeof error.error === 'string') {
+                  console.error('Texto da resposta:', error.error);
+                } else if (error.error.message) {
+                  console.error('Mensagem de erro:', error.error.message);
+                }
+              }
+              
+              // Log do payload que foi enviado
+              console.error('');
+              console.error('📤 Dados enviados para a avaliação:');
+              console.error(JSON.stringify(avaliacaoData, null, 2));
+              console.error('');
+              
+              console.error('Erro completo:', error);
+              console.error('='.repeat(60));
+              this.toastService.error('Erro ao salvar dados adicionais da consulta');
+            },
+          });
+        } else {
+          // Em modo de edição, apenas redirecionar
+          console.log('✅ Edição concluída. Redirecionando...');
+          this.router.navigate(['/pacientes', this.pacienteId]);
+          console.log('='.repeat(60));
+        }
       },
       error: (err) => {
         console.error('❌ ERRO AO SALVAR CONSULTA:');
