@@ -116,6 +116,12 @@ export class ConsultaService {
     avaliacao: AvaliacaoFisicaDTO
   ): Observable<AvaliacaoFisicaDTO> {
     const apiUrl = `${environment.apiUrl}/api/v1/avaliacoes`;
-    return this.http.post<AvaliacaoFisicaDTO>(`${apiUrl}/consulta/${consultaId}`, avaliacao);
+    const url = `${apiUrl}/consulta/${consultaId}`;
+    
+    console.log('📤 ConsultaService.salvarAvaliacao()');
+    console.log('   URL:', url);
+    console.log('   Payload:', JSON.stringify(avaliacao, null, 2));
+    
+    return this.http.post<AvaliacaoFisicaDTO>(url, avaliacao);
   }
 }

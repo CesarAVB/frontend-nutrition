@@ -390,6 +390,13 @@ export class ConsultaFormComponent implements OnInit {
         // 2️⃣ Depois de criar consulta, salvar questionário e avaliação em paralelo
         console.log('💾 Salvando avaliação e questionário em paralelo...');
         console.log('');
+        
+        console.log('🔍 DEBUG - Dados da avaliação a enviar:');
+        console.log(JSON.stringify(avaliacaoData, null, 2));
+        console.log('');
+        console.log('🔍 DEBUG - Dados do questionário a enviar:');
+        console.log(JSON.stringify(questionarioData, null, 2));
+        console.log('');
 
         forkJoin([
           this.consultaService.salvarAvaliacao(consulta.id, avaliacaoData),
@@ -419,6 +426,25 @@ export class ConsultaFormComponent implements OnInit {
             console.error('-'.repeat(60));
             console.error('Status:', error.status);
             console.error('Mensagem:', error.message);
+            console.error('Status Text:', error.statusText);
+            console.error('URL:', error.url);
+            
+            // Tentar extrair resposta do erro
+            if (error.error) {
+              console.error('Resposta do erro:', error.error);
+              if (typeof error.error === 'string') {
+                console.error('Texto da resposta:', error.error);
+              } else if (error.error.message) {
+                console.error('Mensagem de erro:', error.error.message);
+              }
+            }
+            
+            // Log do payload que foi enviado
+            console.error('');
+            console.error('📤 Dados enviados para a avaliação:');
+            console.error(JSON.stringify(avaliacaoData, null, 2));
+            console.error('');
+            
             console.error('Erro completo:', error);
             console.error('='.repeat(60));
             this.toastService.error('Erro ao salvar dados adicionais da consulta');
