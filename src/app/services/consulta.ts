@@ -78,6 +78,17 @@ export class ConsultaService {
     return this.http.post<void>(`${this.apiPhotoUrl}/consulta/${consultaId}`, formData);
   }
 
+  atualizarFotos(consultaId: number, fotos: Record<TipoFoto, File | null>): Observable<void> {
+    const formData = new FormData();
+
+    if (fotos.ANTERIOR) formData.append('fotoAnterior', fotos.ANTERIOR);
+    if (fotos.POSTERIOR) formData.append('fotoPosterior', fotos.POSTERIOR);
+    if (fotos.LATERAL_ESQUERDA) formData.append('fotoLateralEsquerda', fotos.LATERAL_ESQUERDA);
+    if (fotos.LATERAL_DIREITA) formData.append('fotoLateralDireita', fotos.LATERAL_DIREITA);
+
+    return this.http.put<void>(`${this.apiPhotoUrl}/consulta/${consultaId}`, formData);
+  }
+
   // ===============================
   // Buscar Fotos
   // ===============================
@@ -111,6 +122,17 @@ export class ConsultaService {
     );
   }
 
+  atualizarQuestionario(
+    consultaId: number,
+    questionario: QuestionarioEstiloVidaDTO
+  ): Observable<QuestionarioEstiloVidaDTO> {
+    const apiUrl = `${environment.apiUrl}/api/v1/questionario`;
+    return this.http.put<QuestionarioEstiloVidaDTO>(
+      `${apiUrl}/consulta/${consultaId}`,
+      questionario
+    );
+  }
+
   // ===============================
   // Salvar Avaliação Física
   // ===============================
@@ -121,5 +143,14 @@ export class ConsultaService {
     const apiUrl = `${environment.apiUrl}/api/v1/avaliacoes`;
     const url = `${apiUrl}/consulta/${consultaId}`;
     return this.http.post<AvaliacaoFisicaDTO>(url, avaliacao);
+  }
+
+  atualizarAvaliacao(
+    consultaId: number,
+    avaliacao: AvaliacaoFisicaDTO
+  ): Observable<AvaliacaoFisicaDTO> {
+    const apiUrl = `${environment.apiUrl}/api/v1/avaliacoes`;
+    const url = `${apiUrl}/consulta/${consultaId}`;
+    return this.http.put<AvaliacaoFisicaDTO>(url, avaliacao);
   }
 }

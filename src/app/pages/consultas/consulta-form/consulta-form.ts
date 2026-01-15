@@ -346,24 +346,56 @@ export class ConsultaFormComponent implements OnInit {
     // Verificar se é edição ou criação
     const isEdicao = !!this.consultaId;
 
-    // 1️⃣ Criar ou atualizar consulta
-    const consultaRequest$ = isEdicao 
-      ? this.consultaService.atualizar(this.consultaId!, payload)
-      : this.consultaService.criar(this.pacienteId!, payload);
+    if (isEdicao) {
+      // MODO EDIÇÃO: Chamar os 3 endpoints PUT em paralelo
+      forkJoin([
+        this.consultaService.atualizar(this.consultaId!, payload),
+        this.consultaService.atualizarQuestionario(this.consultaId!, questionarioData),
+        this.consultaService.atualizarAvaliacao(this.consultaId!, avaliacaoData),
+      ]).subscribe({
+        next: () => {
+          // Verificar se há fotos para atualizar
+          const arquivosFotos: Record<TipoFoto, File | null> = {
+            ANTERIOR: this.fotos.ANTERIOR.arquivo,
+            POSTERIOR: this.fotos.POSTERIOR.arquivo,
+            LATERAL_ESQUERDA: this.fotos.LATERAL_ESQUERDA.arquivo,
+            LATERAL_DIREITA: this.fotos.LATERAL_DIREITA.arquivo,
+          };
+          const hasFotosNovas = Object.values(arquivosFotos).some((f) => f !== null);
+          
+          if (hasFotosNovas) {
+            this.consultaService.atualizarFotos(this.consultaId!, arquivosFotos).subscribe({
+              next: () => {
+                this.toastService.success('Consulta atualizada com sucesso!');
+                this.router.navigate(['/pacientes', this.pacienteId]);
+              },
+              error: (err) => {
+                this.toastService.warning('Consulta atualizada, mas houve erro ao atualizar fotos');
+                this.router.navigate(['/pacientes', this.pacienteId]);
+              },
+            });
+          } else {
+            this.toastService.success('Consulta atualizada com sucesso!');
+            this.router.navigate(['/pacientes', this.pacienteId]);
+          }
+        },
+        error: (err) => {
+          this.toastService.error('Erro ao atualizar consulta');
+        },
+      });
+    } else {
+      // MODO CRIAÇÃO: Fluxo original
+      this.consultaService.criar(this.pacienteId!, payload).subscribe({
+        next: (consulta) => {
+          this.toastService.success('Consulta salva com sucesso!');
 
-    consultaRequest$.subscribe({
-      next: (consulta) => {
-        this.toastService.success(isEdicao ? 'Consulta atualizada com sucesso!' : 'Consulta salva com sucesso!');
-
-        // 2️⃣ Apenas para criação (não para edição), salvar questionário e avaliação em paralelo
-        // Em modo de edição, esses dados já foram atualizados no PUT
-        if (!isEdicao) {
+          // Salvar questionário e avaliação em paralelo
           forkJoin([
             this.consultaService.salvarAvaliacao(consulta.id, avaliacaoData),
             this.consultaService.salvarQuestionario(consulta.id, questionarioData),
           ]).subscribe({
             next: () => {
-              // 3️⃣ Upload de fotos
+              // Upload de fotos
               const fotosParaUpload = Object.values(this.fotos).filter(
                 (f) => f.arquivo !== null
               ).length;
@@ -377,15 +409,12 @@ export class ConsultaFormComponent implements OnInit {
               this.toastService.error('Erro ao salvar dados adicionais da consulta');
             },
           });
-        } else {
-          // Em modo de edição, apenas redirecionar
-          this.router.navigate(['/pacientes', this.pacienteId]);
-        }
-      },
-      error: (err) => {
-        this.toastService.error('Erro ao salvar consulta');
-      },
-    });
+        },
+        error: (err) => {
+          this.toastService.error('Erro ao salvar consulta');
+        },
+      });
+    }
   }
 
   cancelar(): void {
