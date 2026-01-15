@@ -44,6 +44,14 @@ export class ConsultaFormComponent implements OnInit {
     LATERAL_DIREITA: { arquivo: null, preview: null, uploading: false },
   };
 
+  // Rastrear fotos removidas
+  fotosRemovidas: Record<TipoFoto, boolean> = {
+    ANTERIOR: false,
+    POSTERIOR: false,
+    LATERAL_ESQUERDA: false,
+    LATERAL_DIREITA: false,
+  };
+
   objetivos = ['Emagrecimento', 'Ganho de massa muscular', 'Manutenção', 'Performance esportiva'];
   frequenciasTreino = [
     'Não treina',
@@ -201,7 +209,6 @@ export class ConsultaFormComponent implements OnInit {
         }
       },
       error: (err) => {
-
         this.toastService.error('Erro ao carregar dados da consulta');
       }
     });
@@ -241,6 +248,7 @@ export class ConsultaFormComponent implements OnInit {
       }
 
       this.fotos[tipoFoto].arquivo = arquivo;
+      this.fotosRemovidas[tipoFoto] = false; // Limpar marcação de remoção
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -252,6 +260,7 @@ export class ConsultaFormComponent implements OnInit {
 
   removerFoto(tipoFoto: TipoFoto): void {
     this.fotos[tipoFoto] = { arquivo: null, preview: null, uploading: false };
+    this.fotosRemovidas[tipoFoto] = true; // Marcar como removida
   }
 
   triggerFileInput(tipoFoto: TipoFoto): void {
@@ -301,7 +310,7 @@ export class ConsultaFormComponent implements OnInit {
   }
 
   // ============================================
-  // Submit Consulta
+  // Submit Consulta - ATUALIZADO COM SUPORTE A REMOÇÃO
   // ============================================
   onSubmit(): void {
     if (!this.estiloVidaForm.valid || !this.medidasForm.valid) {
@@ -323,13 +332,11 @@ export class ConsultaFormComponent implements OnInit {
     let questionarioData = { ...this.estiloVidaForm.value };
     let avaliacaoData = { ...this.medidasForm.value };
 
-    // ✅ CORREÇÕES CRÍTICAS ✅
-
-    // 1️⃣ Remover consultaId (vem na URL, não no body)
+    // Remover consultaId (vem na URL, não no body)
     delete questionarioData.consultaId;
     delete avaliacaoData.consultaId;
 
-    // 2️⃣ Remover campo intolerancias (não existe no backend)
+    // Remover campo intolerancias (não existe no backend)
     delete questionarioData.intolerancias;
 
     // Corrigir ingestaoAguaDiaria (remover letras, converter para número)
@@ -354,29 +361,44 @@ export class ConsultaFormComponent implements OnInit {
         this.consultaService.atualizarAvaliacao(this.consultaId!, avaliacaoData),
       ]).subscribe({
         next: () => {
-          // Verificar se há fotos para atualizar
+          // Verificar se há fotos para atualizar ou remover
           const arquivosFotos: Record<TipoFoto, File | null> = {
             ANTERIOR: this.fotos.ANTERIOR.arquivo,
             POSTERIOR: this.fotos.POSTERIOR.arquivo,
             LATERAL_ESQUERDA: this.fotos.LATERAL_ESQUERDA.arquivo,
             LATERAL_DIREITA: this.fotos.LATERAL_DIREITA.arquivo,
           };
-          const hasFotosNovas = Object.values(arquivosFotos).some((f) => f !== null);
           
-          if (hasFotosNovas) {
-            this.consultaService.atualizarFotos(this.consultaId!, arquivosFotos).subscribe({
+          // Verificar se há fotos novas OU removidas
+          const hasFotosNovas = Object.values(arquivosFotos).some((f) => f !== null);
+          const hasFotosRemovidas = Object.values(this.fotosRemovidas).some((r) => r === true);
+          
+          if (hasFotosNovas || hasFotosRemovidas) {
+            // ✅ PASSAR AS REMOÇÕES TAMBÉM
+            this.consultaService.atualizarFotos(
+              this.consultaId!, 
+              arquivosFotos,
+              this.fotosRemovidas
+            ).subscribe({
               next: () => {
                 this.toastService.success('Consulta atualizada com sucesso!');
-                this.router.navigate(['/pacientes', this.pacienteId]);
+                // Limpar o estado de remoções após sucesso
+                this.fotosRemovidas = {
+                  ANTERIOR: false,
+                  POSTERIOR: false,
+                  LATERAL_ESQUERDA: false,
+                  LATERAL_DIREITA: false,
+                };
+                this.router.navigate(['/consultas', this.consultaId]);
               },
               error: (err) => {
                 this.toastService.warning('Consulta atualizada, mas houve erro ao atualizar fotos');
-                this.router.navigate(['/pacientes', this.pacienteId]);
+                this.router.navigate(['/consultas', this.consultaId]);
               },
             });
           } else {
             this.toastService.success('Consulta atualizada com sucesso!');
-            this.router.navigate(['/pacientes', this.pacienteId]);
+            this.router.navigate(['/consultas', this.consultaId]);
           }
         },
         error: (err) => {
@@ -402,7 +424,7 @@ export class ConsultaFormComponent implements OnInit {
               if (fotosParaUpload > 0) {
                 this.uploadFotos(consulta.id);
               } else {
-                this.router.navigate(['/pacientes', this.pacienteId]);
+                this.router.navigate(['/consultas', consulta.id]);
               }
             },
             error: (error) => {

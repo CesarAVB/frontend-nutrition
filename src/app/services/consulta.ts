@@ -78,15 +78,35 @@ export class ConsultaService {
     return this.http.post<void>(`${this.apiPhotoUrl}/consulta/${consultaId}`, formData);
   }
 
-  atualizarFotos(consultaId: number, fotos: Record<TipoFoto, File | null>): Observable<void> {
+  /**
+   * Atualiza fotos da consulta
+   * @param consultaId ID da consulta
+   * @param fotos Objeto com arquivos das fotos { ANTERIOR, POSTERIOR, LATERAL_ESQUERDA, LATERAL_DIREITA }
+   * @param remocoes Opcional - Indica quais fotos remover { ANTERIOR, POSTERIOR, LATERAL_ESQUERDA, LATERAL_DIREITA }
+   */
+  atualizarFotos(
+    consultaId: number, 
+    fotos: Record<TipoFoto, File | null>,
+    remocoes?: Record<TipoFoto, boolean>
+  ): Observable<void> {
     const formData = new FormData();
 
+    // Adicionar arquivos de fotos
     if (fotos.ANTERIOR) formData.append('fotoAnterior', fotos.ANTERIOR);
     if (fotos.POSTERIOR) formData.append('fotoPosterior', fotos.POSTERIOR);
     if (fotos.LATERAL_ESQUERDA) formData.append('fotoLateralEsquerda', fotos.LATERAL_ESQUERDA);
     if (fotos.LATERAL_DIREITA) formData.append('fotoLateralDireita', fotos.LATERAL_DIREITA);
 
-    return this.http.put<void>(`${this.apiPhotoUrl}/consulta/${consultaId}`, formData);
+    // Adicionar QueryParams para remoções
+    let params = new HttpParams();
+    if (remocoes) {
+      if (remocoes['ANTERIOR']) params = params.set('removerFotoAnterior', 'true');
+      if (remocoes['POSTERIOR']) params = params.set('removerFotoPosterior', 'true');
+      if (remocoes['LATERAL_ESQUERDA']) params = params.set('removerFotoLateralEsquerda', 'true');
+      if (remocoes['LATERAL_DIREITA']) params = params.set('removerFotoLateralDireita', 'true');
+    }
+
+    return this.http.put<void>(`${this.apiPhotoUrl}/consulta/${consultaId}`, formData, { params });
   }
 
   // ===============================
