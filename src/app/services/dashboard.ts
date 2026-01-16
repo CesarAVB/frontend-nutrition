@@ -4,20 +4,30 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-export interface DashboardStats {
+export interface DashboardStatsDTO {
   totalPacientes: number;
   consultasHoje: number;
   consultasMes: number;
   proximaConsulta: string;
 }
 
-export interface ConsultaHoje {
+export interface ConsultaHojeDTO {
   id: number;
   pacienteId: number;
   nomePaciente: string;
   iniciais: string;
-  horario: string;
+  horario: Date;
   objetivo?: string;
+}
+
+export interface PacienteDTO {
+ultimaConsulta: string|null|undefined;
+  id: number;
+  nomeCompleto: string;
+  email: string;
+  telefoneWhatsapp: string;
+  dataNascimento: string;
+  cpf: string;
 }
 
 @Injectable({
@@ -25,17 +35,22 @@ export interface ConsultaHoje {
 })
 export class DashboardService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/v1/dashboard`;
+  private readonly apiUrl = `${environment.apiUrl}/api/v1/dashboard`;
 
-  buscarEstatisticas(): Observable<DashboardStats> {
-    return this.http.get<DashboardStats>(`${this.apiUrl}/stats`);
+  // Obter estatísticas
+  obterEstatisticas(): Observable<DashboardStatsDTO> {
+    return this.http.get<DashboardStatsDTO>(`${this.apiUrl}/stats`);
   }
 
-  buscarConsultasHoje(): Observable<ConsultaHoje[]> {
-    return this.http.get<ConsultaHoje[]>(`${this.apiUrl}/consultas-hoje`);
+  // Obter consultas de hoje
+  consultasHoje(): Observable<ConsultaHojeDTO[]> {
+    return this.http.get<ConsultaHojeDTO[]>(`${this.apiUrl}/consultas-hoje`);
   }
 
-  buscarPacientesRecentes(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/pacientes-recentes`);
+  // Obter pacientes recentes
+  pacientesRecentes(limite: number = 5): Observable<PacienteDTO[]> {
+    return this.http.get<PacienteDTO[]>(`${this.apiUrl}/pacientes-recentes`, {
+      params: { limite: limite.toString() }
+    });
   }
 }
