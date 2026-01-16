@@ -24,7 +24,7 @@ export interface LoginResponse {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly apiUrl = 'https://api-login.cesaravb.com.br';
+  private readonly loginUrl = environment.loginUrl;
   
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
@@ -33,7 +33,7 @@ export class AuthService {
   currentUser = signal(this.getUserFromStorage());
 
   login(credentials: LoginRequest) {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials).pipe(
+    return this.http.post<LoginResponse>(`${this.loginUrl}/auth/login`, credentials).pipe(
       tap(response => {
         this.setSession(response);
       })
