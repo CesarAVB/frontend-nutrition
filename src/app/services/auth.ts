@@ -33,7 +33,7 @@ export class AuthService {
   currentUser = signal(this.getUserFromStorage());
 
   login(credentials: LoginRequest) {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap(response => {
         this.setSession(response);
       })
