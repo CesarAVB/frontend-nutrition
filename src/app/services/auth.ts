@@ -10,12 +10,16 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+  name: string;
   token: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
+  perfil: string;
+  email: string;
+}
+
+export interface User {
+  name: string;
+  email: string;
+  perfil: string;
 }
 
 @Injectable({
@@ -30,7 +34,7 @@ export class AuthService {
   private readonly USER_KEY = 'auth_user';
   
   isAuthenticated = signal(this.hasToken());
-  currentUser = signal(this.getUserFromStorage());
+  currentUser = signal<User | null>(this.getUserFromStorage());
 
   login(credentials: LoginRequest) {
     return this.http.post<LoginResponse>(`${this.loginUrl}/auth/login`, credentials).pipe(
@@ -58,12 +62,17 @@ export class AuthService {
 
   private setSession(authResult: LoginResponse) {
     localStorage.setItem(this.TOKEN_KEY, authResult.token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(authResult.user));
+    const user: User = {
+      name: authResult.name,
+      email: authResult.email,
+      perfil: authResult.perfil
+    };
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
     this.isAuthenticated.set(true);
-    this.currentUser.set(authResult.user);
+    this.currentUser.set(user);
   }
 
-  private getUserFromStorage() {
+  private getUserFromStorage(): User | null {
     const userStr = localStorage.getItem(this.USER_KEY);
     if (!userStr || userStr === 'undefined' || userStr === 'null') {
       return null;
