@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -12,7 +13,25 @@ import { Router, RouterModule } from '@angular/router';
 export class NavbarComponent {
   menuAberto = false;
   
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+  get currentUser() {
+    return this.authService.currentUser();
+  }
+
+  getUserInitials(): string {
+    const user = this.currentUser;
+    if (!user?.name) return 'U';
+    
+    const names = user.name.split(' ');
+    if (names.length === 1) {
+      return names[0].substring(0, 2).toUpperCase();
+    }
+    return (names[0][0] + names[names.length - 1][0]).toUpperCase();
+  }
 
   toggleMenu(): void {
     this.menuAberto = !this.menuAberto;
@@ -28,8 +47,7 @@ export class NavbarComponent {
   }
 
   logout(): void {
-    // Implementar lógica de logout
-    console.log('Logout');
-    this.router.navigate(['/login']);
+    this.authService.logout();
+    this.fecharMenu();
   }
 }

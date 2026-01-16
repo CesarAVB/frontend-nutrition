@@ -98,7 +98,9 @@
   display: none;
 
   @media (min-width: 1024px) {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .user-info {
@@ -146,6 +148,29 @@
         color: #6b7280;
         line-height: 1.2;
       }
+    }
+  }
+
+  .logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    svg {
+      flex-shrink: 0;
     }
   }
 }
