@@ -57,6 +57,7 @@ export class PacienteDetailsComponent implements OnInit {
   carregarConsultas(pacienteId: number): void {
     this.consultaService.listarPorPaciente(pacienteId).subscribe({
       next: (consultas) => {
+        console.log('Consultas carregadas:', consultas);
         this.consultas.set(consultas);
       },
       error: (erro) => {
@@ -142,12 +143,17 @@ export class PacienteDetailsComponent implements OnInit {
 
   formatarData(dataISO?: string): string {
     if (!dataISO) return '-';
-    const data = new Date(dataISO);
-    return data.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
+    try {
+      const data = new Date(dataISO);
+      if (isNaN(data.getTime())) return '-';
+      return data.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    } catch {
+      return '-';
+    }
   }
 
   calcularIdade(dataNascimento: string): number {
@@ -164,14 +170,26 @@ export class PacienteDetailsComponent implements OnInit {
   }
 
   extrairDia(dataISO: string): string {
-    const data = new Date(dataISO);
-    return data.getDate().toString().padStart(2, '0');
+    if (!dataISO) return '-';
+    try {
+      const data = new Date(dataISO);
+      if (isNaN(data.getTime())) return '-';
+      return data.getDate().toString().padStart(2, '0');
+    } catch {
+      return '-';
+    }
   }
 
   extrairMes(dataISO: string): string {
-    const data = new Date(dataISO);
-    const meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 
-                   'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
-    return meses[data.getMonth()];
+    if (!dataISO) return '-';
+    try {
+      const data = new Date(dataISO);
+      if (isNaN(data.getTime())) return '-';
+      const meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 
+                     'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+      return meses[data.getMonth()];
+    } catch {
+      return '-';
+    }
   }
 }

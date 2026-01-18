@@ -62,12 +62,18 @@ export class ConsultasListComponent implements OnInit {
 
   formatarData(dataISO: string): string {
     if (!dataISO) return '-';
-    return new Date(dataISO).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    try {
+      const data = new Date(dataISO);
+      if (isNaN(data.getTime())) return '-';
+      return data.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch {
+      return '-';
+    }
   }
 }
