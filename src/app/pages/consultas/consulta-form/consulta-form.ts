@@ -233,30 +233,78 @@ export class ConsultaFormComponent implements OnInit {
   // Upload de Fotos
   // ============================================
   onFileSelected(event: Event, tipoFoto: TipoFoto): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const arquivo = input.files[0];
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const arquivo = input.files[0];
 
-      if (!arquivo.type.startsWith('image/')) {
-        this.toastService.error('Selecione apenas arquivos de imagem');
-        return;
-      }
+    // Validar tipo
+    if (!arquivo.type.startsWith('image/')) {
+      this.toastService.error('Selecione apenas arquivos de imagem');
+      return;
+    }
 
-      if (arquivo.size > 5 * 1024 * 1024) {
-        this.toastService.error('A imagem deve ter no máximo 5MB');
-        return;
-      }
+    // Validar tamanho (10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB em bytes
+    if (arquivo.size > maxSize) {
+      this.toastService.error('A imagem deve ter no máximo 10MB');
+      return;
+    }
 
-      this.fotos[tipoFoto].arquivo = arquivo;
-      this.fotosRemovidas[tipoFoto] = false; // Limpar marcação de remoção
+    // Opcional: Comprimir imagem antes de enviar
+    this.comprimirImagem(arquivo).then(comprimida => {
+      this.fotos[tipoFoto].arquivo = comprimida;
+      this.fotosRemovidas[tipoFoto] = false;
 
       const reader = new FileReader();
       reader.onload = (e) => {
         this.fotos[tipoFoto].preview = e.target?.result as string;
       };
-      reader.readAsDataURL(arquivo);
-    }
+      reader.readAsDataURL(comprimida);
+    });
   }
+}
+
+// Método para comprimir imagem (opcional)
+private comprimirImagem(arquivo: File): Promise<File> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+
+        // Redimensionar mantendo proporção (máximo 1920px de largura)
+        const maxWidth = 1920;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height;
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const comprimida = new File([blob], arquivo.name, {
+              type: 'image/jpeg',
+              lastModified: Date.now()
+            });
+            resolve(comprimida);
+          } else {
+            resolve(arquivo); // Retorna original se falhar
+          }
+        }, 'image/jpeg', 0.85); // 85% de qualidade
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(arquivo);
+  });
+}
 
   removerFoto(tipoFoto: TipoFoto): void {
     this.fotos[tipoFoto] = { arquivo: null, preview: null, uploading: false };
