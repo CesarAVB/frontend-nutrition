@@ -35,11 +35,13 @@ export class ConsultaService {
       .get<ConsultaResumoDTO[]>(`${this.apiUrl}/paciente/${pacienteId}`)
       .pipe(
         map((arr: any[]) =>
-          arr.map((item: any) => ({
-            ...item,
-            dataConsulta:
-              item.dataConsulta || item.data_consulta || item.createdAt || item.created_at || item.create_at || null,
-          }))
+          arr.map((item: any) => {
+            const raw = item.dataConsulta || item.data_consulta || item.createdAt || item.created_at || item.create_at || null;
+            return {
+              ...item,
+              dataConsulta: this.normalizeDateValue(raw),
+            };
+          })
         )
       );
   }
@@ -73,11 +75,13 @@ export class ConsultaService {
       .get<ConsultaResumoDTO[]>(`${this.apiUrl}`)
       .pipe(
         map((arr: any[]) =>
-          arr.map((item: any) => ({
-            ...item,
-            dataConsulta:
-              item.dataConsulta || item.data_consulta || item.createdAt || item.created_at || item.create_at || null,
-          }))
+          arr.map((item: any) => {
+            const raw = item.dataConsulta || item.data_consulta || item.createdAt || item.created_at || item.create_at || null;
+            return {
+              ...item,
+              dataConsulta: this.normalizeDateValue(raw),
+            };
+          })
         )
       );
   }
@@ -95,8 +99,37 @@ export class ConsultaService {
   // Normaliza respostas da API para garantir que o frontend sempre leia `dataConsulta`
   private normalizeConsultaDetalhada(res: any): ConsultaDetalhadaDTO {
     if (!res) return res;
-    const data = res.dataConsulta || res.data_consulta || res.createdAt || res.created_at || res.create_at || null;
+    const raw = res.dataConsulta || res.data_consulta || res.createdAt || res.created_at || res.create_at || null;
+    const data = this.normalizeDateValue(raw);
     return { ...res, dataConsulta: data } as ConsultaDetalhadaDTO;
+  }
+
+  // Aceita várias formas de data vindas do backend e retorna string ISO ou null
+  private normalizeDateValue(value: any): string | null {
+    if (!value && value !== 0) return null;
+
+    // Se já for string, retornar trimmed
+    if (typeof value === 'string') {
+      return value.trim();
+    }
+
+    // Se for número (timestamp em ms ou s), tentar criar Date
+    if (typeof value === 'number') {
+      // tratar como timestamp em ms se maior que 1e12, senão em s
+      const asMs = value > 1e12 ? value : value * 1000;
+      const d = new Date(asMs);
+      return isNaN(d.getTime()) ? null : d.toISOString();
+    }
+
+    // Se for array com componentes [YYYY, M, D, h?, m?, s?]
+    if (Array.isArray(value) && value.length >= 3) {
+      const [y, m, d, h = 0, min = 0, s = 0] = value.map((v: any) => Number(v));
+      // Backend provavelmente usa mês 1-12; JS Date month é 0-11
+      const dateObj = new Date(y, (m || 1) - 1, d, h, min, s);
+      return isNaN(dateObj.getTime()) ? null : dateObj.toISOString();
+    }
+
+    return null;
   }
 
   // ===============================

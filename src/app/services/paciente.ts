@@ -18,11 +18,13 @@ export class PacienteService {
   listarTodos(): Observable<PacienteDTO[]> {
     return this.http.get<PacienteDTO[]>(this.apiUrl).pipe(
       map((arr: any[]) =>
-        arr.map((p: any) => ({
-          ...p,
-          ultimaConsulta:
-            p.ultimaConsulta || p.ultima_consulta || p.data_consulta || p.dataConsulta || p.createdAt || p.created_at || null,
-        }))
+        arr.map((p: any) => {
+          const raw = p.ultimaConsulta || p.ultima_consulta || p.data_consulta || p.dataConsulta || p.createdAt || p.created_at || null;
+          return {
+            ...p,
+            ultimaConsulta: this.normalizeDateValue(raw),
+          } as any;
+        })
       )
     );
   }
@@ -32,12 +34,31 @@ export class PacienteService {
    */
   buscarPorId(id: number): Observable<PacienteDTO> {
     return this.http.get<PacienteDTO>(`${this.apiUrl}/${id}`).pipe(
-      map((p: any) => ({
-        ...p,
-        ultimaConsulta:
-          p.ultimaConsulta || p.ultima_consulta || p.data_consulta || p.dataConsulta || p.createdAt || p.created_at || null,
-      }))
+      map((p: any) => {
+        const raw = p.ultimaConsulta || p.ultima_consulta || p.data_consulta || p.dataConsulta || p.createdAt || p.created_at || null;
+        return {
+          ...p,
+          ultimaConsulta: this.normalizeDateValue(raw),
+        } as any;
+      })
     );
+  }
+
+  // Similar normalization helper as in ConsultaService
+  private normalizeDateValue(value: any): string | null {
+    if (!value && value !== 0) return null;
+    if (typeof value === 'string') return value.trim();
+    if (typeof value === 'number') {
+      const asMs = value > 1e12 ? value : value * 1000;
+      const d = new Date(asMs);
+      return isNaN(d.getTime()) ? null : d.toISOString();
+    }
+    if (Array.isArray(value) && value.length >= 3) {
+      const [y, m, d, h = 0, min = 0, s = 0] = value.map((v: any) => Number(v));
+      const dateObj = new Date(y, (m || 1) - 1, d, h, min, s);
+      return isNaN(dateObj.getTime()) ? null : dateObj.toISOString();
+    }
+    return null;
   }
 
   /**
