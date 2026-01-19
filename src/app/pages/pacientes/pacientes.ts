@@ -31,8 +31,21 @@ export class Pacientes {
   }
 
   getUltimaVisita(p: PacienteDTO) {
-    if (!p.ultimaConsulta) return '-';
-    return new Date(p.ultimaConsulta).toLocaleDateString('pt-BR');
+    const raw = p.ultimaConsulta;
+    if (!raw) return '-';
+
+    // Tentar criar Date de forma robusta
+    let d = new Date(raw as any);
+    if (isNaN(d.getTime())) {
+      // Tentar converter formatos comuns como "YYYY-MM-DD HH:mm:ss" -> "YYYY-MM-DDTHH:mm:ss"
+      const s = String(raw).trim().replace(' ', 'T');
+      d = new Date(s);
+      if (isNaN(d.getTime())) {
+        return '-';
+      }
+    }
+
+    return d.toLocaleDateString('pt-BR');
   }
 
   getConsultasCount(p: PacienteDTO) {
