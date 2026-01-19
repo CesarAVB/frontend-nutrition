@@ -40,6 +40,12 @@ export class ConsultaService {
             return {
               ...item,
               dataConsulta: this.normalizeDateValue(raw),
+              // Garantir campos usados na listagem
+              peso:
+                item.peso ?? item.pesoAtual ?? item.avaliacaoFisica?.pesoAtual ?? null,
+              percentualGordura:
+                item.percentualGordura ?? item.percentual_gordura ?? item.avaliacaoFisica?.percentualGordura ?? null,
+              objetivo: item.objetivo ?? item.questionario?.objetivo ?? item.questionarioEstiloVida?.objetivo ?? null,
             };
           })
         )
@@ -80,6 +86,11 @@ export class ConsultaService {
             return {
               ...item,
               dataConsulta: this.normalizeDateValue(raw),
+              peso:
+                item.peso ?? item.pesoAtual ?? item.avaliacaoFisica?.pesoAtual ?? null,
+              percentualGordura:
+                item.percentualGordura ?? item.percentual_gordura ?? item.avaliacaoFisica?.percentualGordura ?? null,
+              objetivo: item.objetivo ?? item.questionario?.objetivo ?? item.questionarioEstiloVida?.objetivo ?? null,
             };
           })
         )
