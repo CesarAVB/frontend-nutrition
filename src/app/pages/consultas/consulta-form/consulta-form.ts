@@ -31,6 +31,7 @@ export class ConsultaFormComponent implements OnInit {
   activeTab: TabType = 'estilo-vida';
   pacienteId?: number;
   pacienteNome = 'Selecione um paciente';
+  pacienteUltimaVisita: string = '-';
   consultaId?: number;
 
   estiloVidaForm: FormGroup;
@@ -142,6 +143,27 @@ export class ConsultaFormComponent implements OnInit {
       this.consultaId = Number(consultaIdFromRoute);
       this.carregarConsulta(this.consultaId);
     }
+
+    // Calcular IMC automaticamente ao alterar altura ou peso
+    this.medidasForm.valueChanges.subscribe((vals) => {
+      const peso = vals.pesoAtual;
+      const altura = vals.altura;
+
+      if (peso && altura) {
+        // altura no formulário está em cm; converter para metros
+        const alturaM = parseFloat(altura) / 100;
+        const p = parseFloat(peso);
+        if (!isNaN(p) && !isNaN(alturaM) && alturaM > 0) {
+          const imc = p / (alturaM * alturaM);
+          const imcFix = Number(imc.toFixed(1));
+          this.medidasForm.get('imc')?.setValue(imcFix, { emitEvent: false });
+        } else {
+          this.medidasForm.get('imc')?.setValue('', { emitEvent: false });
+        }
+      } else {
+        this.medidasForm.get('imc')?.setValue('', { emitEvent: false });
+      }
+    });
   }
 
   carregarConsulta(consultaId: number): void {
@@ -222,6 +244,21 @@ export class ConsultaFormComponent implements OnInit {
     this.pacienteService.buscarPorId(id).subscribe({
       next: (paciente) => {
         this.pacienteNome = paciente.nomeCompleto;
+        // Formatar última visita se disponível
+        if (paciente.ultimaConsulta) {
+          try {
+            const d = new Date(paciente.ultimaConsulta);
+            if (!isNaN(d.getTime())) {
+              this.pacienteUltimaVisita = d.toLocaleDateString('pt-BR');
+            } else {
+              this.pacienteUltimaVisita = '-';
+            }
+          } catch {
+            this.pacienteUltimaVisita = '-';
+          }
+        } else {
+          this.pacienteUltimaVisita = '-';
+        }
       },
       error: (erro) => {
         this.pacienteNome = `Paciente ${id}`;
