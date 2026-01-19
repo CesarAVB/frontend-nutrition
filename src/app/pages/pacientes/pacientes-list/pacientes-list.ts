@@ -98,8 +98,16 @@ export class PacientesListComponent implements OnInit {
 
   private formatarData(dataISO?: string): string {
     if (!dataISO) return '-';
-    const data = new Date(dataISO);
-    return data.toLocaleDateString('pt-BR', {
+
+    // Tentar parse robusto: aceitar formatos como 'YYYY-MM-DD HH:mm:ss' substituindo espaço por 'T'
+    let d = new Date(dataISO as any);
+    if (isNaN(d.getTime())) {
+      const s = String(dataISO).trim().replace(' ', 'T');
+      d = new Date(s);
+      if (isNaN(d.getTime())) return '-';
+    }
+
+    return d.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
