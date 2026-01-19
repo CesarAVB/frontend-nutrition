@@ -17,7 +17,6 @@
       <p>Carregando dados do paciente...</p>
     </div>
   } @else if (paciente()) {
-    <!-- Header com informações do paciente -->
     <div class="details-header">
       <button class="back-button" (click)="voltar()">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -79,9 +78,7 @@
       </div>
     </div>
 
-    <!-- Grid de informações -->
     <div class="content-grid">
-      <!-- Card de Dados Pessoais -->
       <div class="info-card">
         <div class="card-header">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -110,7 +107,6 @@
         </div>
       </div>
 
-      <!-- Card de Contato -->
       <div class="info-card">
         <div class="card-header">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -138,7 +134,6 @@
         </div>
       </div>
 
-      <!-- Card de Prontuário -->
       @if (paciente()?.prontuario) {
         <div class="info-card full-width">
           <div class="card-header">
@@ -156,14 +151,8 @@
           </div>
         </div>
       }
-              Abrir WhatsApp
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- Histórico de Consultas -->
     <div class="consultas-card">
       <div class="card-header">
         <div class="header-left">
@@ -250,7 +239,6 @@
     </div>
   }
 
-  <!-- Modal de confirmação de exclusão -->
   @if (mostrarModalExclusao()) {
     <div class="modal-overlay" (click)="cancelarExclusao()">
       <div class="modal-content" (click)="$event.stopPropagation()">
