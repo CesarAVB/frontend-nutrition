@@ -169,6 +169,7 @@ export class ConsultaFormComponent implements OnInit {
             numeroRefeicoesDesejadas: consulta.questionario.numeroRefeicoesDesejadas || '',
             horarioMaiorFome: consulta.questionario.horarioMaiorFome || '',
             pressaoArterial: consulta.questionario.pressaoArterial || '',
+            intolerancias: consulta.questionario.intolerancias || '',
           });
         }
 
@@ -189,7 +190,10 @@ export class ConsultaFormComponent implements OnInit {
             perimetroCoxaEsquerda: consulta.avaliacaoFisica.perimetroCoxaEsquerda || '',
             perimetroPanturrilhaDireita: consulta.avaliacaoFisica.perimetroPanturrilhaDireita || '',
             perimetroPanturrilhaEsquerda: consulta.avaliacaoFisica.perimetroPanturrilhaEsquerda || '',
+            perimetroAntebracoDireito: consulta.avaliacaoFisica.perimetroAntebracoDireito || '',
+            perimetroAntebracoEsquerdo: consulta.avaliacaoFisica.perimetroAntebracoEsquerdo || '',
             dobraTriceps: consulta.avaliacaoFisica.dobraTriceps || '',
+            dobraPeito: consulta.avaliacaoFisica.dobraPeito || '',
             dobraAxilarMedia: consulta.avaliacaoFisica.dobraAxilarMedia || '',
             dobraSubescapular: consulta.avaliacaoFisica.dobraSubescapular || '',
             dobraAbdominal: consulta.avaliacaoFisica.dobraAbdominal || '',
@@ -384,8 +388,7 @@ private comprimirImagem(arquivo: File): Promise<File> {
     delete questionarioData.consultaId;
     delete avaliacaoData.consultaId;
 
-    // Remover campo intolerancias (não existe no backend)
-    delete questionarioData.intolerancias;
+    // Não remover campo intolerancias — backend aceita esse campo
 
     // Corrigir ingestaoAguaDiaria (remover letras, converter para número)
     if (questionarioData.ingestaoAguaDiaria) {
