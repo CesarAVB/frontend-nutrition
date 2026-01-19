@@ -23,15 +23,30 @@ export class ConsultaService {
   // CRUD Consultas
   // ===============================
   criar(pacienteId: number, dto: CriarConsultaDTO): Observable<ConsultaDetalhadaDTO> {
-    return this.http.post<ConsultaDetalhadaDTO>(`${this.apiUrl}/paciente/${pacienteId}`, dto);
+    return this.http
+      .post<ConsultaDetalhadaDTO>(`${this.apiUrl}/paciente/${pacienteId}`, dto)
+      .pipe(
+        map((res: any) => this.normalizeConsultaDetalhada(res))
+      );
   }
 
   listarPorPaciente(pacienteId: number): Observable<ConsultaResumoDTO[]> {
-    return this.http.get<ConsultaResumoDTO[]>(`${this.apiUrl}/paciente/${pacienteId}`);
+    return this.http
+      .get<ConsultaResumoDTO[]>(`${this.apiUrl}/paciente/${pacienteId}`)
+      .pipe(
+        map((arr: any[]) =>
+          arr.map((item: any) => ({
+            ...item,
+            dataConsulta: item.dataConsulta || item.createdAt || item.created_at || item.create_at || null,
+          }))
+        )
+      );
   }
 
   buscarCompleta(id: number): Observable<ConsultaDetalhadaDTO> {
-    return this.http.get<ConsultaDetalhadaDTO>(`${this.apiUrl}/${id}`);
+    return this.http
+      .get<ConsultaDetalhadaDTO>(`${this.apiUrl}/${id}`)
+      .pipe(map((res: any) => this.normalizeConsultaDetalhada(res)));
   }
 
   comparar(
@@ -53,7 +68,16 @@ export class ConsultaService {
   }
 
   listarTodas(): Observable<ConsultaResumoDTO[]> {
-    return this.http.get<ConsultaResumoDTO[]>(`${this.apiUrl}`);
+    return this.http
+      .get<ConsultaResumoDTO[]>(`${this.apiUrl}`)
+      .pipe(
+        map((arr: any[]) =>
+          arr.map((item: any) => ({
+            ...item,
+            dataConsulta: item.dataConsulta || item.createdAt || item.created_at || item.create_at || null,
+          }))
+        )
+      );
   }
 
   atualizarData(id: number, novaData: string): Observable<ConsultaResumoDTO> {
@@ -61,7 +85,16 @@ export class ConsultaService {
   }
 
   atualizar(id: number, dto: CriarConsultaDTO): Observable<ConsultaDetalhadaDTO> {
-    return this.http.put<ConsultaDetalhadaDTO>(`${this.apiUrl}/${id}`, dto);
+    return this.http
+      .put<ConsultaDetalhadaDTO>(`${this.apiUrl}/${id}`, dto)
+      .pipe(map((res: any) => this.normalizeConsultaDetalhada(res)));
+  }
+
+  // Normaliza respostas da API para garantir que o frontend sempre leia `dataConsulta`
+  private normalizeConsultaDetalhada(res: any): ConsultaDetalhadaDTO {
+    if (!res) return res;
+    const data = res.dataConsulta || res.data_consulta || res.createdAt || res.created_at || res.create_at || null;
+    return { ...res, dataConsulta: data } as ConsultaDetalhadaDTO;
   }
 
   // ===============================
