@@ -80,6 +80,27 @@
 
         <div class="form-row">
           <div class="form-group">
+            <label for="sexo" class="form-label">
+              Sexo <span class="required">*</span>
+            </label>
+            <select
+              id="sexo"
+              formControlName="sexo"
+              class="form-input"
+              [class.input-error]="pacienteForm.get('sexo')?.touched && pacienteForm.get('sexo')?.invalid"
+            >
+              <option value="">Selecione...</option>
+              <option value="MASCULINO">Masculino</option>
+              <option value="FEMININO">Feminino</option>
+            </select>
+            <span class="error-message" *ngIf="getCampoErro('sexo')">
+              {{ getCampoErro('sexo') }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
             <label for="telefoneWhatsapp" class="form-label">
               Telefone (WhatsApp) <span class="required">*</span>
             </label>
@@ -111,6 +132,19 @@
             <span class="error-message" *ngIf="getCampoErro('email')">
               {{ getCampoErro('email') }}
             </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="prontuario" class="form-label">Prontuário / Observações</label>
+            <textarea
+              id="prontuario"
+              formControlName="prontuario"
+              class="form-textarea"
+              rows="4"
+              placeholder="Informações gerais sobre o paciente, histórico médico, observações importantes..."
+            ></textarea>
           </div>
         </div>
 

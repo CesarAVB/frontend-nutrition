@@ -377,6 +377,10 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+
   .card-header {
     display: flex;
     align-items: center;
@@ -446,6 +450,15 @@
         transform: translateY(-1px);
         box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
       }
+    }
+
+    .prontuario-text {
+      font-size: 0.938rem;
+      line-height: 1.6;
+      color: #374151;
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
   }
 }

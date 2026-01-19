@@ -33,8 +33,10 @@ export class PacienteFormComponent implements OnInit {
       nomeCompleto: ['', [Validators.required, Validators.minLength(3)]],
       cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
       dataNascimento: ['', Validators.required],
+      sexo: ['', Validators.required],
       telefoneWhatsapp: ['', [Validators.required, Validators.pattern(/^\(\d{2}\)\s\d{5}-\d{4}$/)]],
-      email: ['', [Validators.email]]
+      email: ['', [Validators.email]],
+      prontuario: ['']
     });
   }
 
@@ -67,8 +69,10 @@ export class PacienteFormComponent implements OnInit {
           nomeCompleto: paciente.nomeCompleto,
           cpf: cpfFormatado,
           dataNascimento: paciente.dataNascimento,
+          sexo: paciente.sexo,
           telefoneWhatsapp: telefoneFormatado,
-          email: paciente.email
+          email: paciente.email,
+          prontuario: paciente.prontuario
         });
         
         this.isLoading = false;

@@ -7,6 +7,7 @@ export interface PacienteDTO {
   sexo: 'MASCULINO' | 'FEMININO';
   telefoneWhatsapp: string;
   email?: string;
+  prontuario?: string;
   totalConsultas?: number;
   ultimaConsulta?: string; // ISO datetime
 }
