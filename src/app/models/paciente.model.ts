@@ -4,6 +4,7 @@ export interface PacienteDTO {
   nomeCompleto: string;
   cpf: string;
   dataNascimento: string; // formato: YYYY-MM-DD
+  sexo: 'MASCULINO' | 'FEMININO';
   telefoneWhatsapp: string;
   email?: string;
   totalConsultas?: number;

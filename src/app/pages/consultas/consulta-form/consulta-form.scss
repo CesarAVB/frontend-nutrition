@@ -170,6 +170,13 @@
     .required {
       color: #ef4444;
     }
+
+    .auto-calc {
+      color: #10b981;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: 0.5rem;
+    }
   }
 
   .form-input,
@@ -198,6 +205,17 @@
         border-color: #ef4444;
         box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
       }
+    }
+  }
+
+  .form-input-readonly {
+    background-color: #f9fafb;
+    color: #6b7280;
+    cursor: not-allowed;
+    
+    &:focus {
+      border-color: #d1d5db;
+      box-shadow: none;
     }
   }
 
