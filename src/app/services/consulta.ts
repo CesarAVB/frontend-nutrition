@@ -37,7 +37,8 @@ export class ConsultaService {
         map((arr: any[]) =>
           arr.map((item: any) => ({
             ...item,
-            dataConsulta: item.dataConsulta || item.createdAt || item.created_at || item.create_at || null,
+            dataConsulta:
+              item.dataConsulta || item.data_consulta || item.createdAt || item.created_at || item.create_at || null,
           }))
         )
       );
@@ -74,7 +75,8 @@ export class ConsultaService {
         map((arr: any[]) =>
           arr.map((item: any) => ({
             ...item,
-            dataConsulta: item.dataConsulta || item.createdAt || item.created_at || item.create_at || null,
+            dataConsulta:
+              item.dataConsulta || item.data_consulta || item.createdAt || item.created_at || item.create_at || null,
           }))
         )
       );

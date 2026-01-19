@@ -16,14 +16,28 @@ export class PacienteService {
    * Lista todos os pacientes
    */
   listarTodos(): Observable<PacienteDTO[]> {
-    return this.http.get<PacienteDTO[]>(this.apiUrl);
+    return this.http.get<PacienteDTO[]>(this.apiUrl).pipe(
+      map((arr: any[]) =>
+        arr.map((p: any) => ({
+          ...p,
+          ultimaConsulta:
+            p.ultimaConsulta || p.ultima_consulta || p.data_consulta || p.dataConsulta || p.createdAt || p.created_at || null,
+        }))
+      )
+    );
   }
 
   /**
    * Busca paciente por ID
    */
   buscarPorId(id: number): Observable<PacienteDTO> {
-    return this.http.get<PacienteDTO>(`${this.apiUrl}/${id}`);
+    return this.http.get<PacienteDTO>(`${this.apiUrl}/${id}`).pipe(
+      map((p: any) => ({
+        ...p,
+        ultimaConsulta:
+          p.ultimaConsulta || p.ultima_consulta || p.data_consulta || p.dataConsulta || p.createdAt || p.created_at || null,
+      }))
+    );
   }
 
   /**
