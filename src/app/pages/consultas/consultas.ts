@@ -38,7 +38,6 @@ export class Consultas implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Erro ao carregar consulta:', err);
         this.toastService.error('Erro ao carregar dados da consulta.');
         this.isLoading.set(false);
         this.voltar();

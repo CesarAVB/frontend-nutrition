@@ -1,4 +1,3 @@
-// src/app/services/dashboard.service.ts
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -37,17 +36,23 @@ export class DashboardService {
   private http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/api/v1/dashboard`;
 
-  // Obter estatísticas
+  // =======================================
+  // # obterEstatisticas - Obter estatísticas do dashboard
+  // =======================================
   obterEstatisticas(): Observable<DashboardStatsDTO> {
     return this.http.get<DashboardStatsDTO>(`${this.apiUrl}/stats`);
   }
 
-  // Obter consultas de hoje
+  // =======================================
+  // # consultasHoje - Obter consultas de hoje
+  // =======================================
   consultasHoje(): Observable<ConsultaHojeDTO[]> {
     return this.http.get<ConsultaHojeDTO[]>(`${this.apiUrl}/consultas-hoje`);
   }
 
-  // Obter pacientes recentes
+  // =======================================
+  // # pacientesRecentes - Obter pacientes recentes
+  // =======================================
   pacientesRecentes(limite: number = 5): Observable<PacienteDTO[]> {
     return this.http.get<PacienteDTO[]>(`${this.apiUrl}/pacientes-recentes`, {
       params: { limite: limite.toString() }

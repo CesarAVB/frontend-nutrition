@@ -1,4 +1,3 @@
-// src/app/services/paciente.service.ts
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
@@ -12,9 +11,9 @@ export class PacienteService {
   private http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/api/v1/pacientes`;
 
-  /**
-   * Lista todos os pacientes
-   */
+  // =======================================
+  // # listarTodos - Lista todos os pacientes
+  // =======================================
   listarTodos(): Observable<PacienteDTO[]> {
     return this.http.get<PacienteDTO[]>(this.apiUrl).pipe(
       map((arr: any[]) =>
@@ -29,9 +28,9 @@ export class PacienteService {
     );
   }
 
-  /**
-   * Busca paciente por ID
-   */
+  // =======================================
+  // # buscarPorId - Busca paciente por ID
+  // =======================================
   buscarPorId(id: number): Observable<PacienteDTO> {
     return this.http.get<PacienteDTO>(`${this.apiUrl}/${id}`).pipe(
       map((p: any) => {
@@ -46,7 +45,6 @@ export class PacienteService {
     );
   }
 
-  // Similar normalization helper as in ConsultaService
   private normalizeDateValue(value: any): string | null {
     if (!value && value !== 0) return null;
     if (typeof value === 'string') return value.trim();
@@ -63,38 +61,38 @@ export class PacienteService {
     return null;
   }
 
-  /**
-   * Busca paciente por CPF
-   */
+  // =======================================
+  // # buscarPorCpf - Busca paciente por CPF
+  // =======================================
   buscarPorCpf(cpf: string): Observable<PacienteDTO> {
     return this.http.get<PacienteDTO>(`${this.apiUrl}/cpf/${cpf}`);
   }
 
-  /**
-   * Busca pacientes por nome
-   */
+  // =======================================
+  // # buscarPorNome - Busca pacientes por nome
+  // =======================================
   buscarPorNome(nome: string): Observable<PacienteDTO[]> {
     const params = new HttpParams().set('nome', nome);
     return this.http.get<PacienteDTO[]>(`${this.apiUrl}/buscar`, { params });
   }
 
-  /**
-   * Cadastra novo paciente
-   */
+  // =======================================
+  // # cadastrar - Cadastra novo paciente
+  // =======================================
   cadastrar(paciente: PacienteDTO): Observable<PacienteDTO> {
     return this.http.post<PacienteDTO>(this.apiUrl, paciente);
   }
 
-  /**
-   * Atualiza dados do paciente
-   */
+  // =======================================
+  // # atualizar - Atualiza dados do paciente
+  // =======================================
   atualizar(id: number, paciente: PacienteDTO): Observable<PacienteDTO> {
     return this.http.put<PacienteDTO>(`${this.apiUrl}/${id}`, paciente);
   }
 
-  /**
-   * Deleta paciente
-   */
+  // =======================================
+  // # deletar - Deleta paciente
+  // =======================================
   deletar(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

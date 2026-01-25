@@ -1,4 +1,3 @@
-// src/app/components/toast/toast.component.ts
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../services/toast';
@@ -24,7 +23,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 })
 export class ToastComponent {
   private toastService = inject(ToastService);
-  
+
   toasts = this.toastService.toasts$;
 
   remove(id: string): void {

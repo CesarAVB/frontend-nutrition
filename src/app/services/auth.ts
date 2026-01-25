@@ -29,13 +29,16 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly loginUrl = environment.loginUrl;
-  
+
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
-  
+
   isAuthenticated = signal(this.hasToken());
   currentUser = signal<User | null>(this.getUserFromStorage());
 
+  // =======================================
+  // # login - Realiza login do usuário
+  // =======================================
   login(credentials: LoginRequest) {
     return this.http.post<LoginResponse>(`${this.loginUrl}/auth/login`, credentials).pipe(
       tap(response => {
@@ -44,6 +47,9 @@ export class AuthService {
     );
   }
 
+  // =======================================
+  // # logout - Realiza logout do usuário
+  // =======================================
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
@@ -52,6 +58,9 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  // =======================================
+  // # getToken - Retorna o token de autenticação
+  // =======================================
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }

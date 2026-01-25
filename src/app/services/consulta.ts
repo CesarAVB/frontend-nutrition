@@ -19,9 +19,9 @@ export class ConsultaService {
   private readonly apiUrl = `${environment.apiUrl}/api/v1/consultas`;
   private readonly apiPhotoUrl = `${environment.apiUrl}/api/v1/registro-fotografico`;
 
-  // ===============================
-  // CRUD Consultas
-  // ===============================
+  // =======================================
+  // # criar - Cria uma nova consulta para um paciente
+  // =======================================
   criar(pacienteId: number, dto: CriarConsultaDTO): Observable<ConsultaDetalhadaDTO> {
     return this.http
       .post<ConsultaDetalhadaDTO>(`${this.apiUrl}/paciente/${pacienteId}`, dto)
@@ -30,6 +30,9 @@ export class ConsultaService {
       );
   }
 
+  // =======================================
+  // # listarPorPaciente - Lista todas as consultas de um paciente
+  // =======================================
   listarPorPaciente(pacienteId: number): Observable<ConsultaResumoDTO[]> {
     return this.http
       .get<ConsultaResumoDTO[]>(`${this.apiUrl}/paciente/${pacienteId}`)
@@ -40,7 +43,6 @@ export class ConsultaService {
             return {
               ...item,
               dataConsulta: this.normalizeDateValue(raw),
-              // Garantir campos usados na listagem
               peso:
                 item.peso ?? item.pesoAtual ?? item.avaliacaoFisica?.pesoAtual ?? null,
               percentualGordura:
@@ -52,12 +54,18 @@ export class ConsultaService {
       );
   }
 
+  // =======================================
+  // # buscarCompleta - Busca uma consulta completa por ID
+  // =======================================
   buscarCompleta(id: number): Observable<ConsultaDetalhadaDTO> {
     return this.http
       .get<ConsultaDetalhadaDTO>(`${this.apiUrl}/${id}`)
       .pipe(map((res: any) => this.normalizeConsultaDetalhada(res)));
   }
 
+  // =======================================
+  // # comparar - Compara duas consultas de um paciente
+  // =======================================
   comparar(
     pacienteId: number,
     consultaInicialId: number,
@@ -72,10 +80,16 @@ export class ConsultaService {
     });
   }
 
+  // =======================================
+  // # deletar - Deleta uma consulta por ID
+  // =======================================
   deletar(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
+  // =======================================
+  // # listarTodas - Lista todas as consultas do sistema
+  // =======================================
   listarTodas(): Observable<ConsultaResumoDTO[]> {
     return this.http
       .get<ConsultaResumoDTO[]>(`${this.apiUrl}`)
@@ -97,17 +111,22 @@ export class ConsultaService {
       );
   }
 
+  // =======================================
+  // # atualizarData - Atualiza a data de uma consulta
+  // =======================================
   atualizarData(id: number, novaData: string): Observable<ConsultaResumoDTO> {
     return this.http.put<ConsultaResumoDTO>(`${this.apiUrl}/${id}/data?novaData=${novaData}`, {});
   }
 
+  // =======================================
+  // # atualizar - Atualiza uma consulta completa
+  // =======================================
   atualizar(id: number, dto: CriarConsultaDTO): Observable<ConsultaDetalhadaDTO> {
     return this.http
       .put<ConsultaDetalhadaDTO>(`${this.apiUrl}/${id}`, dto)
       .pipe(map((res: any) => this.normalizeConsultaDetalhada(res)));
   }
 
-  // Normaliza respostas da API para garantir que o frontend sempre leia `dataConsulta`
   private normalizeConsultaDetalhada(res: any): ConsultaDetalhadaDTO {
     if (!res) return res;
     const raw = res.dataConsulta || res.data_consulta || res.createdAt || res.created_at || res.create_at || null;
@@ -115,27 +134,21 @@ export class ConsultaService {
     return { ...res, dataConsulta: data } as ConsultaDetalhadaDTO;
   }
 
-  // Aceita várias formas de data vindas do backend e retorna string ISO ou null
   private normalizeDateValue(value: any): string | null {
     if (!value && value !== 0) return null;
 
-    // Se já for string, retornar trimmed
     if (typeof value === 'string') {
       return value.trim();
     }
 
-    // Se for número (timestamp em ms ou s), tentar criar Date
     if (typeof value === 'number') {
-      // tratar como timestamp em ms se maior que 1e12, senão em s
       const asMs = value > 1e12 ? value : value * 1000;
       const d = new Date(asMs);
       return isNaN(d.getTime()) ? null : d.toISOString();
     }
 
-    // Se for array com componentes [YYYY, M, D, h?, m?, s?]
     if (Array.isArray(value) && value.length >= 3) {
       const [y, m, d, h = 0, min = 0, s = 0] = value.map((v: any) => Number(v));
-      // Backend provavelmente usa mês 1-12; JS Date month é 0-11
       const dateObj = new Date(y, (m || 1) - 1, d, h, min, s);
       return isNaN(dateObj.getTime()) ? null : dateObj.toISOString();
     }
@@ -143,9 +156,9 @@ export class ConsultaService {
     return null;
   }
 
-  // ===============================
-  // Upload de Fotos
-  // ===============================
+  // =======================================
+  // # uploadFotos - Faz upload das fotos de uma consulta
+  // =======================================
   uploadFotos(consultaId: number, fotos: Record<TipoFoto, File | null>): Observable<void> {
     const formData = new FormData();
 
@@ -157,26 +170,21 @@ export class ConsultaService {
     return this.http.post<void>(`${this.apiPhotoUrl}/consulta/${consultaId}`, formData);
   }
 
-  /**
-   * Atualiza fotos da consulta
-   * @param consultaId ID da consulta
-   * @param fotos Objeto com arquivos das fotos { ANTERIOR, POSTERIOR, LATERAL_ESQUERDA, LATERAL_DIREITA }
-   * @param remocoes Opcional - Indica quais fotos remover { ANTERIOR, POSTERIOR, LATERAL_ESQUERDA, LATERAL_DIREITA }
-   */
+  // =======================================
+  // # atualizarFotos - Atualiza as fotos de uma consulta
+  // =======================================
   atualizarFotos(
-    consultaId: number, 
+    consultaId: number,
     fotos: Record<TipoFoto, File | null>,
     remocoes?: Record<TipoFoto, boolean>
   ): Observable<void> {
     const formData = new FormData();
 
-    // Adicionar arquivos de fotos
     if (fotos.ANTERIOR) formData.append('fotoAnterior', fotos.ANTERIOR);
     if (fotos.POSTERIOR) formData.append('fotoPosterior', fotos.POSTERIOR);
     if (fotos.LATERAL_ESQUERDA) formData.append('fotoLateralEsquerda', fotos.LATERAL_ESQUERDA);
     if (fotos.LATERAL_DIREITA) formData.append('fotoLateralDireita', fotos.LATERAL_DIREITA);
 
-    // Adicionar QueryParams para remoções
     let params = new HttpParams();
     if (remocoes) {
       if (remocoes['ANTERIOR']) params = params.set('removerFotoAnterior', 'true');
@@ -188,9 +196,9 @@ export class ConsultaService {
     return this.http.put<void>(`${this.apiPhotoUrl}/consulta/${consultaId}`, formData, { params });
   }
 
-  // ===============================
-  // Buscar Fotos
-  // ===============================
+  // =======================================
+  // # getFotos - Busca as fotos de uma consulta
+  // =======================================
   getFotos(consultaId: number): Observable<Record<TipoFoto, string | null>> {
     return this.http
       .get<Record<string, string | null>>(`${this.apiPhotoUrl}/consulta/${consultaId}`)
@@ -207,9 +215,9 @@ export class ConsultaService {
       );
   }
 
-  // ===============================
-  // Salvar Questionário de Estilo de Vida
-  // ===============================
+  // =======================================
+  // # salvarQuestionario - Salva o questionário de estilo de vida
+  // =======================================
   salvarQuestionario(
     consultaId: number,
     questionario: QuestionarioEstiloVidaDTO
@@ -221,6 +229,9 @@ export class ConsultaService {
     );
   }
 
+  // =======================================
+  // # atualizarQuestionario - Atualiza o questionário de estilo de vida
+  // =======================================
   atualizarQuestionario(
     consultaId: number,
     questionario: QuestionarioEstiloVidaDTO
@@ -232,9 +243,9 @@ export class ConsultaService {
     );
   }
 
-  // ===============================
-  // Salvar Avaliação Física
-  // ===============================
+  // =======================================
+  // # salvarAvaliacao - Salva a avaliação física
+  // =======================================
   salvarAvaliacao(
     consultaId: number,
     avaliacao: AvaliacaoFisicaDTO
@@ -244,6 +255,9 @@ export class ConsultaService {
     return this.http.post<AvaliacaoFisicaDTO>(url, avaliacao);
   }
 
+  // =======================================
+  // # atualizarAvaliacao - Atualiza a avaliação física
+  // =======================================
   atualizarAvaliacao(
     consultaId: number,
     avaliacao: AvaliacaoFisicaDTO

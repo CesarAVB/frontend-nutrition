@@ -1,4 +1,3 @@
-// src/app/services/toast.service.ts
 import { Injectable, signal } from '@angular/core';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
@@ -15,8 +14,7 @@ export interface Toast {
 })
 export class ToastService {
   private toasts = signal<Toast[]>([]);
-  
-  // Expõe os toasts como readonly
+
   readonly toasts$ = this.toasts.asReadonly();
 
   private generateId(): string {
@@ -31,10 +29,8 @@ export class ToastService {
       duration
     };
 
-    // Adiciona o toast
     this.toasts.update(current => [...current, toast]);
 
-    // Remove automaticamente após a duração
     if (duration > 0) {
       setTimeout(() => {
         this.remove(toast.id);
@@ -42,26 +38,44 @@ export class ToastService {
     }
   }
 
+  // =======================================
+  // # success - Exibe toast de sucesso
+  // =======================================
   success(message: string, duration?: number): void {
     this.show('success', message, duration);
   }
 
+  // =======================================
+  // # error - Exibe toast de erro
+  // =======================================
   error(message: string, duration?: number): void {
     this.show('error', message, duration);
   }
 
+  // =======================================
+  // # warning - Exibe toast de aviso
+  // =======================================
   warning(message: string, duration?: number): void {
     this.show('warning', message, duration);
   }
 
+  // =======================================
+  // # info - Exibe toast informativo
+  // =======================================
   info(message: string, duration?: number): void {
     this.show('info', message, duration);
   }
 
+  // =======================================
+  // # remove - Remove um toast específico
+  // =======================================
   remove(id: string): void {
     this.toasts.update(current => current.filter(toast => toast.id !== id));
   }
 
+  // =======================================
+  // # clear - Remove todos os toasts
+  // =======================================
   clear(): void {
     this.toasts.set([]);
   }

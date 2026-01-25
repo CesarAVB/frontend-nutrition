@@ -1,22 +1,21 @@
-// src/app/models/paciente.model.ts
 export interface PacienteDTO {
   id?: number;
   nomeCompleto: string;
   cpf: string;
-  dataNascimento: string; // formato: YYYY-MM-DD
+  dataNascimento: string;
   sexo: 'MASCULINO' | 'FEMININO';
   telefoneWhatsapp: string;
   email?: string;
   prontuario?: string;
   totalConsultas?: number;
-  ultimaConsulta?: string; // ISO datetime
+  ultimaConsulta?: string;
 }
 
 export interface ConsultaResumoDTO {
   id: number;
   pacienteId: number;
   nomePaciente: string;
-  dataConsulta: string; // ISO datetime
+  dataConsulta: string;
   peso?: number;
   percentualGordura?: number;
   objetivo?: string;
@@ -39,8 +38,6 @@ export interface AvaliacaoFisicaDTO {
   id?: number;
   consultaId: number;
   altura?: number;
-  
-  // Perímetros (cm)
   perimetroOmbro?: number;
   perimetroTorax?: number;
   perimetroCintura?: number;
@@ -57,8 +54,6 @@ export interface AvaliacaoFisicaDTO {
   perimetroCoxaEsquerda?: number;
   perimetroPanturrilhaDireita?: number;
   perimetroPanturrilhaEsquerda?: number;
-  
-  // Dobras Cutâneas (mm)
   dobraTriceps?: number;
   dobraPeito?: number;
   dobraAxilarMedia?: number;
@@ -66,8 +61,6 @@ export interface AvaliacaoFisicaDTO {
   dobraAbdominal?: number;
   dobraSupraIliaca?: number;
   dobraCoxa?: number;
-  
-  // Composição Corporal
   pesoAtual?: number;
   massaMagra?: number;
   massaGorda?: number;
@@ -78,13 +71,9 @@ export interface AvaliacaoFisicaDTO {
 export interface QuestionarioEstiloVidaDTO {
   id?: number;
   consultaId: number;
-  
-  // Rotina
   objetivo?: string;
   frequenciaTreino?: string;
   tempoTreino?: string;
-  
-  // Saúde
   cirurgias?: string;
   doencas?: string;
   historicoFamiliar?: string;
@@ -93,21 +82,15 @@ export interface QuestionarioEstiloVidaDTO {
   usoAnabolizantes?: string;
   cicloAnabolizantes?: string;
   duracaoAnabolizantes?: string;
-  
-  // Hábitos
   fuma?: boolean;
   frequenciaAlcool?: string;
   funcionamentoIntestino?: string;
   qualidadeSono?: string;
   ingestaoAguaDiaria?: number;
-  
-  // Preferências
   alimentosNaoGosta?: string;
   frutasPreferidas?: string;
   numeroRefeicoesDesejadas?: number;
   horarioMaiorFome?: string;
-  
-  // Clínico
   pressaoArterial?: string;
   intolerancias?: string;
 }

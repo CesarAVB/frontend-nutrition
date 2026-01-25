@@ -1,19 +1,9 @@
-// DTOs de CRIAÇÃO (POST /consultas)
-// Usados no onSubmit do formulário
-
-// ===============================
-// Consulta
-// ===============================
 export interface CriarConsultaDTO {
   avaliacaoFisica: CriarAvaliacaoFisicaDTO;
   questionarioEstiloVida: CriarQuestionarioEstiloVidaDTO;
 }
 
-// ===============================
-// Avaliação Física
-// ===============================
 export interface CriarAvaliacaoFisicaDTO {
-  // Perímetros
   perimetroOmbro?: number;
   perimetroTorax?: number;
   perimetroCintura?: number;
@@ -34,7 +24,6 @@ export interface CriarAvaliacaoFisicaDTO {
   perimetroPanturrilhaDireita?: number;
   perimetroPanturrilhaEsquerda?: number;
 
-  // Dobras cutâneas
   dobraTriceps?: number;
   dobraPeito?: number;
   dobraAxilarMedia?: number;
@@ -43,7 +32,6 @@ export interface CriarAvaliacaoFisicaDTO {
   dobraSupraIliaca?: number;
   dobraCoxa?: number;
 
-  // Composição corporal
   pesoAtual: number;
   massaMagra?: number;
   massaGorda?: number;
@@ -51,15 +39,11 @@ export interface CriarAvaliacaoFisicaDTO {
   imc?: number;
 }
 
-// ===============================
-// Questionário Estilo de Vida
-// ===============================
 export interface CriarQuestionarioEstiloVidaDTO {
   objetivo: string;
   frequenciaTreino: string;
   tempoTreino?: string;
 
-  // Saúde
   cirurgias?: string;
   doencas?: string;
   historicoFamiliar?: string;
@@ -70,20 +54,17 @@ export interface CriarQuestionarioEstiloVidaDTO {
   cicloAnabolizantes?: string;
   duracaoAnabolizantes?: string;
 
-  // Hábitos
   fuma?: boolean;
   frequenciaAlcool: string;
   funcionamentoIntestino: string;
   qualidadeSono?: string;
   ingestaoAguaDiaria?: number;
 
-  // Preferências
   alimentosNaoGosta?: string;
   frutasPreferidas?: string;
   numeroRefeicoesDesejadas: number;
   horarioMaiorFome: string;
 
-  // Clínico
   pressaoArterial?: string;
   intolerancias?: string;
 }

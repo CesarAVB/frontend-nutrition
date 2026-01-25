@@ -1,5 +1,3 @@
-// consulta.model.ts (ou models/consulta.ts)
-
 export interface ConsultaResumoDTO {
   id: number;
   pacienteId: number;
@@ -16,7 +14,6 @@ export interface ConsultaResumoDTO {
 export interface AvaliacaoFisicaDTO {
   id: number;
   consultaId: number;
-  // Perímetros
   perimetroOmbro?: number;
   perimetroTorax?: number;
   perimetroCintura?: number;
@@ -33,7 +30,6 @@ export interface AvaliacaoFisicaDTO {
   perimetroCoxaEsquerda?: number;
   perimetroPanturrilhaDireita?: number;
   perimetroPanturrilhaEsquerda?: number;
-  // Dobras Cutâneas
   dobraTriceps?: number;
   dobraPeito?: number;
   dobraAxilarMedia?: number;
@@ -41,7 +37,6 @@ export interface AvaliacaoFisicaDTO {
   dobraAbdominal?: number;
   dobraSupraIliaca?: number;
   dobraCoxa?: number;
-  // Composição Corporal
   pesoAtual?: number;
   massaMagra?: number;
   massaGorda?: number;

@@ -1,4 +1,3 @@
-// src/app/pages/pacientes/pacientes.ts
 import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PacienteService } from '../../services/paciente';
@@ -34,10 +33,8 @@ export class Pacientes {
     const raw = p.ultimaConsulta;
     if (!raw) return '-';
 
-    // Tentar criar Date de forma robusta
     let d = new Date(raw as any);
     if (isNaN(d.getTime())) {
-      // Tentar converter formatos comuns como "YYYY-MM-DD HH:mm:ss" -> "YYYY-MM-DDTHH:mm:ss"
       const s = String(raw).trim().replace(' ', 'T');
       d = new Date(s);
       if (isNaN(d.getTime())) {

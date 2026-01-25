@@ -1,4 +1,3 @@
-// src/app/pages/pacientes/pacientes-list/pacientes-list.ts
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -20,20 +19,18 @@ interface PacienteView extends PacienteDTO {
   styleUrls: ['./pacientes-list.scss']
 })
 export class PacientesListComponent implements OnInit {
-  // Signals
   searchTerm = signal('');
   pacientes = signal<PacienteView[]>([]);
   isLoading = signal(false);
   error = signal('');
 
-  // Computed - Filtra pacientes baseado no searchTerm
   pacientesFiltrados = computed(() => {
     const termo = this.searchTerm().toLowerCase().trim();
     const lista = this.pacientes();
-    
+
     if (!termo) return lista;
 
-    return lista.filter(p => 
+    return lista.filter(p =>
       p.nomeCompleto.toLowerCase().includes(termo) ||
       p.cpf.replace(/\D/g, '').includes(termo.replace(/\D/g, ''))
     );
@@ -53,7 +50,7 @@ export class PacientesListComponent implements OnInit {
   carregarPacientes(): void {
     this.isLoading.set(true);
     this.error.set('');
-    
+
     this.pacienteService.listarTodos().subscribe({
       next: (pacientes) => {
         const pacientesView = pacientes.map(p => this.mapearParaView(p));
@@ -61,7 +58,6 @@ export class PacientesListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (erro) => {
-        console.error('Erro ao carregar pacientes:', erro);
         this.toastService.error('Erro ao carregar pacientes. Tente novamente.');
         this.isLoading.set(false);
       }
@@ -99,7 +95,6 @@ export class PacientesListComponent implements OnInit {
   private formatarData(dataISO?: string): string {
     if (!dataISO) return '-';
 
-    // Tentar parse robusto: aceitar formatos como 'YYYY-MM-DD HH:mm:ss' substituindo espaço por 'T'
     let d = new Date(dataISO as any);
     if (isNaN(d.getTime())) {
       const s = String(dataISO).trim().replace(' ', 'T');

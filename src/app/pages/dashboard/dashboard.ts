@@ -34,7 +34,6 @@ export class DashboardComponent implements OnInit {
   }
 
   carregarDados(): void {
-    // Carregar estatísticas
     this.loadingStats.set(true);
     this.dashboardService.obterEstatisticas().subscribe({
       next: (stats) => {
@@ -52,7 +51,6 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    // Carregar consultas de hoje
     this.loadingConsultas.set(true);
     this.dashboardService.consultasHoje().subscribe({
       next: (consultas) => {
@@ -70,7 +68,6 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    // Carregar pacientes recentes
     this.loadingPacientes.set(true);
     this.dashboardService.pacientesRecentes(5).subscribe({
       next: (pacientes) => {

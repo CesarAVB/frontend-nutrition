@@ -45,7 +45,6 @@ export class LoginComponent {
       password: this.loginForm.value.password!
     };
 
-    // Salvar ou limpar credenciais baseado no checkbox
     if (this.loginForm.value.rememberMe) {
       this.saveCredentials(credentials.email, credentials.password);
     } else {
@@ -88,7 +87,6 @@ export class LoginComponent {
           rememberMe: true
         });
       } catch (error) {
-        console.error('Erro ao carregar credenciais salvas:', error);
         this.clearSavedCredentials();
       }
     }

@@ -54,8 +54,7 @@ export class ConsultaDetailsComponent implements OnInit {
     this.consultaService.buscarCompleta(id).subscribe({
       next: (consulta) => {
         this.consulta.set(consulta);
-        
-        // Carregar fotos se houver registro fotográfico
+
         if (consulta.registroFotografico) {
           this.carregarFotos(id);
         } else {
@@ -79,7 +78,6 @@ export class ConsultaDetailsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao carregar fotos:', err);
-        // Não exibir erro, apenas continuar sem fotos
         this.isLoading.set(false);
       }
     });
@@ -135,7 +133,6 @@ export class ConsultaDetailsComponent implements OnInit {
   abrirModalRemarcar(): void {
     const dataAtual = this.consulta()?.dataConsulta;
     if (dataAtual) {
-      // Converter data ISO para formato datetime-local (YYYY-MM-DDTHH:mm)
       const data = new Date(dataAtual);
       const dataFormatada = data.toISOString().slice(0, 16);
       this.novaData.set(dataFormatada);
@@ -159,7 +156,6 @@ export class ConsultaDetailsComponent implements OnInit {
 
     this.isLoading.set(true);
 
-    // Converter para ISO 8601 com timezone
     const dataISO = new Date(data).toISOString();
 
     this.consultaService.atualizarData(consultaId, dataISO).subscribe({
@@ -249,15 +245,14 @@ export class ConsultaDetailsComponent implements OnInit {
     this.mostrarModalTemplate.set(false);
     this.toastService.info('Gerando relatório...');
 
-    // Fazer requisição POST para o endpoint do backend
     const url = `${environment.apiUrl}/api/v1/relatorio`;
-    
+
     const payload = {
       pacienteId: consulta.pacienteId,
       consultaId: consulta.id,
       templateType: this.templateType()
     };
-    
+
     this.http.post(url, payload, {
       responseType: 'blob',
       headers: {
@@ -265,7 +260,6 @@ export class ConsultaDetailsComponent implements OnInit {
       }
     }).subscribe({
       next: (blob: Blob) => {
-        // Criar URL para o blob e fazer download
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
@@ -274,7 +268,7 @@ export class ConsultaDetailsComponent implements OnInit {
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
-        
+
         this.toastService.success('Relatório gerado com sucesso!');
       },
       error: (error) => {
