@@ -1,11 +1,13 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaService } from '../../../services/consulta';
 import { ToastService } from '../../../services/toast';
 import { ConsultaDetalhadaDTO } from '../../../models/consulta.model';
 import { TipoFoto } from '../../../models/tipo-foto';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-consulta-details',
@@ -19,6 +21,7 @@ export class ConsultaDetailsComponent implements OnInit {
   private router = inject(Router);
   private consultaService = inject(ConsultaService);
   private toastService = inject(ToastService);
+  private http = inject(HttpClient);
 
   consulta = signal<ConsultaDetalhadaDTO | null>(null);
   fotos = signal<Record<TipoFoto, string | null>>({
@@ -31,7 +34,9 @@ export class ConsultaDetailsComponent implements OnInit {
   error = signal<string | null>(null);
   mostrarModalExclusao = signal(false);
   mostrarModalRemarcar = signal(false);
+  mostrarModalTemplate = signal(false);
   novaData = signal('');
+  templateType = signal<'padrao' | 'simples' | 'detalhado'>('padrao');
   fotoAmpliada = signal<string | null>(null);
   tituloFotoAmpliada = signal<string>('');
 
@@ -219,5 +224,72 @@ export class ConsultaDetailsComponent implements OnInit {
     if (imc < 35) return 'Obesidade Grau I';
     if (imc < 40) return 'Obesidade Grau II';
     return 'Obesidade Grau III';
+  }
+
+  gerarPDF(): void {
+    this.mostrarModalTemplate.set(true);
+  }
+
+  abrirModalTemplate(): void {
+    this.mostrarModalTemplate.set(true);
+  }
+
+  cancelarTemplate(): void {
+    this.mostrarModalTemplate.set(false);
+    this.templateType.set('padrao');
+  }
+
+  confirmarTemplate(): void {
+    const consulta = this.consulta();
+    if (!consulta) {
+      this.toastService.error('Consulta não encontrada');
+      return;
+    }
+
+    this.mostrarModalTemplate.set(false);
+    this.toastService.info('Gerando relatório...');
+
+    // Fazer requisição POST para o endpoint do backend
+    const url = `${environment.apiUrl}/api/v1/plano/relatorio`;
+    
+    const payload = {
+      pacienteId: consulta.pacienteId,
+      consultaId: consulta.id,
+      templateType: this.templateType()
+    };
+    
+    this.http.post(url, payload, {
+      responseType: 'blob',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).subscribe({
+      next: (blob: Blob) => {
+        // Criar URL para o blob e fazer download
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `relatorio-consulta-${consulta.nomePaciente.replace(/\s+/g, '-')}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        this.toastService.success('Relatório gerado com sucesso!');
+      },
+      error: (error) => {
+        console.error('Erro ao gerar relatório:', error);
+        this.toastService.error('Erro ao gerar relatório. Tente novamente.');
+      }
+    });
+  }
+
+  private getClassificacaoIMCFromValue(imc: number): string {
+    if (imc < 18.5) return 'Baixo peso';
+    if (imc < 25) return 'Peso normal';
+    if (imc < 30) return 'Sobrepeso';
+    if (imc < 35) return 'Obesidade grau I';
+    if (imc < 40) return 'Obesidade grau II';
+    return 'Obesidade grau III';
   }
 }

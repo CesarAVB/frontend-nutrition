@@ -48,6 +48,26 @@
         </svg>
         Editar
       </button>
+      <button class="btn-pdf" (click)="gerarPDF()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14,2 14,8 20,8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10,9 9,9 8,9"></polyline>
+        </svg>
+        Gerar PDF
+      </button>
       <button class="btn-danger" (click)="confirmarExclusao()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -341,6 +361,82 @@
       <div class="modal-footer">
         <button class="btn-secondary" (click)="cancelarRemarcar()">Cancelar</button>
         <button class="btn-primary" (click)="remarcarConsulta()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Modal de Seleção de Template -->
+  @if (mostrarModalTemplate()) {
+  <div class="modal-overlay" (click)="cancelarTemplate()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Selecionar Tipo de Relatório</h2>
+        <button class="close-button" (click)="cancelarTemplate()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="template-options">
+          <div class="template-option" 
+               [class.selected]="templateType() === 'padrao'"
+               (click)="templateType.set('padrao')">
+            <div class="template-radio">
+              <input type="radio" 
+                     [checked]="templateType() === 'padrao'"
+                     (change)="templateType.set('padrao')" />
+            </div>
+            <div class="template-content">
+              <h3>Padrão</h3>
+              <p>Relatório completo com dados pessoais, cálculos e recomendações</p>
+            </div>
+          </div>
+          
+          <div class="template-option" 
+               [class.selected]="templateType() === 'simples'"
+               (click)="templateType.set('simples')">
+            <div class="template-radio">
+              <input type="radio" 
+                     [checked]="templateType() === 'simples'"
+                     (change)="templateType.set('simples')" />
+            </div>
+            <div class="template-content">
+              <h3>Simples</h3>
+              <p>Versão resumida com foco nos números principais</p>
+            </div>
+          </div>
+          
+          <div class="template-option" 
+               [class.selected]="templateType() === 'detalhado'"
+               (click)="templateType.set('detalhado')">
+            <div class="template-radio">
+              <input type="radio" 
+                     [checked]="templateType() === 'detalhado'"
+                     (change)="templateType.set('detalhado')" />
+            </div>
+            <div class="template-content">
+              <h3>Detalhado</h3>
+              <p>Relatório profissional com design avançado e métricas visuais</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="cancelarTemplate()">Cancelar</button>
+        <button class="btn-primary" (click)="confirmarTemplate()">Gerar Relatório</button>
       </div>
     </div>
   </div>

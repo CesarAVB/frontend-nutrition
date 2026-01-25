@@ -142,10 +142,67 @@
     }
   }
 
+  .input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .form-input {
+      padding-right: 3rem; // Espaço para o ícone dentro do campo
+      width: 100%;
+    }
+
+    .hidden-date-input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .input-icon-button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 3rem;
+      background: white;
+      border: 1px solid #d1d5db; // Linha de borda completa
+      border-left: none; // Remove borda esquerda para não duplicar
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 0 8px 8px 0;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background: #f9fafb;
+      }
+
+      &:focus {
+        outline: 2px solid #10b981;
+        outline-offset: -2px;
+      }
+
+      .input-icon {
+        color: #6b7280;
+        pointer-events: none;
+      }
+    }
+  }
+
   .form-textarea {
     resize: vertical;
     font-family: inherit;
     line-height: 1.6;
+  }
+
+  .form-help {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
   }
 
   .error-message {
@@ -205,6 +262,19 @@
     &:active:not(:disabled) {
       transform: translateY(0);
     }
+
+    .spinner {
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 

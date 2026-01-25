@@ -36,9 +36,11 @@ export class PacienteService {
     return this.http.get<PacienteDTO>(`${this.apiUrl}/${id}`).pipe(
       map((p: any) => {
         const raw = p.ultimaConsulta || p.ultima_consulta || p.data_consulta || p.dataConsulta || p.createdAt || p.created_at || null;
+        const rawDataNascimento = p.dataNascimento || p.data_nascimento || null;
         return {
           ...p,
           ultimaConsulta: this.normalizeDateValue(raw),
+          dataNascimento: this.normalizeDateValue(rawDataNascimento),
         } as any;
       })
     );

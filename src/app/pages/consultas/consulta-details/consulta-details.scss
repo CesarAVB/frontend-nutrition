@@ -125,6 +125,29 @@
       box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
     }
   }
+
+  .btn-pdf {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.938rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    background: #10b981;
+    color: white;
+    flex-shrink: 0;
+
+    &:hover {
+      background: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+    }
+  }
 }
 
 .content-grid {
@@ -504,6 +527,66 @@
       outline: none;
       border-color: #10b981;
       box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+  }
+}
+
+// Modal de Seleção de Template
+.template-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .template-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+
+    &:hover {
+      border-color: #10b981;
+      background: #f0fdf4;
+    }
+
+    &.selected {
+      border-color: #10b981;
+      background: #f0fdf4;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .template-radio {
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+
+      input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        accent-color: #10b981;
+        cursor: pointer;
+      }
+    }
+
+    .template-content {
+      flex: 1;
+
+      h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1f2937;
+      }
+
+      p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 0.938rem;
+        line-height: 1.5;
+      }
     }
   }
 }
