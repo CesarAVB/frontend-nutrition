@@ -250,7 +250,7 @@ export class ConsultaDetailsComponent implements OnInit {
     this.toastService.info('Gerando relatório...');
 
     // Fazer requisição POST para o endpoint do backend
-    const url = `${environment.apiUrl}/api/v1/plano/relatorio`;
+    const url = `${environment.apiUrl}/api/v1/relatorio`;
     
     const payload = {
       pacienteId: consulta.pacienteId,
