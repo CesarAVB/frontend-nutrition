@@ -263,7 +263,7 @@ export class ConsultaDetailsComponent implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `relatorio-consulta-${consulta.nomePaciente.replace(/\s+/g, '-')}.pdf`;
+        link.download = this.gerarNomeArquivoRelatorio(consulta.nomePaciente, this.templateType());
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -276,6 +276,19 @@ export class ConsultaDetailsComponent implements OnInit {
         this.toastService.error('Erro ao gerar relatório. Tente novamente.');
       }
     });
+  }
+
+  private gerarNomeArquivoRelatorio(nomePaciente: string, tipo: 'padrao' | 'simples' | 'detalhado'): string {
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const MM = String(now.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+    const yy = String(now.getFullYear()).slice(-2); // Últimos 2 dígitos do ano
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const timestamp = `${dd}${MM}${yy}${hh}${mm}`;
+
+    const nomePacienteFormatado = nomePaciente.replace(/\s+/g, '-');
+    return `relatorio-${nomePacienteFormatado}-${tipo}-${timestamp}.pdf`;
   }
 
   private getClassificacaoIMCFromValue(imc: number): string {
