@@ -39,6 +39,9 @@ export class PacienteFormComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # validarData - Valida formato de data
+  // ===========================================
   private validarData(control: AbstractControl): ValidationErrors | null {
     if (!control.touched) return null;
 
@@ -68,6 +71,9 @@ export class PacienteFormComponent implements OnInit {
     return null;
   }
 
+  // ===========================================
+  // # ngOnInit - Inicializa o componente
+  // ===========================================
   ngOnInit(): void {
     if (this.route.snapshot.url.some(segment => segment.path === 'editar')) {
       this.pacienteId = Number(this.route.snapshot.paramMap.get('id'));
@@ -78,6 +84,9 @@ export class PacienteFormComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # carregarPaciente - Carrega dados do paciente para edição
+  // ===========================================
   carregarPaciente(id: number): void {
     this.isLoading = true;
 
@@ -106,6 +115,9 @@ export class PacienteFormComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # formatarCPFString - Formata string de CPF
+  // ===========================================
   private formatarCPFString(cpf: string): string {
     if (!cpf) return '';
     const apenasNumeros = cpf.replace(/\D/g, '');
@@ -114,6 +126,9 @@ export class PacienteFormComponent implements OnInit {
     return apenasNumeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
   }
 
+  // ===========================================
+  // # formatarTelefoneString - Formata string de telefone
+  // ===========================================
   private formatarTelefoneString(telefone: string): string {
     if (!telefone) return '';
     const apenasNumeros = telefone.replace(/\D/g, '');
@@ -122,7 +137,9 @@ export class PacienteFormComponent implements OnInit {
     return apenasNumeros.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
   }
 
-  // Formata data de "1990-06-15" ou "1990-06-15T00:00:00.000Z" para "15/06/1990"
+  // ===========================================
+  // # formatarDataString - Formata string de data
+  // ===========================================
   private formatarDataString(data: string): string {
     if (!data) return '';
     
@@ -142,6 +159,9 @@ export class PacienteFormComponent implements OnInit {
     return data;
   }
 
+  // ===========================================
+  // # dataParaISO - Converte data para formato ISO
+  // ===========================================
   private dataParaISO(data: string): string {
     if (!data) return '';
     const partes = data.split('/');
@@ -151,6 +171,9 @@ export class PacienteFormComponent implements OnInit {
     return data;
   }
 
+  // ===========================================
+  // # formatarCPF - Formata CPF durante digitação
+  // ===========================================
   formatarCPF(event: Event): void {
     const input = event.target as HTMLInputElement;
     let valor = input.value.replace(/\D/g, '');
@@ -164,6 +187,9 @@ export class PacienteFormComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # formatarTelefone - Formata telefone durante digitação
+  // ===========================================
   formatarTelefone(event: Event): void {
     const input = event.target as HTMLInputElement;
     let valor = input.value.replace(/\D/g, '');
@@ -176,6 +202,9 @@ export class PacienteFormComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # formatarData - Formata data durante digitação
+  // ===========================================
   formatarData(event: Event): void {
     const input = event.target as HTMLInputElement;
     let valor = input.value.replace(/\D/g, '');
@@ -188,6 +217,9 @@ export class PacienteFormComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # abrirCalendario - Abre seletor de data
+  // ===========================================
   abrirCalendario(hiddenInput: HTMLInputElement): void {
     const dataAtual = this.pacienteForm.get('dataNascimento')?.value;
     if (dataAtual && dataAtual.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
@@ -203,6 +235,9 @@ export class PacienteFormComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # onDateSelected - Processa seleção de data
+  // ===========================================
   onDateSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const dataISO = input.value;
@@ -213,6 +248,9 @@ export class PacienteFormComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # onSubmit - Processa submissão do formulário
+  // ===========================================
   onSubmit(): void {
     if (this.pacienteForm.valid) {
       this.isSaving = true;
@@ -265,10 +303,16 @@ export class PacienteFormComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # removerMascara - Remove máscara de string
+  // ===========================================
   private removerMascara(valor: string): string {
     return valor ? valor.replace(/\D/g, '') : '';
   }
 
+  // ===========================================
+  // # cancelar - Cancela operação e volta
+  // ===========================================
   cancelar(): void {
     if (this.isEditMode && this.pacienteId) {
       // Volta para os detalhes do paciente
@@ -279,6 +323,9 @@ export class PacienteFormComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # marcarCamposComoTocados - Marca campos como tocados
+  // ===========================================
   private marcarCamposComoTocados(): void {
     Object.keys(this.pacienteForm.controls).forEach(field => {
       const control = this.pacienteForm.get(field);
@@ -286,6 +333,9 @@ export class PacienteFormComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # getCampoErro - Obtém mensagem de erro do campo
+  // ===========================================
   getCampoErro(campo: string): string | null {
     const control = this.pacienteForm.get(campo);
     if (control?.touched && control?.errors) {

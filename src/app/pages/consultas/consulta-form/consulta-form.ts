@@ -131,6 +131,9 @@ export class ConsultaFormComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # ngOnInit - Inicializa o componente e carrega dados iniciais
+  // ===========================================
   ngOnInit(): void {
     const idFromRoute = this.route.snapshot.params['id'];
     if (idFromRoute) {
@@ -166,6 +169,9 @@ export class ConsultaFormComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # carregarConsulta - Carrega dados completos de uma consulta existente
+  // ===========================================
   carregarConsulta(consultaId: number): void {
     this.consultaService.buscarCompleta(consultaId).subscribe({
       next: (consulta: ConsultaDetalhadaDTO) => {
@@ -240,6 +246,9 @@ export class ConsultaFormComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # carregarNomePaciente - Carrega nome e última visita do paciente
+  // ===========================================
   carregarNomePaciente(id: number): void {
     this.pacienteService.buscarPorId(id).subscribe({
       next: (paciente) => {
@@ -266,13 +275,16 @@ export class ConsultaFormComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # setActiveTab - Define a aba ativa do formulário
+  // ===========================================
   setActiveTab(tab: TabType): void {
     this.activeTab = tab;
   }
 
-  // ============================================
-  // Upload de Fotos
-  // ============================================
+  // ===========================================
+  // # onFileSelected - Processa seleção de arquivo de imagem
+  // ===========================================
   onFileSelected(event: Event, tipoFoto: TipoFoto): void {
   const input = event.target as HTMLInputElement;
   if (input.files && input.files[0]) {
@@ -305,8 +317,10 @@ export class ConsultaFormComponent implements OnInit {
   }
 }
 
-// Método para comprimir imagem (opcional)
-private comprimirImagem(arquivo: File): Promise<File> {
+  // ===========================================
+  // # comprimirImagem - Comprime imagem mantendo proporção
+  // ===========================================
+  private comprimirImagem(arquivo: File): Promise<File> {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -347,17 +361,26 @@ private comprimirImagem(arquivo: File): Promise<File> {
   });
 }
 
+  // ===========================================
+  // # removerFoto - Remove foto selecionada e marca como removida
+  // ===========================================
   removerFoto(tipoFoto: TipoFoto): void {
     this.fotos[tipoFoto] = { arquivo: null, preview: null, uploading: false };
     this.fotosRemovidas[tipoFoto] = true; // Marcar como removida
   }
 
+  // ===========================================
+  // # triggerFileInput - Aciona seletor de arquivo para tipo específico
+  // ===========================================
   triggerFileInput(tipoFoto: TipoFoto): void {
     const inputId = `file-${tipoFoto.toLowerCase().replace(/_/g, '-')}`;
     const input = document.getElementById(inputId) as HTMLInputElement;
     if (input) input.click();
   }
 
+  // ===========================================
+  // # uploadFotos - Faz upload das fotos para o servidor
+  // ===========================================
   private uploadFotos(consultaId: number): void {
     const arquivos: Record<TipoFoto, File | null> = {
       ANTERIOR: this.fotos.ANTERIOR.arquivo,
@@ -382,9 +405,9 @@ private comprimirImagem(arquivo: File): Promise<File> {
     });
   }
 
-  // ============================================
-  // Load Fotos Existentes
-  // ============================================
+  // ===========================================
+  // # loadFotos - Carrega fotos existentes da consulta
+  // ===========================================
   private loadFotos(consultaId: number): void {
     this.consultaService.getFotos(consultaId).subscribe({
       next: (fotos) => {
@@ -398,9 +421,9 @@ private comprimirImagem(arquivo: File): Promise<File> {
     });
   }
 
-  // ============================================
-  // Submit Consulta - ATUALIZADO COM SUPORTE A REMOÇÃO
-  // ============================================
+  // ===========================================
+  // # onSubmit - Processa envio do formulário de consulta
+  // ===========================================
   onSubmit(): void {
     if (!this.estiloVidaForm.valid || !this.medidasForm.valid) {
       this.toastService.warning('Preencha todos os campos obrigatórios');
@@ -527,17 +550,25 @@ private comprimirImagem(arquivo: File): Promise<File> {
     }
   }
 
+  // ===========================================
+  // # cancelar - Cancela operação e volta à página anterior
+  // ===========================================
   cancelar(): void {
     if (this.pacienteId) this.router.navigate(['/pacientes', this.pacienteId]);
     else this.location.back();
   }
 
-  // Adicione dentro da classe ConsultaFormComponent
+  // ===========================================
+  // # isFieldInvalid - Verifica se campo do formulário é inválido
+  // ===========================================
   isFieldInvalid(form: FormGroup, fieldName: string): boolean {
     const field = form.get(fieldName);
     return !!(field && field.invalid && (field.touched || field.dirty));
   }
 
+  // ===========================================
+  // # getFieldError - Retorna mensagem de erro do campo do formulário
+  // ===========================================
   getFieldError(form: FormGroup, fieldName: string): string | null {
     const field = form.get(fieldName);
     if (!field || !field.errors) return null;

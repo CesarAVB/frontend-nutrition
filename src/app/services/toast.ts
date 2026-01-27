@@ -17,10 +17,16 @@ export class ToastService {
 
   readonly toasts$ = this.toasts.asReadonly();
 
+  // ===========================================
+  // # generateId - Gera ID único para toast
+  // ===========================================
   private generateId(): string {
     return `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
+  // ===========================================
+  // # show - Exibe toast com tipo e mensagem
+  // ===========================================
   private show(type: ToastType, message: string, duration: number = 4000): void {
     const toast: Toast = {
       id: this.generateId(),

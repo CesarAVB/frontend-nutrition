@@ -127,6 +127,9 @@ export class ConsultaService {
       .pipe(map((res: any) => this.normalizeConsultaDetalhada(res)));
   }
 
+  // ===========================================
+  // # normalizeConsultaDetalhada - Normaliza dados de consulta detalhada
+  // ===========================================
   private normalizeConsultaDetalhada(res: any): ConsultaDetalhadaDTO {
     if (!res) return res;
     const raw = res.dataConsulta || res.data_consulta || res.createdAt || res.created_at || res.create_at || null;
@@ -134,6 +137,9 @@ export class ConsultaService {
     return { ...res, dataConsulta: data } as ConsultaDetalhadaDTO;
   }
 
+  // ===========================================
+  // # normalizeDateValue - Normaliza valor de data
+  // ===========================================
   private normalizeDateValue(value: any): string | null {
     if (!value && value !== 0) return null;
 

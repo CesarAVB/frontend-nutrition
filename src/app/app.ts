@@ -40,5 +40,8 @@ import { CommonModule } from '@angular/common';
 export class AppComponent {
   title = 'NutriControl';
   
+  // ===========================================
+  // # constructor - Inicializa o componente raiz
+  // ===========================================
   constructor(public authService: AuthService) {}
 }

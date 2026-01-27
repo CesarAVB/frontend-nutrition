@@ -40,6 +40,9 @@ export class ConsultaDetailsComponent implements OnInit {
   fotoAmpliada = signal<string | null>(null);
   tituloFotoAmpliada = signal<string>('');
 
+  // ===========================================
+  // # ngOnInit - Inicializa o componente
+  // ===========================================
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
     if (id) {
@@ -47,6 +50,9 @@ export class ConsultaDetailsComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # carregarConsulta - Carrega dados da consulta
+  // ===========================================
   carregarConsulta(id: number): void {
     this.isLoading.set(true);
     this.error.set(null);
@@ -70,6 +76,9 @@ export class ConsultaDetailsComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # carregarFotos - Carrega fotos da consulta
+  // ===========================================
   carregarFotos(consultaId: number): void {
     this.consultaService.getFotos(consultaId).subscribe({
       next: (fotos) => {
@@ -83,6 +92,9 @@ export class ConsultaDetailsComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # voltar - Navega de volta
+  // ===========================================
   voltar(): void {
     const pacienteId = this.consulta()?.pacienteId;
     if (pacienteId) {
@@ -92,6 +104,9 @@ export class ConsultaDetailsComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # editarConsulta - Navega para edição da consulta
+  // ===========================================
   editarConsulta(): void {
     const consultaId = this.consulta()?.id;
     const pacienteId = this.consulta()?.pacienteId;
@@ -102,14 +117,23 @@ export class ConsultaDetailsComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # confirmarExclusao - Confirma exclusão da consulta
+  // ===========================================
   confirmarExclusao(): void {
     this.mostrarModalExclusao.set(true);
   }
 
+  // ===========================================
+  // # cancelarExclusao - Cancela exclusão da consulta
+  // ===========================================
   cancelarExclusao(): void {
     this.mostrarModalExclusao.set(false);
   }
 
+  // ===========================================
+  // # excluirConsulta - Exclui a consulta
+  // ===========================================
   excluirConsulta(): void {
     const consultaId = this.consulta()?.id;
     if (!consultaId) return;
@@ -130,6 +154,9 @@ export class ConsultaDetailsComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # abrirModalRemarcar - Abre modal para remarcar consulta
+  // ===========================================
   abrirModalRemarcar(): void {
     const dataAtual = this.consulta()?.dataConsulta;
     if (dataAtual) {
@@ -140,11 +167,17 @@ export class ConsultaDetailsComponent implements OnInit {
     this.mostrarModalRemarcar.set(true);
   }
 
+  // ===========================================
+  // # cancelarRemarcar - Cancela remarcação da consulta
+  // ===========================================
   cancelarRemarcar(): void {
     this.mostrarModalRemarcar.set(false);
     this.novaData.set('');
   }
 
+  // ===========================================
+  // # remarcarConsulta - Remarca a consulta
+  // ===========================================
   remarcarConsulta(): void {
     const consultaId = this.consulta()?.id;
     const data = this.novaData();
@@ -174,6 +207,9 @@ export class ConsultaDetailsComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # ampliarFoto - Amplia foto para visualização
+  // ===========================================
   ampliarFoto(url: string, titulo: string): void {
     console.log('ampliarFoto chamado:', url, titulo);
     this.fotoAmpliada.set(url);
@@ -181,11 +217,17 @@ export class ConsultaDetailsComponent implements OnInit {
     console.log('fotoAmpliada signal:', this.fotoAmpliada());
   }
 
+  // ===========================================
+  // # fecharFotoAmpliada - Fecha foto ampliada
+  // ===========================================
   fecharFotoAmpliada(): void {
     this.fotoAmpliada.set(null);
     this.tituloFotoAmpliada.set('');
   }
 
+  // ===========================================
+  // # formatarData - Formata data para exibição
+  // ===========================================
   formatarData(dataISO: string): string {
     if (!dataISO) return '-';
     try {
@@ -203,6 +245,9 @@ export class ConsultaDetailsComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # calcularIMC - Calcula IMC
+  // ===========================================
   calcularIMC(peso?: number, altura?: number): string {
     if (!peso || !altura || altura === 0) return '-';
     const imc = peso / (altura * altura);
@@ -210,6 +255,9 @@ export class ConsultaDetailsComponent implements OnInit {
     return imc.toFixed(1);
   }
 
+  // ===========================================
+  // # getClassificacaoIMC - Obtém classificação do IMC
+  // ===========================================
   getClassificacaoIMC(peso?: number, altura?: number): string {
     if (!peso || !altura || altura === 0) return '';
     const imc = peso / (altura * altura);
@@ -222,19 +270,31 @@ export class ConsultaDetailsComponent implements OnInit {
     return 'Obesidade Grau III';
   }
 
+  // ===========================================
+  // # gerarPDF - Inicia geração de PDF
+  // ===========================================
   gerarPDF(): void {
     this.mostrarModalTemplate.set(true);
   }
 
+  // ===========================================
+  // # abrirModalTemplate - Abre modal de template
+  // ===========================================
   abrirModalTemplate(): void {
     this.mostrarModalTemplate.set(true);
   }
 
+  // ===========================================
+  // # cancelarTemplate - Cancela seleção de template
+  // ===========================================
   cancelarTemplate(): void {
     this.mostrarModalTemplate.set(false);
     this.templateType.set('padrao');
   }
 
+  // ===========================================
+  // # confirmarTemplate - Confirma template e gera relatório
+  // ===========================================
   confirmarTemplate(): void {
     const consulta = this.consulta();
     if (!consulta) {
@@ -278,6 +338,9 @@ export class ConsultaDetailsComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # gerarNomeArquivoRelatorio - Gera nome do arquivo de relatório
+  // ===========================================
   private gerarNomeArquivoRelatorio(nomePaciente: string, tipo: 'padrao' | 'simples' | 'detalhado'): string {
     const now = new Date();
     const dd = String(now.getDate()).padStart(2, '0');

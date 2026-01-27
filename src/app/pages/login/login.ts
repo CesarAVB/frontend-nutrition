@@ -32,6 +32,9 @@ export class LoginComponent {
     this.loadSavedCredentials();
   }
 
+  // ===========================================
+  // # onSubmit - Processa o formulário de login
+  // ===========================================
   onSubmit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -68,14 +71,23 @@ export class LoginComponent {
     });
   }
 
+  // ===========================================
+  // # emailControl - Getter para controle de email
+  // ===========================================
   get emailControl() {
     return this.loginForm.get('email');
   }
 
+  // ===========================================
+  // # passwordControl - Getter para controle de senha
+  // ===========================================
   get passwordControl() {
     return this.loginForm.get('password');
   }
 
+  // ===========================================
+  // # loadSavedCredentials - Carrega credenciais salvas
+  // ===========================================
   private loadSavedCredentials() {
     const saved = localStorage.getItem(this.REMEMBER_KEY);
     if (saved) {
@@ -92,10 +104,16 @@ export class LoginComponent {
     }
   }
 
+  // ===========================================
+  // # saveCredentials - Salva credenciais no localStorage
+  // ===========================================
   private saveCredentials(email: string, password: string) {
     localStorage.setItem(this.REMEMBER_KEY, JSON.stringify({ email, password }));
   }
 
+  // ===========================================
+  // # clearSavedCredentials - Remove credenciais salvas
+  // ===========================================
   private clearSavedCredentials() {
     localStorage.removeItem(this.REMEMBER_KEY);
   }

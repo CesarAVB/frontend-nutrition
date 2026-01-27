@@ -26,10 +26,16 @@ export class ToastComponent {
 
   toasts = this.toastService.toasts$;
 
+  // ===========================================
+  // # remove - Remove um toast
+  // ===========================================
   remove(id: string): void {
     this.toastService.remove(id);
   }
 
+  // ===========================================
+  // # getIcon - Obtém ícone para tipo de toast
+  // ===========================================
   getIcon(type: string): string {
     const icons: { [key: string]: string } = {
       success: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

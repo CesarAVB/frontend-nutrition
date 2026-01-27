@@ -21,6 +21,9 @@ export class Consultas implements OnInit {
   isLoading = signal(true);
   error = signal<string | null>(null);
 
+  // ===========================================
+  // # ngOnInit - Inicializa o componente
+  // ===========================================
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
     if (id) {
@@ -28,6 +31,9 @@ export class Consultas implements OnInit {
     }
   }
 
+  // ===========================================
+  // # carregarConsulta - Carrega dados da consulta
+  // ===========================================
   carregarConsulta(id: number): void {
     this.isLoading.set(true);
     this.error.set(null);
@@ -45,6 +51,9 @@ export class Consultas implements OnInit {
     });
   }
 
+  // ===========================================
+  // # voltar - Navega de volta
+  // ===========================================
   voltar(): void {
     const pacienteId = this.consulta()?.pacienteId;
     if (pacienteId) {

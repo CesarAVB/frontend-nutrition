@@ -45,6 +45,9 @@ export class PacienteService {
     );
   }
 
+  // ===========================================
+  // # normalizeDateValue - Normaliza valor de data
+  // ===========================================
   private normalizeDateValue(value: any): string | null {
     if (!value && value !== 0) return null;
     if (typeof value === 'string') return value.trim();

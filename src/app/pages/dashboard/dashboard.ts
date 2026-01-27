@@ -29,10 +29,16 @@ export class DashboardComponent implements OnInit {
     this.loadingStats() || this.loadingConsultas() || this.loadingPacientes()
   );
 
+  // ===========================================
+  // # ngOnInit - Inicializa o componente
+  // ===========================================
   ngOnInit(): void {
     this.carregarDados();
   }
 
+  // ===========================================
+  // # carregarDados - Carrega dados do dashboard
+  // ===========================================
   carregarDados(): void {
     this.loadingStats.set(true);
     this.dashboardService.obterEstatisticas().subscribe({
@@ -86,22 +92,37 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # recarregar - Recarrega os dados
+  // ===========================================
   protected recarregar(): void {
     this.carregarDados();
   }
 
+  // ===========================================
+  // # verTodosPacientes - Navega para lista de pacientes
+  // ===========================================
   protected verTodosPacientes(): void {
     this.router.navigate(['/pacientes']);
   }
 
+  // ===========================================
+  // # verDetalhesPaciente - Navega para detalhes do paciente
+  // ===========================================
   protected verDetalhesPaciente(id: number): void {
     this.router.navigate(['/pacientes', id.toString()]);
   }
 
+  // ===========================================
+  // # novoPaciente - Navega para criação de novo paciente
+  // ===========================================
   protected novoPaciente(): void {
     this.router.navigate(['/pacientes/novo']);
   }
 
+  // ===========================================
+  // # getIniciais - Obtém iniciais do nome
+  // ===========================================
   protected getIniciais(nomeCompleto: string): string {
     return nomeCompleto
       .split(' ')
@@ -110,6 +131,9 @@ export class DashboardComponent implements OnInit {
       .join('');
   }
 
+  // ===========================================
+  // # formatarData - Formata data para exibição
+  // ===========================================
   protected formatarData(data: string | null | undefined): string {
     if (!data) return 'Sem registro';
     
@@ -121,6 +145,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # ligarPaciente - Abre WhatsApp do paciente
+  // ===========================================
   protected ligarPaciente(telefone: string | null | undefined, event: Event): void {
     event.stopPropagation();
     if (!telefone) {

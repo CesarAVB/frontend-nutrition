@@ -65,10 +65,16 @@ export class AuthService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
+  // ===========================================
+  // # hasToken - Verifica se há token armazenado
+  // ===========================================
   private hasToken(): boolean {
     return !!this.getToken();
   }
 
+  // ===========================================
+  // # setSession - Armazena sessão de autenticação
+  // ===========================================
   private setSession(authResult: LoginResponse) {
     localStorage.setItem(this.TOKEN_KEY, authResult.token);
     const user: User = {
@@ -81,6 +87,9 @@ export class AuthService {
     this.currentUser.set(user);
   }
 
+  // ===========================================
+  // # getUserFromStorage - Recupera usuário do localStorage
+  // ===========================================
   private getUserFromStorage(): User | null {
     const userStr = localStorage.getItem(this.USER_KEY);
     if (!userStr || userStr === 'undefined' || userStr === 'null') {

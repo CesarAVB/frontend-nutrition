@@ -25,10 +25,16 @@ export class Pacientes {
     );
   });
 
+  // ===========================================
+  // # constructor - Inicializa o componente
+  // ===========================================
   constructor() {
     this.service.listarTodos().subscribe(res => this.pacientes.set(res));
   }
 
+  // ===========================================
+  // # getUltimaVisita - Obtém última visita formatada
+  // ===========================================
   getUltimaVisita(p: PacienteDTO) {
     const raw = p.ultimaConsulta;
     if (!raw) return '-';
@@ -45,10 +51,16 @@ export class Pacientes {
     return d.toLocaleDateString('pt-BR');
   }
 
+  // ===========================================
+  // # getConsultasCount - Obtém contagem de consultas
+  // ===========================================
   getConsultasCount(p: PacienteDTO) {
     return p.totalConsultas ?? 0;
   }
 
+  // ===========================================
+  // # getIniciais - Obtém iniciais do nome
+  // ===========================================
   getIniciais(nome: string) {
     const partes = nome.split(' ');
     return (partes[0][0] + (partes[1]?.[0] ?? '')).toUpperCase();

@@ -29,6 +29,9 @@ export class PacienteDetailsComponent implements OnInit {
     private consultaService: ConsultaService
   ) {}
 
+  // ===========================================
+  // # ngOnInit - Inicializa o componente carregando dados do paciente e consultas
+  // ===========================================
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
     if (id) {
@@ -37,6 +40,9 @@ export class PacienteDetailsComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # carregarPaciente - Carrega os dados do paciente pelo ID
+  // ===========================================
   carregarPaciente(id: number): void {
     this.isLoading.set(true);
     
@@ -54,6 +60,9 @@ export class PacienteDetailsComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # carregarConsultas - Carrega as consultas associadas ao paciente
+  // ===========================================
   carregarConsultas(pacienteId: number): void {
     this.consultaService.listarPorPaciente(pacienteId).subscribe({
       next: (consultas) => {
@@ -67,6 +76,9 @@ export class PacienteDetailsComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # novaConsulta - Navega para a página de criação de nova consulta
+  // ===========================================
   novaConsulta(): void {
     const pacienteId = this.paciente()?.id;
     if (pacienteId) {
@@ -74,6 +86,9 @@ export class PacienteDetailsComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # editarPaciente - Navega para a página de edição do paciente
+  // ===========================================
   editarPaciente(): void {
     console.log('Método editarPaciente chamado');
     const pacienteAtual = this.paciente();
@@ -92,23 +107,38 @@ export class PacienteDetailsComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # verConsulta - Navega para os detalhes da consulta selecionada
+  // ===========================================
   verConsulta(consultaId: number): void {
     this.router.navigate(['/consultas', consultaId]);
   }
 
+  // ===========================================
+  // # abrirWhatsApp - Abre o WhatsApp com o número de telefone fornecido
+  // ===========================================
   abrirWhatsApp(telefone: string): void {
     const numero = telefone.replace(/\D/g, '');
     window.open(`https://wa.me/55${numero}`, '_blank');
   }
 
+  // ===========================================
+  // # confirmarExclusao - Exibe o modal de confirmação para exclusão do paciente
+  // ===========================================
   confirmarExclusao(): void {
     this.mostrarModalExclusao.set(true);
   }
 
+  // ===========================================
+  // # cancelarExclusao - Fecha o modal de confirmação de exclusão
+  // ===========================================
   cancelarExclusao(): void {
     this.mostrarModalExclusao.set(false);
   }
 
+  // ===========================================
+  // # excluirPaciente - Exclui o paciente do sistema
+  // ===========================================
   excluirPaciente(): void {
     const pacienteId = this.paciente()?.id;
     if (!pacienteId) return;
@@ -129,11 +159,16 @@ export class PacienteDetailsComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # voltar - Navega de volta para a lista de pacientes
+  // ===========================================
   voltar(): void {
     this.router.navigate(['/pacientes']);
   }
 
-  // Métodos auxiliares para o template
+  // ===========================================
+  // # getIniciais - Retorna as iniciais do nome do paciente
+  // ===========================================
   getIniciais(nome: string): string {
     const partes = nome.split(' ').filter(p => p.length > 0);
     if (partes.length === 0) return 'NN';
@@ -141,6 +176,9 @@ export class PacienteDetailsComponent implements OnInit {
     return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
   }
 
+  // ===========================================
+  // # formatarData - Formata a data ISO para o formato brasileiro
+  // ===========================================
   formatarData(dataISO?: string): string {
     if (!dataISO) return '-';
     try {
@@ -156,6 +194,9 @@ export class PacienteDetailsComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # calcularIdade - Calcula a idade do paciente baseada na data de nascimento
+  // ===========================================
   calcularIdade(dataNascimento: string): number {
     const hoje = new Date();
     const nascimento = new Date(dataNascimento);
@@ -169,6 +210,9 @@ export class PacienteDetailsComponent implements OnInit {
     return idade;
   }
 
+  // ===========================================
+  // # extrairDia - Extrai o dia da data ISO
+  // ===========================================
   extrairDia(dataISO: string): string {
     if (!dataISO) return '-';
     try {
@@ -180,6 +224,9 @@ export class PacienteDetailsComponent implements OnInit {
     }
   }
 
+  // ===========================================
+  // # extrairMes - Extrai o mês da data ISO em formato abreviado
+  // ===========================================
   extrairMes(dataISO: string): string {
     if (!dataISO) return '-';
     try {

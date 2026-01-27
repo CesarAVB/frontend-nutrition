@@ -35,10 +35,16 @@ export class ConsultasListComponent implements OnInit {
     );
   });
 
+  // ===========================================
+  // # ngOnInit - Inicializa o componente
+  // ===========================================
   ngOnInit(): void {
     this.carregarConsultas();
   }
 
+  // ===========================================
+  // # carregarConsultas - Carrega lista de consultas
+  // ===========================================
   carregarConsultas(): void {
     this.isLoading.set(true);
     this.error.set(null);
@@ -56,10 +62,16 @@ export class ConsultasListComponent implements OnInit {
     });
   }
 
+  // ===========================================
+  // # verDetalhes - Navega para detalhes da consulta
+  // ===========================================
   verDetalhes(id: number): void {
     this.router.navigate(['/consultas', id]);
   }
 
+  // ===========================================
+  // # formatarData - Formata data para exibição
+  // ===========================================
   formatarData(dataISO: string): string {
     if (!dataISO) return '-';
     try {
