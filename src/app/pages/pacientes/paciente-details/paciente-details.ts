@@ -167,16 +167,6 @@ export class PacienteDetailsComponent implements OnInit {
   }
 
   // ===========================================
-  // # getIniciais - Retorna as iniciais do nome do paciente
-  // ===========================================
-  getIniciais(nome: string): string {
-    const partes = nome.split(' ').filter(p => p.length > 0);
-    if (partes.length === 0) return 'NN';
-    if (partes.length === 1) return partes[0].substring(0, 2).toUpperCase();
-    return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
-  }
-
-  // ===========================================
   // # formatarData - Formata a data ISO para o formato brasileiro
   // ===========================================
   formatarData(dataISO?: string): string {

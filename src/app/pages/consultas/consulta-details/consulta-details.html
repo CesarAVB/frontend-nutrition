@@ -1,10 +1,12 @@
-<div class="consulta-details-container">
+<div class="details-container">
   @if (isLoading()) {
   <div class="loading-state">
     <div class="spinner"></div>
     <p>Carregando consulta...</p>
   </div>
-  } @else if (error()) {
+  }
+
+  @if (error()) {
   <div class="error-state">
     <p>{{ error() }}</p>
     <button class="btn-primary" (click)="voltar()">
@@ -15,7 +17,9 @@
       Voltar
     </button>
   </div>
-  } @else if (consulta()) {
+  }
+
+  @if (consulta()) {
   <div class="header">
     <button class="back-button" (click)="voltar()">
       <svg
@@ -102,66 +106,91 @@
     <!-- Card de Avaliação Física -->
     @if (consulta()?.avaliacaoFisica) {
     <div class="info-card">
-      <h2>Avaliação Física</h2>
-      <div class="info-row">
-        <span>Peso:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.pesoAtual }} kg</strong>
+      <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 12l2 2 4-4"></path>
+          <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
+          <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
+          <path d="M12 3c-1 0-3 1-3 3s2 3 3 3 3-1 3-3-2-3-3-3"></path>
+        </svg>
+        <h2 class="card-title">Avaliação Física</h2>
       </div>
-      <div class="info-row">
-        <span>% Gordura:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.percentualGordura }}%</strong>
-      </div>
-      <div class="info-row">
-        <span>IMC:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.imc }}</strong>
-      </div>
-      <div class="info-row">
-        <span>Massa Magra:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.massaMagra }} kg</strong>
-      </div>
-      <div class="info-row">
-        <span>Massa Gorda:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.massaGorda }} kg</strong>
-      </div>
-    </div>
-
-    <div class="info-card">
-      <h2>Perímetros (cm)</h2>
-      <div class="info-row">
-        <span>Cintura:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.perimetroCintura || '-' }}</strong>
-      </div>
-      <div class="info-row">
-        <span>Quadril:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.perimetroQuadril || '-' }}</strong>
-      </div>
-      <div class="info-row">
-        <span>Tórax:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.perimetroTorax || '-' }}</strong>
-      </div>
-      <div class="info-row">
-        <span>Braço D (contraído):</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.perimetroBracoDireitoContr || '-' }}</strong>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">Peso</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.pesoAtual }} kg</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">% Gordura</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.percentualGordura }}%</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">IMC</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.imc }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Massa Magra</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.massaMagra }} kg</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Massa Gorda</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.massaGorda }} kg</span>
+        </div>
       </div>
     </div>
 
     <div class="info-card">
-      <h2>Dobras Cutâneas (mm)</h2>
-      <div class="info-row">
-        <span>Tríceps:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.dobraTriceps || '-' }}</strong>
+      <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m16.24-3.76l-4.24 4.24m-6-6L2.76 6.24m16.24 12.52l-4.24-4.24m-6 6L2.76 17.76"></path>
+        </svg>
+        <h2 class="card-title">Perímetros (cm)</h2>
       </div>
-      <div class="info-row">
-        <span>Abdominal:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.dobraAbdominal || '-' }}</strong>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">Cintura</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroCintura || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Quadril</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroQuadril || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Tórax</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroTorax || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Braço D (contraído)</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroBracoDireitoContr || '-' }}</span>
+        </div>
       </div>
-      <div class="info-row">
-        <span>Subescapular:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.dobraSubescapular || '-' }}</strong>
+    </div>
+
+    <div class="info-card">
+      <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+        </svg>
+        <h2 class="card-title">Dobras Cutâneas (mm)</h2>
       </div>
-      <div class="info-row">
-        <span>Supra-ilíaca:</span>
-        <strong>{{ consulta()?.avaliacaoFisica?.dobraSupraIliaca || '-' }}</strong>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">Tríceps</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraTriceps || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Abdominal</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraAbdominal || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Subescapular</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraSubescapular || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Supra-ilíaca</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraSupraIliaca || '-' }}</span>
+        </div>
       </div>
     </div>
     } @else {
@@ -173,66 +202,97 @@
     <!-- Card de Questionário -->
     @if (consulta()?.questionario) {
     <div class="info-card">
-      <h2>Estilo de Vida</h2>
-      <div class="info-row">
-        <span>Objetivo:</span>
-        <strong>{{ consulta()?.questionario?.objetivo || '-' }}</strong>
+      <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <h2 class="card-title">Estilo de Vida</h2>
       </div>
-      <div class="info-row">
-        <span>Frequência de Treino:</span>
-        <strong>{{ consulta()?.questionario?.frequenciaTreino || '-' }}</strong>
-      </div>
-      <div class="info-row">
-        <span>Tempo de Treino:</span>
-        <strong>{{ consulta()?.questionario?.tempoTreino || '-' }}</strong>
-      </div>
-    </div>
-
-    <div class="info-card">
-      <h2>Hábitos</h2>
-      <div class="info-row">
-        <span>Fuma:</span>
-        <strong>{{ consulta()?.questionario?.fuma ? 'Sim' : 'Não' }}</strong>
-      </div>
-      <div class="info-row">
-        <span>Álcool:</span>
-        <strong>{{ consulta()?.questionario?.frequenciaAlcool || '-' }}</strong>
-      </div>
-      <div class="info-row">
-        <span>Intestino:</span>
-        <strong>{{ consulta()?.questionario?.funcionamentoIntestino || '-' }}</strong>
-      </div>
-      <div class="info-row">
-        <span>Sono:</span>
-        <strong>{{ consulta()?.questionario?.qualidadeSono || '-' }}</strong>
-      </div>
-      <div class="info-row">
-        <span>Água (L/dia):</span>
-        <strong>{{ consulta()?.questionario?.ingestaoAguaDiaria || '-' }}</strong>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">Objetivo</span>
+          <span class="info-value">{{ consulta()?.questionario?.objetivo || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Frequência de Treino</span>
+          <span class="info-value">{{ consulta()?.questionario?.frequenciaTreino || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Tempo de Treino</span>
+          <span class="info-value">{{ consulta()?.questionario?.tempoTreino || '-' }}</span>
+        </div>
       </div>
     </div>
 
     <div class="info-card">
-      <h2>Preferências Alimentares</h2>
-      <div class="info-row">
-        <span>Refeições desejadas:</span>
-        <strong>{{ consulta()?.questionario?.numeroRefeicoesDesejadas || '-' }}</strong>
+      <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+          <path d="M21 3v5h-5"></path>
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+          <path d="M8 16H3v5"></path>
+        </svg>
+        <h2 class="card-title">Hábitos</h2>
       </div>
-      <div class="info-row">
-        <span>Horário de maior fome:</span>
-        <strong>{{ consulta()?.questionario?.horarioMaiorFome || '-' }}</strong>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">Fuma</span>
+          <span class="info-value">{{ consulta()?.questionario?.fuma ? 'Sim' : 'Não' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Álcool</span>
+          <span class="info-value">{{ consulta()?.questionario?.frequenciaAlcool || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Intestino</span>
+          <span class="info-value">{{ consulta()?.questionario?.funcionamentoIntestino || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Sono</span>
+          <span class="info-value">{{ consulta()?.questionario?.qualidadeSono || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Água (L/dia)</span>
+          <span class="info-value">{{ consulta()?.questionario?.ingestaoAguaDiaria || '-' }}</span>
+        </div>
       </div>
-      @if (consulta()?.questionario?.alimentosNaoGosta) {
-      <div class="info-row full-width">
-        <span>Alimentos que não gosta:</span>
-        <p>{{ consulta()?.questionario?.alimentosNaoGosta }}</p>
+    </div>
+
+    <div class="info-card">
+      <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+          <path d="M7 2v20"></path>
+          <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+        </svg>
+        <h2 class="card-title">Preferências Alimentares</h2>
       </div>
-      } @if (consulta()?.questionario?.intolerancias) {
-      <div class="info-row full-width">
-        <span>Intolerâncias:</span>
-        <p>{{ consulta()?.questionario?.intolerancias }}</p>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">Refeições desejadas</span>
+          <span class="info-value">{{ consulta()?.questionario?.numeroRefeicoesDesejadas || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Horário de maior fome</span>
+          <span class="info-value">{{ consulta()?.questionario?.horarioMaiorFome || '-' }}</span>
+        </div>
+        @if (consulta()?.questionario?.alimentosNaoGosta) {
+        <div class="info-row full-width">
+          <span class="info-label">Alimentos que não gosta</span>
+          <p class="info-value">{{ consulta()?.questionario?.alimentosNaoGosta }}</p>
+        </div>
+        }
+        @if (consulta()?.questionario?.intolerancias) {
+        <div class="info-row full-width">
+          <span class="info-label">Intolerâncias</span>
+          <p class="info-value">{{ consulta()?.questionario?.intolerancias }}</p>
+        </div>
+        }
       </div>
-      }
     </div>
     } @else {
     <div class="info-card empty">
@@ -243,14 +303,22 @@
     <!-- Card de Fotos -->
     @if (consulta()?.registroFotografico) {
     <div class="info-card fotos-card">
-      <h2>Registro Fotográfico</h2>
-      <div class="fotos-grid">
+      <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <circle cx="9" cy="9" r="2"></circle>
+          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+        </svg>
+        <h2 class="card-title">Registro Fotográfico</h2>
+      </div>
+      <div class="card-body">
+        <div class="fotos-grid">
         @if (fotos()['ANTERIOR']) {
         <div class="foto-item">
           <span>Anterior</span>
-          <img 
-            [src]="fotos()['ANTERIOR']" 
-            alt="Foto Anterior" 
+          <img
+            [src]="fotos()['ANTERIOR']"
+            alt="Foto Anterior"
             class="foto-img"
             (click)="ampliarFoto(fotos()['ANTERIOR']!, 'Foto Anterior')">
         </div>
@@ -258,9 +326,9 @@
         @if (fotos()['POSTERIOR']) {
         <div class="foto-item">
           <span>Posterior</span>
-          <img 
-            [src]="fotos()['POSTERIOR']" 
-            alt="Foto Posterior" 
+          <img
+            [src]="fotos()['POSTERIOR']"
+            alt="Foto Posterior"
             class="foto-img"
             (click)="ampliarFoto(fotos()['POSTERIOR']!, 'Foto Posterior')">
         </div>
@@ -268,9 +336,9 @@
         @if (fotos()['LATERAL_ESQUERDA']) {
         <div class="foto-item">
           <span>Lateral Esquerda</span>
-          <img 
-            [src]="fotos()['LATERAL_ESQUERDA']" 
-            alt="Foto Lateral Esquerda" 
+          <img
+            [src]="fotos()['LATERAL_ESQUERDA']"
+            alt="Foto Lateral Esquerda"
             class="foto-img"
             (click)="ampliarFoto(fotos()['LATERAL_ESQUERDA']!, 'Foto Lateral Esquerda')">
         </div>
@@ -278,9 +346,9 @@
         @if (fotos()['LATERAL_DIREITA']) {
         <div class="foto-item">
           <span>Lateral Direita</span>
-          <img 
-            [src]="fotos()['LATERAL_DIREITA']" 
-            alt="Foto Lateral Direita" 
+          <img
+            [src]="fotos()['LATERAL_DIREITA']"
+            alt="Foto Lateral Direita"
             class="foto-img"
             (click)="ampliarFoto(fotos()['LATERAL_DIREITA']!, 'Foto Lateral Direita')">
         </div>
@@ -288,7 +356,12 @@
         @if (!fotos()['ANTERIOR'] && !fotos()['POSTERIOR'] && !fotos()['LATERAL_ESQUERDA'] && !fotos()['LATERAL_DIREITA']) {
         <p class="no-photos">Nenhuma foto disponível</p>
         }
+        </div>
       </div>
+    </div>
+    } @else {
+    <div class="info-card empty">
+      <p>Nenhum registro fotográfico</p>
     </div>
     }
   </div>
@@ -426,11 +499,11 @@
       </div>
       <div class="modal-body">
         <div class="template-options">
-          <div class="template-option" 
+          <div class="template-option"
                [class.selected]="templateType() === 'padrao'"
                (click)="templateType.set('padrao')">
             <div class="template-radio">
-              <input type="radio" 
+              <input type="radio"
                      [checked]="templateType() === 'padrao'"
                      (change)="templateType.set('padrao')" />
             </div>
@@ -439,12 +512,12 @@
               <p>Relatório completo com dados pessoais, cálculos e recomendações</p>
             </div>
           </div>
-          
-          <div class="template-option" 
+
+          <div class="template-option"
                [class.selected]="templateType() === 'simples'"
                (click)="templateType.set('simples')">
             <div class="template-radio">
-              <input type="radio" 
+              <input type="radio"
                      [checked]="templateType() === 'simples'"
                      (change)="templateType.set('simples')" />
             </div>
@@ -453,12 +526,12 @@
               <p>Versão resumida com foco nos números principais</p>
             </div>
           </div>
-          
-          <div class="template-option" 
+
+          <div class="template-option"
                [class.selected]="templateType() === 'detalhado'"
                (click)="templateType.set('detalhado')">
             <div class="template-radio">
-              <input type="radio" 
+              <input type="radio"
                      [checked]="templateType() === 'detalhado'"
                      (change)="templateType.set('detalhado')" />
             </div>
