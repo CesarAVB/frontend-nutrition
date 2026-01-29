@@ -511,6 +511,9 @@
     min-width: 0;
     width: 100%;
     padding: 2rem 1rem;
+    position: relative;
+    z-index: 2; /* manter acima de possíveis elementos fixos */
+    padding-top: 3.5rem; /* evita que algo sobreponha o topo em mobile */
   }
 }
 

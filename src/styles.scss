@@ -238,7 +238,26 @@ body.mobile-menu-open .mobile-menu-content {
 .mobile-menu-portal .mobile-menu-divider {
   height: 1px;
   background: rgba(16, 185, 129, 0.1);
-  margin: 0.75rem 0;
+
+}
+
+/* If a page opts out of the navbar (e.g. login), hide the fixed navbar entirely */
+body.no-navbar-padding .navbar {
+  display: none !important;
+}
+
+/* Also ensure portal mobile menu doesn't reserve top padding when navbar hidden */
+body.no-navbar-padding > .mobile-menu-content,
+body.no-navbar-padding .mobile-menu-content {
+  padding-top: 0 !important;
+}
+
+/* Hide left-panel visuals only on small screens when navbar is opted-out (mobile safety) */
+@media (max-width: 900px) {
+  body.no-navbar-padding .login-left,
+  body.no-navbar-padding .login-left * {
+    display: none !important;
+  }
 }
 
 /* More complete portal fallbacks to mirror component styles */
