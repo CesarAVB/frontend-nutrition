@@ -415,6 +415,26 @@
 
   .content-grid .info-card.fotos-card .fotos-grid {
     gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: start;
+  }
+}
+
+/* Em telas largas, mostrar 4 miniaturas em uma linha */
+@media (min-width: 1200px) {
+  .content-grid .info-card.fotos-card .fotos-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .content-grid .info-card.fotos-card .fotos-grid .foto-item {
+    padding: 1rem;
+  }
+
+  .content-grid .info-card.fotos-card .fotos-grid .foto-item .foto-img {
+    height: 180px;
+    object-fit: cover;
   }
 }
 
