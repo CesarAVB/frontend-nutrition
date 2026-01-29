@@ -2,6 +2,41 @@
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .details-container {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0.75rem 0 0.75rem 0 !important;
+    overflow-x: hidden !important;
+  }
+  .content-grid {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (max-width: 480px) {
+  .details-container {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0.5rem 0 0.5rem 0 !important;
+    overflow-x: hidden !important;
+  }
+  .content-grid {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    grid-template-columns: 1fr !important;
+  }
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
   backdrop-filter: blur(20px);
   border-radius: 16px;
@@ -151,7 +186,23 @@
 .content-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   gap: 1.5rem;
+}
+
+@media (max-width: 480px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    gap: 1.5rem;
+  }
+}
 }
 
 // Cards de informação
@@ -264,10 +315,20 @@
     gap: 0.75rem;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
     backdrop-filter: blur(10px);
-    padding: 1rem;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 480px) {
+    .details-container {
+      max-width: 100vw !important;
+      width: 100vw !important;
+      margin: 0 !important;
+      padding: 0.75rem 0 0.75rem 0 !important;
+      overflow-x: hidden !important;
+    }
+  }
     transition: all 0.3s ease;
 
     &:hover {
