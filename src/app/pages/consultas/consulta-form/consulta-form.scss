@@ -142,6 +142,70 @@
   }
 }
 
+/* Responsividade do Header e Actions */
+@media (max-width: 1024px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .header-content h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .header-content {
+    order: 1;
+    width: 100%;
+  }
+
+  .header-actions {
+    order: 2;
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  .header-actions .btn-secondary,
+  .header-actions .btn-primary {
+    flex: 0 0 auto;
+  }
+
+  /* Garantir que o botão de voltar fique no canto superior esquerdo em telas pequenas */
+  .back-button {
+    order: 0;
+    align-self: flex-start;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0.75rem;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .header-actions .btn-secondary,
+  .header-actions .btn-primary {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem;
+  }
+}
+
 // Tabs Container
 .tabs-container {
   display: flex;
@@ -184,6 +248,29 @@
       color: white;
       box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
     }
+  }
+}
+
+/* Responsividade das Tabs / Steps */
+@media (max-width: 768px) {
+  .tabs-container {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .tabs-container .tab-button {
+    flex: 1 1 100%;
+    width: 100%;
+    justify-content: center;
+    padding: 0.65rem 0.75rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .tabs-container .tab-button {
+    flex: 1 1 auto;
+    min-width: 140px;
   }
 }
 
@@ -517,18 +604,30 @@
 // Fotos Grid
 .fotos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   margin-top: 1.5rem;
+  justify-items: center;
 }
 
 .foto-upload-card {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.8);
-  border: 2px dashed #d1d5db;
-  transition: all 0.2s ease;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+  }
 
   &:hover {
     border-color: #3b82f6;
@@ -540,7 +639,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem 1rem;
     cursor: pointer;
     transition: all 0.2s ease;
 
@@ -550,9 +648,14 @@
     }
 
     .upload-label {
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 0.95rem;
       color: #374151;
+      font-weight: 600;
+      text-align: center;
+      padding: 0.5rem;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
       margin-bottom: 0.5rem;
     }
 
@@ -576,13 +679,36 @@
 
   .foto-preview {
     position: relative;
-    width: 100%;
-    height: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    span {
+      font-size: 0.95rem;
+      color: #374151;
+      font-weight: 600;
+      text-align: center;
+      padding: 0.5rem;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
 
     img {
       width: 100%;
-      height: 100%;
+      height: 200px;
       object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid #e5e7eb;
+      transition: transform 0.3s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        border-color: #10b981;
+        transform: scale(1.05);
+        box-shadow: 0 8px 15px rgba(16, 185, 129, 0.3);
+      }
     }
 
     .foto-overlay {
@@ -708,7 +834,7 @@
   }
 
   .fotos-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
 }
@@ -775,6 +901,8 @@
 @media (max-width: 480px) {
   .consulta-container {
     padding: 0.5rem;
+    width: 100%;
+    max-width: 100%;
   }
 
   .info-card {
@@ -793,6 +921,14 @@
   }
 
   .foto-preview {
+    height: 150px;
+  }
+
+  .foto-upload-card {
+    padding: 0.625rem;
+  }
+
+  .foto-preview img {
     height: 150px;
   }
 }

@@ -503,6 +503,7 @@
             
             @if (fotos['ANTERIOR'].preview) {
               <div class="foto-preview">
+                <span>Anterior</span>
                 <img [src]="fotos['ANTERIOR'].preview" alt="Foto Anterior">
                 <div class="foto-overlay">
                   <button class="btn-remove-foto" (click)="removerFoto('ANTERIOR')" type="button">
@@ -543,6 +544,7 @@
             
             @if (fotos['POSTERIOR'].preview) {
               <div class="foto-preview">
+                <span>Posterior</span>
                 <img [src]="fotos['POSTERIOR'].preview" alt="Foto Posterior">
                 <div class="foto-overlay">
                   <button class="btn-remove-foto" (click)="removerFoto('POSTERIOR')" type="button">
@@ -583,6 +585,7 @@
             
             @if (fotos['LATERAL_ESQUERDA'].preview) {
               <div class="foto-preview">
+                <span>Lateral Esquerda</span>
                 <img [src]="fotos['LATERAL_ESQUERDA'].preview" alt="Foto Lateral Esquerda">
                 <div class="foto-overlay">
                   <button class="btn-remove-foto" (click)="removerFoto('LATERAL_ESQUERDA')" type="button">
@@ -623,6 +626,7 @@
             
             @if (fotos['LATERAL_DIREITA'].preview) {
               <div class="foto-preview">
+                <span>Lateral Direita</span>
                 <img [src]="fotos['LATERAL_DIREITA'].preview" alt="Foto Lateral Direita">
                 <div class="foto-overlay">
                   <button class="btn-remove-foto" (click)="removerFoto('LATERAL_DIREITA')" type="button">
