@@ -247,7 +247,8 @@ export class NavbarComponent {
   // ===========================================
   logout(): void {
     this.userMenuOpen = false;
-    this.menuAberto = false;
+    // ensure mobile menu and its overlay are fully closed and cleaned up
+    try { this.fecharMenu(); } catch (e) { console.warn('fecharMenu error on logout', e); }
     this.authService.logout();
     this.router.navigate(['/login']);
   }
