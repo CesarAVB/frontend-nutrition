@@ -172,6 +172,18 @@
   text-align: center;
   margin-bottom: 2rem;
 
+  .mobile-logo {
+    display: none; // Oculto por padrão
+    margin-bottom: 1.5rem;
+
+    .brand-logo-mobile {
+      width: 120px;
+      height: auto;
+      // filter: brightness(0) invert(1); // Removido para manter cores originais
+      opacity: 0.9;
+    }
+  }
+
   .welcome-section {
     h2 {
       font-size: 1.75rem;
@@ -418,6 +430,10 @@
     height: 100%; // Ocupa toda a altura
     display: flex;
     flex-direction: column;
+  }
+
+  .login-header .mobile-logo {
+    display: block; // Mostra o logo em telas menores
   }
 
   .form-container {
