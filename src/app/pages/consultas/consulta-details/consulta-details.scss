@@ -398,8 +398,34 @@
       margin-bottom: 1rem;
       opacity: 0.6;
     }
+
+  }
+
+}
+
+/* Fazer o card de Registro Fotográfico ocupar 2 colunas em telas largas
+   e garantir a grade de 4 fotos visíveis quando houver espaço suficiente. */
+@media (min-width: 1024px) {
+  .content-grid {
+    grid-auto-rows: auto;
+  }
+
+  .content-grid .info-card.fotos-card {
+    grid-column: span 2;
+  }
+
+  .content-grid .info-card.fotos-card .fotos-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
   }
 }
+
+@media (max-width: 1023px) {
+  .content-grid .info-card.fotos-card {
+    grid-column: span 1;
+  }
+}
+ 
 
 .loading-state,
 .error-state {
