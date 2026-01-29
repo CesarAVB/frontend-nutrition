@@ -37,6 +37,16 @@ export class AuthService {
   currentUser = signal<User | null>(this.getUserFromStorage());
 
   // =======================================
+  // # constructor - Inicializa verificação de token
+  // =======================================
+  constructor() {
+    // Verifica token a cada 5 minutos
+    setInterval(() => {
+      this.checkTokenExpiration();
+    }, 5 * 60 * 1000); // 5 minutos
+  }
+
+  // =======================================
   // # login - Realiza login do usuário
   // =======================================
   login(credentials: LoginRequest) {
@@ -59,6 +69,33 @@ export class AuthService {
   }
 
   // =======================================
+  // # isTokenExpired - Verifica se o token JWT está expirado
+  // =======================================
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+      return payload.exp < currentTime;
+    } catch (error) {
+      console.error('Erro ao verificar expiração do token:', error);
+      return true;
+    }
+  }
+
+  // =======================================
+  // # checkTokenExpiration - Verifica e trata expiração do token
+  // =======================================
+  checkTokenExpiration() {
+    if (this.isAuthenticated() && this.isTokenExpired()) {
+      console.warn('Token expirado detectado. Realizando logout automático.');
+      this.logout();
+    }
+  }
+
+  // =======================================
   // # getToken - Retorna o token de autenticação
   // =======================================
   getToken(): string | null {
@@ -66,10 +103,11 @@ export class AuthService {
   }
 
   // ===========================================
-  // # hasToken - Verifica se há token armazenado
+  // # hasToken - Verifica se há token armazenado e válido
   // ===========================================
   private hasToken(): boolean {
-    return !!this.getToken();
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    return !!token && !this.isTokenExpired();
   }
 
   // ===========================================

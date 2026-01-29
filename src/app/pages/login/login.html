@@ -1,76 +1,151 @@
 <div class="login-container">
-  <div class="login-card">
-    <div class="login-header">
-      <img src="images/logo.png" alt="Logo" class="logo">
-      <h1>Bem-vindo</h1>
-      <p>Entre com suas credenciais de acessar</p>
+  <!-- Lado esquerdo - Informações e branding -->
+  <div class="login-left">
+    <div class="brand-section">
+      <div class="logo-wrapper">
+        <img src="images/logo.png" alt="Logo" class="brand-logo">
+      </div>
+
+      <div class="brand-description">
+        <h2>Sistema Completo de<br>Nutrição e Bem-estar</h2>
+        <p>Gerencie seus pacientes, crie planos alimentares personalizados e acompanhe o progresso.</p>
+      </div>
+
+      <div class="features-list">
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div class="feature-text">
+            <h4>Acompanhamento Detalhado</h4>
+            <p>Monitore evolução e métricas dos pacientes</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">🥗</div>
+          <div class="feature-text">
+            <h4>Planos Alimentares</h4>
+            <p>Crie dietas personalizadas e equilibradas</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">📱</div>
+          <div class="feature-text">
+            <h4>Acesso Anywhere</h4>
+            <p>Gerencie tudo de qualquer dispositivo</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-text">
+            <h4>Segurança Total</h4>
+            <p>Dados protegidos e criptografados</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="nutrition-elements">
+        <div class="floating-element apple">🍎</div>
+        <div class="floating-element carrot">🥕</div>
+        <div class="floating-element broccoli">🥦</div>
+        <div class="floating-element banana">🍌</div>
+        <div class="floating-element orange">🍊</div>
+      </div>
     </div>
+  </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <div class="form-group">
-        <label for="email">E-mail</label>
-        <input
-          type="email"
-          id="email"
-          formControlName="email"
-          placeholder="seu@email.com"
-          [class.invalid]="emailControl?.invalid && emailControl?.touched"
-        >
-        @if (emailControl?.invalid && emailControl?.touched) {
-          <div class="error-message">
-            @if (emailControl?.errors?.['required']) {
-              <span>E-mail é obrigatório</span>
-            }
-            @if (emailControl?.errors?.['email']) {
-              <span>E-mail inválido</span>
-            }
-          </div>
-        }
+  <!-- Lado direito - Formulário de login -->
+  <div class="login-right">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="welcome-section">
+          <h2>Seja Bem-vindo!</h2>
+          <p>Entre com seus dados de acesso para continuar.</p>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="password">Senha</label>
-        <input
-          type="password"
-          id="password"
-          formControlName="password"
-          placeholder="••••••••"
-          [class.invalid]="passwordControl?.invalid && passwordControl?.touched"
-        >
-        @if (passwordControl?.invalid && passwordControl?.touched) {
-          <div class="error-message">
-            @if (passwordControl?.errors?.['required']) {
-              <span>Senha é obrigatória</span>
-            }
-            @if (passwordControl?.errors?.['minlength']) {
-              <span>Senha deve ter no mínimo 6 caracteres</span>
-            }
-          </div>
-        }
-      </div>
-
-      <div class="form-group-checkbox">
-        <label class="checkbox-label">
+      <div class="form-container">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="email">
+            <span class="icon">📧</span>
+            E-mail
+          </label>
           <input
-            type="checkbox"
-            formControlName="rememberMe"
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="nutricionista@email.com"
+            [class.invalid]="emailControl?.invalid && emailControl?.touched"
           >
-          <span>Lembrar-me</span>
-        </label>
+          @if (emailControl?.invalid && emailControl?.touched) {
+            <div class="error-message">
+              @if (emailControl?.errors?.['required']) {
+                <span>E-mail é obrigatório</span>
+              }
+              @if (emailControl?.errors?.['email']) {
+                <span>E-mail inválido</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="password">
+            <span class="icon">🔒</span>
+            Senha
+          </label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="••••••••"
+            [class.invalid]="passwordControl?.invalid && passwordControl?.touched"
+          >
+          @if (passwordControl?.invalid && passwordControl?.touched) {
+            <div class="error-message">
+              @if (passwordControl?.errors?.['required']) {
+                <span>Senha é obrigatória</span>
+              }
+              @if (passwordControl?.errors?.['minlength']) {
+                <span>Senha deve ter no mínimo 6 caracteres</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group-checkbox">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              formControlName="rememberMe"
+            >
+            <span>Lembrar-me</span>
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          class="btn-login"
+          [disabled]="isLoading()"
+        >
+          @if (isLoading()) {
+            <span class="spinner"></span>
+            <span>Acessando sistema...</span>
+          } @else {
+            <span>ENTRAR</span>
+          }
+        </button>
+      </form>
       </div>
 
-      <button
-        type="submit"
-        class="btn-login"
-        [disabled]="isLoading()"
-      >
-        @if (isLoading()) {
-          <span class="spinner"></span>
-          <span>Entrando...</span>
-        } @else {
-          <span>Entrar</span>
-        }
-      </button>
-    </form>
+      <div class="login-footer">
+        <div class="footer-info">
+          <p>Desenvolvido por <a href="https://portfolio.cesaraugusto.dev.br/" target="_blank" rel="noopener noreferrer">César Augusto</a></p>
+          <p>© Copyright 2026 - Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
