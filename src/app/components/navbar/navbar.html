@@ -94,7 +94,7 @@
 
   <!-- Menu Mobile -->
   <div class="mobile-menu" [class.open]="menuAberto">
-    <div class="mobile-menu-content">
+    <div #mobileMenuContent class="mobile-menu-content">
       <a routerLink="/dashboard" routerLinkActive="active" class="mobile-menu-item" (click)="fecharMenu()">
         <i class="fas fa-th-large"></i>
         <span>Dashboard</span>

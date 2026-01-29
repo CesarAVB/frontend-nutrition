@@ -19,6 +19,11 @@ body {
   font-weight: 400;
 }
 
+/* Allow pages (like login) to opt-out of the navbar top padding */
+body.no-navbar-padding {
+  padding-top: 0 !important;
+}
+
 /* Scrollbar personalizada */
 ::-webkit-scrollbar {
   width: 8px;
@@ -101,4 +106,263 @@ $breakpoint-xl: 1280px;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Global portal/drawer styles for mobile menu */
+body.mobile-menu-open::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 2000;
+  pointer-events: auto;
+}
+
+body > .mobile-menu-content,
+body .mobile-menu-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.985) 0%, rgba(250,251,253,0.985) 100%);
+  backdrop-filter: blur(6px);
+  border-radius: 0;
+  box-shadow: none;
+  padding-top: 72px; /* reserva espaço para navbar */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-3%) scale(0.995);
+  transition: all 0.22s ease;
+  z-index: 2001;
+  pointer-events: auto;
+  overflow-y: auto;
+}
+
+body.mobile-menu-open > .mobile-menu-content,
+body.mobile-menu-open .mobile-menu-content {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) scale(1) !important;
+}
+
+/* touch targets */
+.mobile-menu-content .mobile-menu-item,
+.mobile-menu-content button.mobile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+/* Global fallback for portal-mounted mobile menu (when moved to <body>) */
+.mobile-menu-portal .mobile-menu-item,
+.mobile-menu-portal button.mobile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  color: #4b5563;
+  background: transparent;
+}
+
+.mobile-menu-portal .mobile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.1);
+}
+
+/* user details layout inside portal */
+.mobile-menu-portal .user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.mobile-menu-portal .user-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.mobile-menu-portal .user-role {
+  font-size: 0.875rem;
+  color: #059669;
+  font-weight: 500;
+}
+
+/* close button inside portal */
+.mobile-menu-portal .mobile-menu-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255,255,255,0.95);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  z-index: 100000;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-portal .mobile-menu-close:hover {
+  background: rgba(255,255,255,1);
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.mobile-menu-portal .mobile-menu-close i { 
+  color: #374151; 
+  font-size: 1.25rem;
+}
+
+.mobile-menu-portal .mobile-menu-divider {
+  height: 1px;
+  background: rgba(16, 185, 129, 0.1);
+  margin: 0.75rem 0;
+}
+
+/* More complete portal fallbacks to mirror component styles */
+.mobile-menu-portal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 72px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 2rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.985) 0%, rgba(250,251,253,0.985) 100%);
+  backdrop-filter: blur(6px);
+  min-height: 100vh;
+  overflow-y: auto;
+  animation: slideInFromLeft 0.3s ease-out;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.mobile-menu-portal .mobile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  color: #4b5563;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 56px; /* Touch-friendly */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.mobile-menu-portal .mobile-menu-item:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.12) 100%);
+  color: #059669;
+  transform: translateX(4px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+
+.mobile-menu-portal .mobile-menu-item.active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  transform: translateX(2px);
+}
+
+.mobile-menu-portal .mobile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.1);
+}
+
+/* Remove default button borders and improve icon layout inside portal */
+.mobile-menu-portal a.mobile-menu-item,
+.mobile-menu-portal button.mobile-menu-item {
+  border: none;
+  background: transparent;
+  border-radius: 12px;
+  text-align: left;
+  padding: 1rem 1.25rem;
+}
+
+.mobile-menu-portal .mobile-menu-item:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.08);
+}
+
+.mobile-menu-portal .mobile-menu-item i,
+.mobile-menu-portal .mobile-menu-item svg {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #374151;
+}
+
+.mobile-menu-portal .mobile-menu-item.active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+}
+
+/* Media queries for better mobile experience */
+@media (max-width: 480px) {
+  .mobile-menu-portal {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    gap: 0.25rem;
+  }
+
+  .mobile-menu-portal .mobile-menu-item {
+    padding: 1.5rem 1.25rem;
+    font-size: 1.1rem;
+    min-height: 64px;
+  }
+
+  .mobile-menu-portal .mobile-user-info {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .mobile-menu-portal .user-name {
+    font-size: 1.1rem;
+  }
+
+  .mobile-menu-portal .user-role {
+    font-size: 0.95rem;
+  }
 }

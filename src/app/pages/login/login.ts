@@ -1,4 +1,4 @@
-import { Component, signal, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule]
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
@@ -30,6 +30,11 @@ export class LoginComponent {
 
   constructor() {
     this.loadSavedCredentials();
+    try { document.body.classList.add('no-navbar-padding'); } catch (e) {}
+  }
+
+  ngOnDestroy(): void {
+    try { document.body.classList.remove('no-navbar-padding'); } catch (e) {}
   }
 
   // ===========================================
