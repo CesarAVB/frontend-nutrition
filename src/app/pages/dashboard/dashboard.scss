@@ -15,7 +15,7 @@
 
   .dashboard-title {
     font-size: 2.5rem;
-    font-weight: 800;
+    font-weight: 700;
     color: #1e293b;
     margin: 0 0 0.5rem 0;
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
@@ -120,7 +120,7 @@
 
     .stat-value {
       font-size: 2.5rem;
-      font-weight: 800;
+      font-weight: 700;
       color: #1e293b;
       line-height: 1;
     }
@@ -135,6 +135,11 @@
     justify-content: center;
     flex-shrink: 0;
     z-index: 1;
+
+    fa-icon {
+      font-size: 24px;
+      display: block;
+    }
 
     &.stat-icon-primary {
       background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
@@ -167,7 +172,7 @@
 
   .section-title {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #1e293b;
     margin: 0 0 1rem 0;
     position: relative;
@@ -249,7 +254,7 @@
     .action-content {
       h3 {
         font-size: 1.125rem;
-        font-weight: 700;
+        font-weight: 600;
         color: #1e293b;
         margin: 0 0 0.25rem 0;
         transition: color 0.3s ease;
@@ -303,7 +308,7 @@
 
     .card-title {
       font-size: 1.25rem;
-      font-weight: 700;
+      font-weight: 600;
       color: #1e293b;
       margin: 0;
     }
@@ -510,7 +515,7 @@
 
   .empty-title {
     font-size: 1.25rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #1e293b;
     margin: 0 0 0.5rem 0;
   }

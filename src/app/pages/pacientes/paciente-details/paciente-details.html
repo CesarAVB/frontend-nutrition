@@ -176,7 +176,7 @@
                 </div>
                 <div class="consulta-info">
                   <div class="consulta-details">
-                    <h3 class="consulta-titulo">Consulta {{ consulta.id }}</h3>
+                    <h3 class="consulta-titulo">{{ getConsultaPrefix(consulta.id) }}</h3>
                     <p class="consulta-objetivo">{{ consulta.objetivo || 'Sem objetivo definido' }}</p>
                   </div>
                   <div class="consulta-badges">

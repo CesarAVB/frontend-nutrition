@@ -115,6 +115,13 @@ export class PacienteDetailsComponent implements OnInit {
   }
 
   // ===========================================
+  // # getConsultaPrefix - Gera prefixo tipo SKU para consulta
+  // ===========================================
+  getConsultaPrefix(id: number): string {
+    return `CNS-${id.toString().padStart(4, '0')}`;
+  }
+
+  // ===========================================
   // # abrirWhatsApp - Abre o WhatsApp com o número de telefone fornecido
   // ===========================================
   abrirWhatsApp(telefone: string): void {

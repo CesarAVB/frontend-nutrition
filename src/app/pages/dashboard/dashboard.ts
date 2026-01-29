@@ -3,15 +3,31 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { DashboardService, DashboardStatsDTO, ConsultaHojeDTO, PacienteDTO } from '../../services/dashboard';
 import { ToastService } from '../../services/toast';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faUsers, faCalendarDay, faChartBar, faClock, faUserPlus, faCalendarPlus, faList, faCalendarAlt, faChevronRight, faPhone, faPlus, faSyncAlt, faHome } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, FontAwesomeModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit {
+
+  protected readonly faUsers = faUsers;
+  protected readonly faCalendarDay = faCalendarDay;
+  protected readonly faChartBar = faChartBar;
+  protected readonly faClock = faClock;
+  protected readonly faUserPlus = faUserPlus;
+  protected readonly faCalendarPlus = faCalendarPlus;
+  protected readonly faList = faList;
+  protected readonly faCalendarAlt = faCalendarAlt;
+  protected readonly faChevronRight = faChevronRight;
+  protected readonly faPhone = faPhone;
+  protected readonly faPlus = faPlus;
+  protected readonly faSyncAlt = faSyncAlt;
+  protected readonly faHome = faHome;
   
   private readonly dashboardService = inject(DashboardService);
   private readonly toastService = inject(ToastService);
