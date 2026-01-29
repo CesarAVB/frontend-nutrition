@@ -21,6 +21,30 @@ export class LoginComponent implements OnDestroy {
   private readonly REMEMBER_KEY = 'remember_credentials';
 
   isLoading = signal(false);
+  showPassword = signal(false);
+
+  features = [
+    {
+      icon: 'fas fa-chart-line',
+      title: 'Acompanhamento Detalhado',
+      description: 'Monitore evolução e métricas dos pacientes'
+    },
+    {
+      icon: 'fas fa-utensils',
+      title: 'Planos Alimentares',
+      description: 'Crie dietas personalizadas e equilibradas'
+    },
+    {
+      icon: 'fas fa-mobile-alt',
+      title: 'Acesso Anywhere',
+      description: 'Gerencie tudo de qualquer dispositivo'
+    },
+    {
+      icon: 'fas fa-shield-alt',
+      title: 'Segurança Total',
+      description: 'Dados protegidos e criptografados'
+    }
+  ];
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -88,6 +112,13 @@ export class LoginComponent implements OnDestroy {
   // ===========================================
   get passwordControl() {
     return this.loginForm.get('password');
+  }
+
+  // ===========================================
+  // # togglePasswordVisibility - Alterna visibilidade da senha
+  // ===========================================
+  togglePasswordVisibility() {
+    this.showPassword.update(value => !value);
   }
 
   // ===========================================
