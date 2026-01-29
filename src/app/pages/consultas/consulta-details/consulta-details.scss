@@ -37,13 +37,17 @@
     overflow-x: hidden !important;
     grid-template-columns: 1fr !important;
   }
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  animation: fadeInUp 0.6s ease-out;
-  min-height: calc(100vh - 4rem);
+  .details-container {
+    /* mobile background/card adjustments */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.6s ease-out;
+    min-height: calc(100vh - 4rem);
+    box-sizing: border-box;
+  }
 }
 
 @keyframes fadeInUp {
@@ -202,8 +206,7 @@
     padding: 0;
     gap: 1.5rem;
   }
-}
-}
+  }
 
 // Cards de informação
 .info-card {
