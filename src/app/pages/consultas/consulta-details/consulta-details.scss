@@ -1392,42 +1392,41 @@
   }
 }
 
-// Modal de foto ampliada
+// Modal de foto ampliada (tela cheia)
 .modal-foto {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  max-width: 90vw;
-  max-height: 90vh;
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 95vw;
+  max-height: 95vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: modalSlideIn 0.3s ease-out;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.98) 100%);
+  border-radius: 16px;
+  animation: modalSlideIn 0.18s ease-out;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.2);
 
   .modal-foto-header {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 2rem;
-    border-bottom: 2px solid #f3f4f6;
+    padding: 1rem 1.25rem;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 
     h3 {
       margin: 0;
-      font-size: 1.25rem;
+      font-size: 1rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #1f2937;
     }
 
     .close-button {
       width: 40px;
       height: 40px;
-      border-radius: 12px;
+      border-radius: 8px;
       border: none;
       background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
       color: #6b7280;
@@ -1435,38 +1434,27 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.12s ease, background 0.12s ease;
 
-      &:hover {
-        background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
-        color: #374151;
-        transform: scale(1.05);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      }
-
-      &:active {
-        transform: scale(0.95);
-      }
+      &:hover { transform: scale(1.06); }
     }
   }
 
   .modal-foto-body {
-    padding: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: auto;
-    max-height: calc(90vh - 100px);
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    padding: 0.75rem;
+    background: rgba(0,0,0,0.75);
+    flex: 1 1 auto;
 
     img {
       max-width: 100%;
-      max-height: 100%;
+      max-height: calc(95vh - 80px);
       object-fit: contain;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      border: 2px solid rgba(255,255,255,0.85);
     }
   }
 }
