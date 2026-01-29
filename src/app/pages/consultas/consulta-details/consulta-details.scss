@@ -826,9 +826,12 @@
 
 @media (max-width: 480px) {
   .details-container {
-    margin: 0.25rem;
-    padding: 0.75rem;
+    margin: 0;
+    padding: 0.75rem 0;
     border-radius: 6px;
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
 
   .header {
@@ -866,7 +869,10 @@
   }
 
   .info-card {
-    padding: 1rem;
+    padding: 1rem 0.5rem;
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
 
     h2 {
       font-size: 1rem;
@@ -903,15 +909,18 @@
 
   .fotos-grid {
     gap: 0.5rem;
-
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
     .foto-item {
       padding: 0.625rem;
-
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
       span {
         font-size: 0.8rem;
         padding: 0.25rem 0.5rem;
       }
-
       .foto-placeholder {
         font-size: 1.5rem;
       }
@@ -920,22 +929,30 @@
 
   .medidas-grid {
     gap: 0.5rem;
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
-
   .medida-card {
     padding: 0.875rem;
-
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
     .medida-header h3 {
       font-size: 0.9rem;
     }
-
     .medida-value {
       font-size: 1.1rem;
     }
-
     .medida-unit {
       font-size: 0.8rem;
     }
+  }
+  // Remove overflow do body em mobile
+  :host-context(body) {
+    overflow-x: hidden !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
   }
 
   .observacoes-section {
