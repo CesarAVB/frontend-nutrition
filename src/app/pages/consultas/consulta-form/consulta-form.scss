@@ -767,6 +767,25 @@
 }
 
 // Coming Soon
+
+/* Em telas largas, mostrar 4 miniaturas por linha no formulário de consulta */
+@media (min-width: 1200px) {
+  .fotos-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .foto-upload-card {
+    padding: 1rem;
+  }
+
+  .foto-upload-card .foto-preview img,
+  .foto-upload-card img {
+    height: 160px;
+    object-fit: cover;
+  }
+}
 .coming-soon {
   text-align: center;
   padding: 3rem 1rem;
