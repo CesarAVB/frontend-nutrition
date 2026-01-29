@@ -1,7 +1,17 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
-    <h1 class="dashboard-title">Dashboard</h1>
-    <p class="dashboard-subtitle">Bem-vindo ao seu painel de controle</p>
+    <div>
+      <h1 class="dashboard-title">{{ greeting() }}!</h1>
+      <p class="dashboard-subtitle">Bem-vindo ao seu painel de controle</p>
+    </div>
+    <button class="btn-refresh" (click)="recarregar()" [disabled]="isLoading()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"></polyline>
+        <polyline points="1 20 1 14 7 14"></polyline>
+        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+      </svg>
+      Atualizar
+    </button>
   </div>
 
   <!-- Cards de Estatísticas -->
@@ -62,6 +72,54 @@
     </div>
   </div>
 
+  <!-- Ações Rápidas -->
+  <div class="quick-actions">
+    <h2 class="section-title">Ações Rápidas</h2>
+    <div class="actions-grid">
+      <button class="action-card" (click)="novoPaciente()">
+        <div class="action-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <div class="action-content">
+          <h3>Novo Paciente</h3>
+          <p>Cadastrar um novo paciente</p>
+        </div>
+      </button>
+
+      <button class="action-card" (click)="novaConsulta()">
+        <div class="action-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <div class="action-content">
+          <h3>Nova Consulta</h3>
+          <p>Agendar uma nova consulta</p>
+        </div>
+      </button>
+
+      <button class="action-card" (click)="verConsultas()">
+        <div class="action-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </div>
+        <div class="action-content">
+          <h3>Ver Consultas</h3>
+          <p>Gerenciar consultas agendadas</p>
+        </div>
+      </button>
+    </div>
+  </div>
+
   <!-- Grid de Conteúdo -->
   <div class="content-grid">
     <!-- Consultas de Hoje -->
@@ -75,7 +133,13 @@
         }
       </div>
       <div class="card-body">
-        <div class="consulta-list">
+        @if (loadingConsultas()) {
+          <div class="section-loading">
+            <div class="spinner-small"></div>
+            <p>Carregando consultas...</p>
+          </div>
+        } @else {
+          <div class="consulta-list">
           @for (consulta of consultasHoje(); track consulta.id) {
             <div class="consulta-item">
               <div class="consulta-avatar">
@@ -107,6 +171,7 @@
           </div>
           }
         </div>
+        }
       </div>
     </div>
 
@@ -122,7 +187,13 @@
         </button>
       </div>
       <div class="card-body">
-        <div class="paciente-list">
+        @if (loadingPacientes()) {
+          <div class="section-loading">
+            <div class="spinner-small"></div>
+            <p>Carregando pacientes...</p>
+          </div>
+        } @else {
+          <div class="paciente-list">
           @for (paciente of pacientesRecentes(); track paciente.id) {
             <div class="paciente-item" (click)="verDetalhesPaciente(paciente.id!)">
               <div class="paciente-avatar">
@@ -162,7 +233,8 @@
             </button>
           </div>
           }
-        </div>
+          </div>
+        }
       </div>
     </div>
   </div>

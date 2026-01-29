@@ -29,6 +29,13 @@ export class DashboardComponent implements OnInit {
     this.loadingStats() || this.loadingConsultas() || this.loadingPacientes()
   );
 
+  protected readonly greeting = computed(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Bom dia';
+    if (hour < 18) return 'Boa tarde';
+    return 'Boa noite';
+  });
+
   // ===========================================
   // # ngOnInit - Inicializa o componente
   // ===========================================
@@ -118,6 +125,20 @@ export class DashboardComponent implements OnInit {
   // ===========================================
   protected novoPaciente(): void {
     this.router.navigate(['/pacientes/novo']);
+  }
+
+  // ===========================================
+  // # novaConsulta - Navega para criação de nova consulta
+  // ===========================================
+  protected novaConsulta(): void {
+    this.router.navigate(['/consultas/novo']);
+  }
+
+  // ===========================================
+  // # verConsultas - Navega para lista de consultas
+  // ===========================================
+  protected verConsultas(): void {
+    this.router.navigate(['/consultas']);
   }
 
   // ===========================================
