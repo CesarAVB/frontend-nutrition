@@ -25,15 +25,43 @@ export class PacientesListComponent implements OnInit {
   error = signal('');
 
   pacientesFiltrados = computed(() => {
-    const termo = this.searchTerm().toLowerCase().trim();
+    const raw = this.searchTerm() ?? '';
+    const termo = String(raw).trim().toLowerCase();
+    const digitsQuery = termo.replace(/\D/g, '');
     const lista = this.pacientes();
+
+    const normalize = (s: string) =>
+      s
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .toLowerCase();
+
+    const normQuery = normalize(termo);
 
     if (!termo) return lista;
 
-    return lista.filter(p =>
-      p.nomeCompleto.toLowerCase().includes(termo) ||
-      p.cpf.replace(/\D/g, '').includes(termo.replace(/\D/g, ''))
-    );
+    const filtered = lista.filter(p => {
+      const nome = normalize(p.nomeCompleto ?? '');
+      const cpfDigits = String(p.cpf ?? '').replace(/\D/g, '');
+
+      // name full match or token match
+      if (normQuery.length > 0 && nome.includes(normQuery)) return true;
+      if (normQuery.length > 0) {
+        const tokens = nome.split(/\s+/).filter(Boolean);
+        for (const t of tokens) if (t.includes(normQuery)) return true;
+      }
+
+      // cpf match
+      if (digitsQuery) return cpfDigits.includes(digitsQuery);
+      return String(p.cpf ?? '').toLowerCase().includes(termo);
+    });
+
+    try {
+      // eslint-disable-next-line no-console
+      console.debug('[PacientesList] search', { raw, termo, normQuery, countAll: lista.length, countFiltered: filtered.length });
+    } catch (e) {}
+
+    return filtered;
   });
 
   // ===========================================

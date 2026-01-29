@@ -7,7 +7,8 @@
   <input 
     type="text" 
     placeholder="Buscar por nome ou CPF..."
-    (input)="busca.set($any($event.target).value)"
+    [ngModel]="busca()"
+    (ngModelChange)="busca.set($event)"
   />
 </div>
 

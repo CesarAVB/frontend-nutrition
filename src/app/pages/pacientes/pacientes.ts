@@ -1,12 +1,13 @@
 import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { PacienteService } from '../../services/paciente';
 import { PacienteDTO } from '../../models/paciente.model';
 
 @Component({
   selector: 'app-pacientes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './pacientes.html',
   styleUrls: ['./pacientes.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,11 +19,48 @@ export class Pacientes {
   busca = signal('');
 
   pacientesFiltrados = computed(() => {
-    const b = this.busca().toLowerCase();
-    return this.pacientes().filter(p =>
-      p.nomeCompleto.toLowerCase().includes(b) ||
-      p.cpf.includes(b)
-    );
+    const bRaw = this.busca() ?? '';
+    const b = String(bRaw).trim().toLowerCase();
+    const digitsQuery = b.replace(/\D/g, '');
+
+    const normalize = (s: string) =>
+      s
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .toLowerCase();
+
+    const normQuery = normalize(b);
+
+    const filtered = this.pacientes().filter(p => {
+      const nomeRaw = String(p.nomeCompleto ?? '');
+      const nome = normalize(nomeRaw);
+      const cpfRaw = String(p.cpf ?? '');
+      const cpfDigits = cpfRaw.replace(/\D/g, '');
+
+      // match full normalized name
+      if (nome.includes(normQuery) && normQuery.length > 0) return true;
+
+      // match any token of the name (first, last, etc.)
+      if (normQuery.length > 0) {
+        const tokens = nome.split(/\s+/).filter(Boolean);
+        for (const t of tokens) {
+          if (t.includes(normQuery)) return true;
+        }
+      }
+
+      // CPF: if query has digits, match digits-only cpf; otherwise match raw cpf string
+      const cpfMatch = digitsQuery ? cpfDigits.includes(digitsQuery) : cpfRaw.toLowerCase().includes(b);
+
+      return cpfMatch;
+    });
+
+    // Debug logs (temporary) - helpful during UI testing
+    try {
+      // eslint-disable-next-line no-console
+      console.debug('[pacientesFiltrados] query:', { raw: bRaw, normalized: normQuery, digitsQuery, total: this.pacientes().length, filtered: filtered.length });
+    } catch (e) {}
+
+    return filtered;
   });
 
   // ===========================================
