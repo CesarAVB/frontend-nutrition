@@ -1,29 +1,14 @@
 // Container Principal
 .consultas-list-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 2rem;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:
-      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: -1;
-  }
-
-  > * {
-    position: relative;
-    z-index: 1;
-  }
+  max-width: 1400px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 4rem);
 }
 
 // Header da Página
@@ -32,15 +17,12 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
   padding: 2rem;
-  box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.1),
-    0 8px 16px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 244, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .header-content {
@@ -171,16 +153,12 @@
 }
 
 .table-container {
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
   backdrop-filter: blur(20px);
-  border-radius: 20px;
-  box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.08),
-    0 8px 16px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  margin-bottom: 2rem;
 }
 
 .consultas-table {
@@ -188,22 +166,17 @@
   border-collapse: collapse;
 
   thead {
-    background: rgba(16, 185, 129, 0.05);
-    border-bottom: 2px solid rgba(16, 185, 129, 0.2);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+    border-bottom: 1px solid rgba(16, 185, 129, 0.2);
 
     th {
-      padding: 1.25rem 1rem;
+      padding: 1rem 1.5rem;
       text-align: left;
-      font-size: 0.875rem;
+      font-size: 0.813rem;
       font-weight: 600;
-      color: #374151;
+      color: #065f46;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-
-      &:last-child {
-        width: 50px;
-        text-align: center;
-      }
     }
   }
 
@@ -224,17 +197,9 @@
       }
 
       td {
-        padding: 1.25rem 1rem;
+        padding: 1.25rem 1.5rem;
         font-size: 0.875rem;
         color: #1f2937;
-
-        &:last-child {
-          text-align: center;
-        }
-
-        .text-muted {
-          color: #9ca3af;
-        }
       }
     }
   }
