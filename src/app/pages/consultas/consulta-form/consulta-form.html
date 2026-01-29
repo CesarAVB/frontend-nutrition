@@ -1,14 +1,30 @@
 <div class="consulta-container">
-  <div class="consulta-header">
+  <div class="header">
     <button class="back-button" (click)="cancelar()">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
     </button>
     <div class="header-content">
-      <h1 class="page-title">Nova Consulta - {{ pacienteNome }}</h1>
-      <p class="page-subtitle">Preencha os dados da consulta</p>
-      <p class="page-subtitle small">Última visita: {{ pacienteUltimaVisita }}</p>
+      <h1>{{ isEditMode ? 'Editar Consulta' : 'Nova Consulta' }} - {{ pacienteNome }}</h1>
+      <p>{{ isEditMode ? 'Atualize os dados da consulta' : (pacienteUltimaVisita ? 'Última visita: ' + pacienteUltimaVisita : 'Preencha os dados da consulta') }}</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        Cancelar
+      </button>
+      <button type="button" class="btn-primary" (click)="onSubmit()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        {{ isEditMode ? 'Atualizar Consulta' : 'Salvar Consulta' }}
+      </button>
     </div>
   </div>
 
@@ -563,13 +579,6 @@
 
   <!-- Ações do formulário -->
   <div class="form-actions">
-    <button type="button" class="btn-secondary" (click)="cancelar()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-      Cancelar
-    </button>
     <button type="button" class="btn-primary" (click)="onSubmit()">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>

@@ -33,6 +33,7 @@ export class ConsultaFormComponent implements OnInit {
   pacienteNome = 'Selecione um paciente';
   pacienteUltimaVisita: string = '-';
   consultaId?: number;
+  isEditMode = false;
 
   estiloVidaForm: FormGroup;
   medidasForm: FormGroup;
@@ -144,6 +145,7 @@ export class ConsultaFormComponent implements OnInit {
     const consultaIdFromRoute = this.route.snapshot.queryParams['consultaId'];
     if (consultaIdFromRoute) {
       this.consultaId = Number(consultaIdFromRoute);
+      this.isEditMode = true;
       this.carregarConsulta(this.consultaId);
     }
 
