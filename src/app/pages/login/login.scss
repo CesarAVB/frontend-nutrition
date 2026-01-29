@@ -403,65 +403,36 @@
   }
 
   .login-left {
-    flex: none;
-    height: 50vh;
-    padding: 1.5rem 1rem;
-
-    .brand-section {
-      max-width: 100%;
-
-      .logo-wrapper {
-        margin-bottom: 0.25rem;
-
-        .brand-logo {
-          width: 160px;
-        }
-
-      }
-
-      .brand-description {
-        margin-bottom: 1.5rem;
-
-        h2 {
-          font-size: 1.75rem;
-        }
-
-        p {
-          font-size: 1rem;
-        }
-      }
-
-      .features-list {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-
-        .feature-item {
-          justify-content: center;
-          text-align: center;
-        }
-      }
-
-      .nutrition-elements .floating-element {
-        font-size: 2rem;
-      }
-    }
+    display: none; // Oculta a seção de branding em telas menores
   }
 
   .login-right {
-    flex: none;
-    height: 50vh;
+    flex: 1;
+    height: 100vh; // Ocupa toda a altura disponível
     padding: 1.5rem 1rem;
+    position: relative; // Para posicionar o footer relativamente
   }
 
   .login-card {
     max-width: 100%;
+    height: 100%; // Ocupa toda a altura
+    display: flex;
+    flex-direction: column;
   }
 
   .form-container {
     padding: 1.5rem;
     border-radius: 12px;
     margin-bottom: 1.5rem;
+    flex: 1; // Ocupa o espaço disponível
+  }
+
+  .login-footer {
+    margin-top: auto; // Empurra o footer para o final
+    margin-bottom: 1rem; // Espaço do final da tela
+    position: relative;
+    border-top: none;
+    padding-top: 1rem;
   }
 
   .login-header .welcome-section h2 {
