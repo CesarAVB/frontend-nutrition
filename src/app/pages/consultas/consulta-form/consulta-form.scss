@@ -203,8 +203,8 @@
   }
 }
 
-// Content Card
-.content-card {
+// Info Card
+.info-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(15px);
   border-radius: 16px;
@@ -232,7 +232,7 @@
       content: '';
       width: 4px;
       height: 24px;
-      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       border-radius: 2px;
     }
   }
@@ -613,7 +613,7 @@
     padding: 0.25rem;
   }
 
-  .content-card {
+  .info-card {
     padding: 1.5rem;
   }
 
@@ -659,7 +659,7 @@
     }
   }
 
-  .content-card {
+  .info-card {
     padding: 1.5rem;
   }
 
@@ -687,7 +687,7 @@
     padding: 0.5rem;
   }
 
-  .content-card {
+  .info-card {
     padding: 1rem;
   }
 
