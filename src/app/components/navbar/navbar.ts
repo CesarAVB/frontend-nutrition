@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth';
 })
 export class NavbarComponent {
   menuAberto = false;
+  userMenuOpen = false;
   
   // ===========================================
   // # constructor - Inicializa o componente
@@ -43,32 +44,54 @@ export class NavbarComponent {
   }
 
   // ===========================================
-  // # toggleMenu - Alterna estado do menu
+  // # toggleMenu - Alterna estado do menu mobile
   // ===========================================
   toggleMenu(): void {
     this.menuAberto = !this.menuAberto;
+    if (this.userMenuOpen) {
+      this.userMenuOpen = false;
+    }
   }
 
   // ===========================================
-  // # fecharMenu - Fecha o menu
+  // # toggleUserMenu - Alterna estado do menu do usuário
+  // ===========================================
+  toggleUserMenu(): void {
+    this.userMenuOpen = !this.userMenuOpen;
+  }
+
+  // ===========================================
+  // # fecharMenu - Fecha o menu mobile
   // ===========================================
   fecharMenu(): void {
     this.menuAberto = false;
   }
 
   // ===========================================
-  // # navegarPara - Navega para uma rota
+  // # navigateToProfile - Navega para o perfil
   // ===========================================
-  navegarPara(rota: string): void {
-    this.router.navigate([rota]);
-    this.fecharMenu();
+  navigateToProfile(): void {
+    this.userMenuOpen = false;
+    // TODO: Implementar navegação para perfil
+    console.log('Navegando para perfil...');
   }
 
   // ===========================================
-  // # logout - Realiza logout
+  // # navigateToSettings - Navega para configurações
+  // ===========================================
+  navigateToSettings(): void {
+    this.userMenuOpen = false;
+    // TODO: Implementar navegação para configurações
+    console.log('Navegando para configurações...');
+  }
+
+  // ===========================================
+  // # logout - Faz logout do usuário
   // ===========================================
   logout(): void {
+    this.userMenuOpen = false;
+    this.menuAberto = false;
     this.authService.logout();
-    this.fecharMenu();
+    this.router.navigate(['/login']);
   }
 }
