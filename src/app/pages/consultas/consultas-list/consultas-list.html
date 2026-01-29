@@ -48,9 +48,6 @@
             <th>ID</th>
             <th>Paciente</th>
             <th>Data da Consulta</th>
-            <th>Peso</th>
-            <th>% Gordura</th>
-            <th>Objetivo</th>
             <th></th>
           </tr>
         </thead>
@@ -58,7 +55,7 @@
           @for (consulta of consultasFiltradas(); track consulta.id) {
             <tr (click)="verDetalhes(consulta.id)" class="table-row">
               <td>
-                <span class="consulta-id">#{{ consulta.id }}</span>
+                <span class="consulta-id">{{ getConsultaPrefix(consulta.id) }}</span>
               </td>
               <td>
                 <div class="paciente-info">
@@ -66,27 +63,7 @@
                 </div>
               </td>
               <td>{{ formatarData(consulta.dataConsulta) }}</td>
-              <td>
-                @if (consulta.peso) {
-                  <span>{{ consulta.peso }} kg</span>
-                } @else {
-                  <span class="text-muted">-</span>
-                }
-              </td>
-              <td>
-                @if (consulta.percentualGordura) {
-                  <span>{{ consulta.percentualGordura }}%</span>
-                } @else {
-                  <span class="text-muted">-</span>
-                }
-              </td>
-              <td>
-                @if (consulta.objetivo) {
-                  <span class="objetivo-badge">{{ consulta.objetivo }}</span>
-                } @else {
-                  <span class="text-muted">-</span>
-                }
-              </td>
+              <!-- Peso, % Gordura e Objetivo removidos por solicitação -->
               <td>
                 <button class="icon-button" (click)="verDetalhes(consulta.id); $event.stopPropagation()">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -97,7 +74,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="7" class="empty-state">
+              <td colspan="4" class="empty-state">
                 <div class="empty-content">
                   <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>

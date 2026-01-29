@@ -70,6 +70,13 @@ export class ConsultasListComponent implements OnInit {
   }
 
   // ===========================================
+  // # getConsultaPrefix - Gera prefixo tipo SKU para consulta
+  // ===========================================
+  getConsultaPrefix(id: number): string {
+    return `CNS-${id.toString().padStart(4, '0')}`;
+  }
+
+  // ===========================================
   // # formatarData - Formata data para exibição
   // ===========================================
   formatarData(dataISO: string): string {

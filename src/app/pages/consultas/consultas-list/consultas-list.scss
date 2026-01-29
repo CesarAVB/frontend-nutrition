@@ -102,7 +102,7 @@
 
     h3 {
       font-size: 1.25rem;
-      font-weight: 600;
+      white-space: nowrap; /* Prevent line breaks for ID */
       color: #1f2937;
       margin: 0;
     }
@@ -125,6 +125,9 @@
 
   .search-icon {
     position: absolute;
+          &:first-child {
+            white-space: nowrap; /* Prevent line breaks for first td */
+          }
     left: 1rem;
     top: 50%;
     transform: translateY(-50%);
@@ -214,6 +217,9 @@
   font-size: 0.75rem;
   font-weight: 600;
   box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .paciente-info {
