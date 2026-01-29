@@ -398,9 +398,66 @@
 }
 
 // Responsividade
+@media (max-width: 1200px) {
+  .login-left {
+    flex: 0.9;
+    padding: 1.5rem;
+
+    .brand-section {
+      max-width: 450px;
+
+      .logo-wrapper .brand-logo {
+        width: 180px;
+      }
+
+      .brand-description h2 {
+        font-size: 1.5rem;
+      }
+
+      .brand-description p {
+        font-size: 1rem;
+      }
+
+      .features-list {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+  }
+
+  .login-right {
+    flex: 1.1;
+  }
+}
+
 @media (max-width: 1024px) {
   .login-left {
     flex: 0.8;
+    padding: 1.5rem;
+
+    .brand-section {
+      max-width: 400px;
+
+      .logo-wrapper .brand-logo {
+        width: 160px;
+      }
+
+      .brand-description h2 {
+        font-size: 1.4rem;
+      }
+
+      .brand-description p {
+        font-size: 0.95rem;
+      }
+
+      .features-list {
+        gap: 1.25rem;
+
+        .feature-item .feature-text h4 {
+          font-size: 1rem;
+        }
+      }
+    }
   }
 
   .login-right {
@@ -408,10 +465,56 @@
   }
 }
 
+@media (max-width: 900px) {
+  .login-left {
+    flex: 0.7;
+    padding: 1.25rem;
+
+    .brand-section {
+      max-width: 350px;
+
+      .logo-wrapper .brand-logo {
+        width: 140px;
+      }
+
+      .brand-description h2 {
+        font-size: 1.3rem;
+      }
+
+      .brand-description p {
+        font-size: 0.9rem;
+      }
+
+      .features-list {
+        gap: 1rem;
+
+        .feature-item {
+          .feature-icon {
+            font-size: 1.8rem;
+          }
+
+          .feature-text h4 {
+            font-size: 0.95rem;
+          }
+
+          .feature-text p {
+            font-size: 0.85rem;
+          }
+        }
+      }
+    }
+  }
+
+  .login-right {
+    flex: 1.3;
+  }
+}
+
 @media (max-width: 768px) {
   .login-container {
     flex-direction: column;
     height: 100vh;
+    overflow-y: auto; // Permite rolagem se necessário
   }
 
   .login-left {
@@ -420,141 +523,267 @@
 
   .login-right {
     flex: 1;
-    height: 100vh; // Ocupa toda a altura disponível
-    padding: 1.5rem 1rem;
-    position: relative; // Para posicionar o footer relativamente
+    height: auto; // Altura automática para conteúdo
+    min-height: 100vh; // Mínimo de altura da tela
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .login-card {
+    width: 100%;
     max-width: 100%;
-    height: 100%; // Ocupa toda a altura
+    height: auto;
     display: flex;
     flex-direction: column;
-  }
-
-  .login-header .mobile-logo {
-    display: block; // Mostra o logo em telas menores
-  }
-
-  .form-container {
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-    flex: 1; // Ocupa o espaço disponível
-  }
-
-  .login-footer {
-    margin-top: auto; // Empurra o footer para o final
-    margin-bottom: 1rem; // Espaço do final da tela
-    position: relative;
-    border-top: none;
-    padding-top: 1rem;
-  }
-
-  .login-header .welcome-section h2 {
-    font-size: 1.5rem;
-  }
-
-  .login-form .form-group-checkbox {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .login-left {
-    padding: 1rem 0.75rem;
-
-    .brand-section {
-      .logo-wrapper {
-        margin-bottom: 0.25rem;
-
-        .brand-logo {
-          width: 120px;
-        }
-
-      }
-
-      .brand-description {
-        margin-bottom: 1rem;
-
-        h2 {
-          font-size: 1.25rem;
-        }
-
-        p {
-          font-size: 0.9rem;
-        }
-      }
-
-      .features-list {
-        gap: 0.75rem;
-
-        .feature-item .feature-icon {
-          font-size: 1.5rem;
-        }
-
-        .feature-text h4 {
-          font-size: 1rem;
-        }
-
-        .feature-text p {
-          font-size: 0.85rem;
-        }
-      }
-
-      .nutrition-elements .floating-element {
-        font-size: 1.5rem;
-      }
-    }
-  }
-
-  .login-right {
-    padding: 1rem 0.75rem;
+    padding: 0;
   }
 
   .login-header {
-    margin-bottom: 1.25rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
 
-    .welcome-section h2 {
-      font-size: 1.25rem;
+    .mobile-logo {
+      display: block;
+      margin-bottom: 1rem;
+
+      .brand-logo-mobile {
+        width: 100px;
+        height: auto;
+        max-width: 120px;
+      }
     }
 
-    .welcome-section p {
-      font-size: 0.9rem;
-    }
-  }
+    .welcome-section {
+      h2 {
+        font-size: 1.4rem;
+        line-height: 1.3;
+      }
 
-  .login-form .form-group {
-    margin-bottom: 1rem;
-
-    input {
-      padding: 0.75rem 1rem;
+      p {
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
     }
   }
 
   .form-container {
     padding: 1.25rem;
-    border-radius: 10px;
-    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .login-form .form-group-checkbox {
-    margin-bottom: 1.5rem;
-  }
+  .login-form {
+    .form-group {
+      margin-bottom: 1rem;
 
-  .login-form .btn-login {
-    padding: 0.75rem 1.25rem;
-    font-size: 1rem;
+      label {
+        font-size: 0.9rem;
+
+        .icon {
+          font-size: 0.9rem;
+        }
+      }
+
+      input {
+        padding: 0.75rem;
+        font-size: 1rem;
+      }
+    }
+
+    .form-group-checkbox {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+
+      label {
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 0.875rem;
+      font-size: 1rem;
+    }
   }
 
   .login-footer {
     margin-top: 1.5rem;
-    padding-top: 1.5rem;
+    padding-top: 1rem;
+    text-align: center;
 
     p {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
+      line-height: 1.4;
     }
+
+    .footer-info {
+      margin-top: 0.5rem;
+
+      p {
+        font-size: 0.75rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    height: auto;
+    min-height: 100vh;
+    padding: 0.5rem;
+  }
+
+  .login-left {
+    display: none;
+  }
+
+  .login-right {
+    padding: 0.5rem;
+    min-height: 100vh;
+  }
+
+  .login-card {
+    width: 100%;
+    padding: 0;
+  }
+
+  .login-header {
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+
+    .mobile-logo {
+      margin-bottom: 0.75rem;
+
+      .brand-logo-mobile {
+        width: 80px;
+        max-width: 100px;
+      }
+    }
+
+    .welcome-section {
+      h2 {
+        font-size: 1.2rem;
+        line-height: 1.3;
+      }
+
+      p {
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .form-container {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    max-width: 100%;
+  }
+
+  .login-form {
+    .form-group {
+      margin-bottom: 0.875rem;
+
+      label {
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+
+        .icon {
+          font-size: 0.85rem;
+        }
+      }
+
+      input {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.95rem;
+        border-radius: 6px;
+      }
+    }
+
+    .form-group-checkbox {
+      margin-bottom: 1rem;
+
+      label {
+        font-size: 0.8rem;
+        line-height: 1.3;
+
+        input[type="checkbox"] {
+          width: 16px;
+          height: 16px;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 0.95rem;
+      border-radius: 6px;
+    }
+  }
+
+  .login-footer {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+
+    p {
+      font-size: 0.75rem;
+      line-height: 1.3;
+    }
+
+    .footer-info {
+      margin-top: 0.25rem;
+
+      p {
+        font-size: 0.7rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .login-container {
+    padding: 0.25rem;
+  }
+
+  .login-right {
+    padding: 0.25rem;
+  }
+
+  .login-header {
+    padding: 0 0.25rem;
+
+    .mobile-logo .brand-logo-mobile {
+      width: 70px;
+    }
+
+    .welcome-section h2 {
+      font-size: 1.1rem;
+    }
+  }
+
+  .form-container {
+    padding: 0.75rem;
+  }
+
+  .login-form .form-group input {
+    padding: 0.5rem 0.625rem;
+    font-size: 0.9rem;
+  }
+
+  .login-form .btn-login {
+    padding: 0.625rem;
+    font-size: 0.9rem;
   }
 }
