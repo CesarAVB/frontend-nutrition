@@ -76,160 +76,194 @@
   <div class="tab-content" *ngIf="activeTab === 'estilo-vida'">
     <form [formGroup]="estiloVidaForm">
       <div class="info-card">
-        <h2 class="section-title">Rotina e Objetivos</h2>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Objetivo <span class="required">*</span></label>
-            <select formControlName="objetivo" class="form-input">
-              <option value="">Selecione...</option>
-              <option *ngFor="let obj of objetivos" [value]="obj">{{ obj }}</option>
-            </select>
-            @if (isFieldInvalid(estiloVidaForm, 'objetivo')) {
-              <span class="error-message">{{ getFieldError(estiloVidaForm, 'objetivo') }}</span>
-            }
-          </div>
-          <div class="form-group">
-            <label class="form-label">Frequência de Treino <span class="required">*</span></label>
-            <select formControlName="frequenciaTreino" class="form-input">
-              <option value="">Selecione...</option>
-              <option *ngFor="let freq of frequenciasTreino" [value]="freq">{{ freq }}</option>
-            </select>
-            @if (isFieldInvalid(estiloVidaForm, 'frequenciaTreino')) {
-              <span class="error-message">{{ getFieldError(estiloVidaForm, 'frequenciaTreino') }}</span>
-            }
-          </div>
-          <div class="form-group">
-            <label class="form-label">Duração do Treino</label>
-            <input type="text" formControlName="tempoTreino" class="form-input" placeholder="Ex: 1 hora">
+        <div class="card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="6"></circle>
+            <circle cx="12" cy="12" r="2"></circle>
+          </svg>
+          <h2 class="card-title">Rotina e Objetivos</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Objetivo <span class="required">*</span></label>
+              <select formControlName="objetivo" class="form-input">
+                <option value="">Selecione...</option>
+                <option *ngFor="let obj of objetivos" [value]="obj">{{ obj }}</option>
+              </select>
+              @if (isFieldInvalid(estiloVidaForm, 'objetivo')) {
+                <span class="error-message">{{ getFieldError(estiloVidaForm, 'objetivo') }}</span>
+              }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Frequência de Treino <span class="required">*</span></label>
+              <select formControlName="frequenciaTreino" class="form-input">
+                <option value="">Selecione...</option>
+                <option *ngFor="let freq of frequenciasTreino" [value]="freq">{{ freq }}</option>
+              </select>
+              @if (isFieldInvalid(estiloVidaForm, 'frequenciaTreino')) {
+                <span class="error-message">{{ getFieldError(estiloVidaForm, 'frequenciaTreino') }}</span>
+              }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Duração do Treino</label>
+              <input type="text" formControlName="tempoTreino" class="form-input" placeholder="Ex: 1 hora">
+            </div>
           </div>
         </div>
       </div>
 
       <div class="info-card">
-        <h2 class="section-title">Histórico de Saúde</h2>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Cirurgias</label>
-            <textarea formControlName="cirurgias" class="form-textarea" rows="2" placeholder="Descreva ou 'Nenhuma'"></textarea>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Doenças</label>
-            <textarea formControlName="doencas" class="form-textarea" rows="2" placeholder="Descreva ou 'Nenhuma'"></textarea>
-          </div>
+        <div class="card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <h2 class="card-title">Histórico de Saúde</h2>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Histórico Familiar</label>
-            <textarea formControlName="historicoFamiliar" class="form-textarea" rows="2" placeholder="Diabetes, hipertensão, etc."></textarea>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Cirurgias</label>
+              <textarea formControlName="cirurgias" class="form-textarea" rows="2" placeholder="Descreva ou 'Nenhuma'"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Doenças</label>
+              <textarea formControlName="doencas" class="form-textarea" rows="2" placeholder="Descreva ou 'Nenhuma'"></textarea>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Medicamentos em Uso</label>
-            <textarea formControlName="medicamentos" class="form-textarea" rows="2" placeholder="Liste os medicamentos"></textarea>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Histórico Familiar</label>
+              <textarea formControlName="historicoFamiliar" class="form-textarea" rows="2" placeholder="Diabetes, hipertensão, etc."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Medicamentos em Uso</label>
+              <textarea formControlName="medicamentos" class="form-textarea" rows="2" placeholder="Liste os medicamentos"></textarea>
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Suplementos</label>
-            <textarea formControlName="suplementos" class="form-textarea" rows="2" placeholder="Whey, creatina, etc."></textarea>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Uso de Anabolizantes <span class="required">*</span></label>
-            <select formControlName="usoAnabolizantes" class="form-input">
-              <option value="">Selecione...</option>
-              <option *ngFor="let uso of usoAnabolizantes" [value]="uso">{{ uso }}</option>
-            </select>
-            @if (isFieldInvalid(estiloVidaForm, 'usoAnabolizantes')) {
-              <span class="error-message">{{ getFieldError(estiloVidaForm, 'usoAnabolizantes') }}</span>
-            }
-          </div>
-        </div>
-      </div>
-
-      <div class="info-card">
-        <h2 class="section-title">Hábitos</h2>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Tabagismo <span class="required">*</span></label>
-            <select formControlName="fuma" class="form-input">
-              <option [value]="false">Não fuma</option>
-              <option [value]="true">Fuma</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Consumo de Álcool <span class="required">*</span></label>
-            <select formControlName="frequenciaAlcool" class="form-input">
-              <option value="">Selecione...</option>
-              <option *ngFor="let freq of consumoAlcool" [value]="freq">{{ freq }}</option>
-            </select>
-            @if (isFieldInvalid(estiloVidaForm, 'frequenciaAlcool')) {
-              <span class="error-message">{{ getFieldError(estiloVidaForm, 'frequenciaAlcool') }}</span>
-            }
-          </div>
-          <div class="form-group">
-            <label class="form-label">Funcionamento Intestinal <span class="required">*</span></label>
-            <select formControlName="funcionamentoIntestino" class="form-input">
-              <option value="">Selecione...</option>
-              <option *ngFor="let func of funcionamentoIntestino" [value]="func">{{ func }}</option>
-            </select>
-            @if (isFieldInvalid(estiloVidaForm, 'funcionamentoIntestino')) {
-              <span class="error-message">{{ getFieldError(estiloVidaForm, 'funcionamentoIntestino') }}</span>
-            }
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Qualidade do Sono</label>
-            <input type="text" formControlName="qualidadeSono" class="form-input" placeholder="Ex: 7-8 horas">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Ingestão de Água</label>
-            <input type="text" formControlName="ingestaoAguaDiaria" class="form-input" placeholder="Ex: 2L por dia">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Pressão Arterial</label>
-            <input type="text" formControlName="pressaoArterial" class="form-input" placeholder="Ex: 120/80">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Suplementos</label>
+              <textarea formControlName="suplementos" class="form-textarea" rows="2" placeholder="Whey, creatina, etc."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Uso de Anabolizantes <span class="required">*</span></label>
+              <select formControlName="usoAnabolizantes" class="form-input">
+                <option value="">Selecione...</option>
+                <option *ngFor="let uso of usoAnabolizantes" [value]="uso">{{ uso }}</option>
+              </select>
+              @if (isFieldInvalid(estiloVidaForm, 'usoAnabolizantes')) {
+                <span class="error-message">{{ getFieldError(estiloVidaForm, 'usoAnabolizantes') }}</span>
+              }
+            </div>
           </div>
         </div>
       </div>
 
       <div class="info-card">
-        <h2 class="section-title">Preferências Alimentares</h2>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Alimentos que não gosta</label>
-            <textarea formControlName="alimentosNaoGosta" class="form-textarea" rows="3" placeholder="Liste os alimentos"></textarea>
+        <div class="card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+          </svg>
+          <h2 class="card-title">Hábitos</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tabagismo <span class="required">*</span></label>
+              <select formControlName="fuma" class="form-input">
+                <option [value]="false">Não fuma</option>
+                <option [value]="true">Fuma</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Consumo de Álcool <span class="required">*</span></label>
+              <select formControlName="frequenciaAlcool" class="form-input">
+                <option value="">Selecione...</option>
+                <option *ngFor="let freq of consumoAlcool" [value]="freq">{{ freq }}</option>
+              </select>
+              @if (isFieldInvalid(estiloVidaForm, 'frequenciaAlcool')) {
+                <span class="error-message">{{ getFieldError(estiloVidaForm, 'frequenciaAlcool') }}</span>
+              }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Funcionamento Intestinal <span class="required">*</span></label>
+              <select formControlName="funcionamentoIntestino" class="form-input">
+                <option value="">Selecione...</option>
+                <option *ngFor="let func of funcionamentoIntestino" [value]="func">{{ func }}</option>
+              </select>
+              @if (isFieldInvalid(estiloVidaForm, 'funcionamentoIntestino')) {
+                <span class="error-message">{{ getFieldError(estiloVidaForm, 'funcionamentoIntestino') }}</span>
+              }
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Frutas preferidas</label>
-            <textarea formControlName="frutasPreferidas" class="form-textarea" rows="3" placeholder="Liste as frutas"></textarea>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Qualidade do Sono</label>
+              <input type="text" formControlName="qualidadeSono" class="form-input" placeholder="Ex: 7-8 horas">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ingestão de Água</label>
+              <input type="text" formControlName="ingestaoAguaDiaria" class="form-input" placeholder="Ex: 2L por dia">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pressão Arterial</label>
+              <input type="text" formControlName="pressaoArterial" class="form-input" placeholder="Ex: 120/80">
+            </div>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Número de refeições desejadas <span class="required">*</span></label>
-            <select formControlName="numeroRefeicoesDesejadas" class="form-input">
-              <option value="">Selecione...</option>
-              <option *ngFor="let num of numeroRefeicoes" [value]="num">{{ num }} refeições</option>
-            </select>
-            @if (isFieldInvalid(estiloVidaForm, 'numeroRefeicoesDesejadas')) {
-              <span class="error-message">{{ getFieldError(estiloVidaForm, 'numeroRefeicoesDesejadas') }}</span>
-            }
-          </div>
-          <div class="form-group">
-            <label class="form-label">Horário de maior fome <span class="required">*</span></label>
-            <select formControlName="horarioMaiorFome" class="form-input">
-              <option value="">Selecione...</option>
-              <option *ngFor="let hora of horariosFome" [value]="hora">{{ hora }}</option>
-            </select>
-            @if (isFieldInvalid(estiloVidaForm, 'horarioMaiorFome')) {
-              <span class="error-message">{{ getFieldError(estiloVidaForm, 'horarioMaiorFome') }}</span>
-            }
-          </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+            <path d="M7 2v20"></path>
+            <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+          </svg>
+          <h2 class="card-title">Preferências Alimentares</h2>
         </div>
-        <div class="form-row">
-          <div class="form-group full-width">
-            <label class="form-label">Intolerâncias e Alergias</label>
-            <textarea formControlName="intolerancias" class="form-textarea" rows="2" placeholder="Lactose, glúten, frutos do mar, etc."></textarea>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Alimentos que não gosta</label>
+              <textarea formControlName="alimentosNaoGosta" class="form-textarea" rows="3" placeholder="Liste os alimentos"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Frutas preferidas</label>
+              <textarea formControlName="frutasPreferidas" class="form-textarea" rows="3" placeholder="Liste as frutas"></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Número de refeições desejadas <span class="required">*</span></label>
+              <select formControlName="numeroRefeicoesDesejadas" class="form-input">
+                <option value="">Selecione...</option>
+                <option *ngFor="let num of numeroRefeicoes" [value]="num">{{ num }} refeições</option>
+              </select>
+              @if (isFieldInvalid(estiloVidaForm, 'numeroRefeicoesDesejadas')) {
+                <span class="error-message">{{ getFieldError(estiloVidaForm, 'numeroRefeicoesDesejadas') }}</span>
+              }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Horário de maior fome <span class="required">*</span></label>
+              <select formControlName="horarioMaiorFome" class="form-input">
+                <option value="">Selecione...</option>
+                <option *ngFor="let hora of horariosFome" [value]="hora">{{ hora }}</option>
+              </select>
+              @if (isFieldInvalid(estiloVidaForm, 'horarioMaiorFome')) {
+                <span class="error-message">{{ getFieldError(estiloVidaForm, 'horarioMaiorFome') }}</span>
+              }
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label class="form-label">Intolerâncias e Alergias</label>
+              <textarea formControlName="intolerancias" class="form-textarea" rows="2" placeholder="Lactose, glúten, frutos do mar, etc."></textarea>
+            </div>
           </div>
         </div>
       </div>
@@ -240,152 +274,173 @@
   <div class="tab-content" *ngIf="activeTab === 'medidas'">
     <form [formGroup]="medidasForm">
       <div class="info-card">
-        <h2 class="section-title">Composição Corporal</h2>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Altura (cm)</label>
-            <input type="number" step="0.1" formControlName="altura" class="form-input" placeholder="Ex: 175.5">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Peso Atual (kg) <span class="required">*</span></label>
-            <input type="number" step="0.1" formControlName="pesoAtual" class="form-input" placeholder="Ex: 75.5">
-            @if (isFieldInvalid(medidasForm, 'pesoAtual')) {
-              <span class="error-message">{{ getFieldError(medidasForm, 'pesoAtual') }}</span>
-            }
-          </div>
-          <div class="form-group">
-            <label class="form-label">Massa Magra (kg) <span class="auto-calc">🤖 Automático</span></label>
-            <input type="number" step="0.1" formControlName="massaMagra" class="form-input form-input-readonly" placeholder="Calculado automaticamente" readonly>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Massa Gorda (kg) <span class="auto-calc">🤖 Automático</span></label>
-            <input type="number" step="0.1" formControlName="massaGorda" class="form-input form-input-readonly" placeholder="Calculado automaticamente" readonly>
-          </div>
+        <div class="card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+          </svg>
+          <h2 class="card-title">Composição Corporal</h2>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Percentual de Gordura (%) <span class="auto-calc">🤖 Automático</span></label>
-            <input type="number" step="0.1" formControlName="percentualGordura" class="form-input form-input-readonly" placeholder="Calculado automaticamente" readonly>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Altura (cm)</label>
+              <input type="number" step="0.1" formControlName="altura" class="form-input" placeholder="Ex: 175.5">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Peso Atual (kg) <span class="required">*</span></label>
+              <input type="number" step="0.1" formControlName="pesoAtual" class="form-input" placeholder="Ex: 75.5">
+              @if (isFieldInvalid(medidasForm, 'pesoAtual')) {
+                <span class="error-message">{{ getFieldError(medidasForm, 'pesoAtual') }}</span>
+              }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Massa Magra (kg) <span class="auto-calc">🤖 Automático</span></label>
+              <input type="number" step="0.1" formControlName="massaMagra" class="form-input form-input-readonly" placeholder="Calculado automaticamente" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Massa Gorda (kg) <span class="auto-calc">🤖 Automático</span></label>
+              <input type="number" step="0.1" formControlName="massaGorda" class="form-input form-input-readonly" placeholder="Calculado automaticamente" readonly>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">IMC <span class="auto-calc">🤖 Automático</span></label>
-            <input type="number" step="0.1" formControlName="imc" class="form-input form-input-readonly" placeholder="Calculado automaticamente" readonly>
-          </div>
-        </div>
-      </div>
-
-      <div class="info-card">
-        <h2 class="section-title">Perímetros (cm)</h2>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Ombro</label>
-            <input type="number" step="0.1" formControlName="perimetroOmbro" class="form-input" placeholder="cm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tórax</label>
-            <input type="number" step="0.1" formControlName="perimetroTorax" class="form-input" placeholder="cm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Cintura</label>
-            <input type="number" step="0.1" formControlName="perimetroCintura" class="form-input" placeholder="cm">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Abdominal</label>
-            <input type="number" step="0.1" formControlName="perimetroAbdominal" class="form-input" placeholder="cm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Quadril</label>
-            <input type="number" step="0.1" formControlName="perimetroQuadril" class="form-input" placeholder="cm">
-          </div>
-        </div>
-        <h3 class="subsection-title">Braços</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Braço D (relaxado)</label>
-            <input type="number" step="0.1" formControlName="perimetroBracoDireitoRelax" class="form-input" placeholder="cm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Braço D (contraído)</label>
-            <input type="number" step="0.1" formControlName="perimetroBracoDireitoContr" class="form-input" placeholder="cm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Braço E (relaxado)</label>
-            <input type="number" step="0.1" formControlName="perimetroBracoEsquerdoRelax" class="form-input" placeholder="cm">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Braço E (contraído)</label>
-            <input type="number" step="0.1" formControlName="perimetroBracoEsquerdoContr" class="form-input" placeholder="cm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Antebraço D</label>
-            <input type="number" step="0.1" formControlName="perimetroAntebracoDireito" class="form-input" placeholder="cm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Antebraço E</label>
-            <input type="number" step="0.1" formControlName="perimetroAntebracoEsquerdo" class="form-input" placeholder="cm">
-          </div>
-        </div>
-        <h3 class="subsection-title">Pernas</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Coxa D</label>
-            <input type="number" step="0.1" formControlName="perimetroCoxaDireita" class="form-input" placeholder="cm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Coxa E</label>
-            <input type="number" step="0.1" formControlName="perimetroCoxaEsquerda" class="form-input" placeholder="cm">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Panturrilha D</label>
-            <input type="number" step="0.1" formControlName="perimetroPanturrilhaDireita" class="form-input" placeholder="cm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Panturrilha E</label>
-            <input type="number" step="0.1" formControlName="perimetroPanturrilhaEsquerda" class="form-input" placeholder="cm">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Percentual de Gordura (%) <span class="auto-calc">🤖 Automático</span></label>
+              <input type="number" step="0.1" formControlName="percentualGordura" class="form-input form-input-readonly" placeholder="Calculado automaticamente" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">IMC <span class="auto-calc">🤖 Automático</span></label>
+              <input type="number" step="0.1" formControlName="imc" class="form-input form-input-readonly" placeholder="Calculado automaticamente" readonly>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="info-card">
-        <h2 class="section-title">Dobras Cutâneas (mm)</h2>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Tríceps</label>
-            <input type="number" step="0.1" formControlName="dobraTriceps" class="form-input" placeholder="mm">
+        <div class="card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          <h2 class="card-title">Perímetros (cm)</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ombro</label>
+              <input type="number" step="0.1" formControlName="perimetroOmbro" class="form-input" placeholder="cm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tórax</label>
+              <input type="number" step="0.1" formControlName="perimetroTorax" class="form-input" placeholder="cm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cintura</label>
+              <input type="number" step="0.1" formControlName="perimetroCintura" class="form-input" placeholder="cm">
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Peitoral</label>
-            <input type="number" step="0.1" formControlName="dobraPeito" class="form-input" placeholder="mm">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Abdominal</label>
+              <input type="number" step="0.1" formControlName="perimetroAbdominal" class="form-input" placeholder="cm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Quadril</label>
+              <input type="number" step="0.1" formControlName="perimetroQuadril" class="form-input" placeholder="cm">
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Axilar Média</label>
-            <input type="number" step="0.1" formControlName="dobraAxilarMedia" class="form-input" placeholder="mm">
+          <h3 class="subsection-title">Braços</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Braço D (relaxado)</label>
+              <input type="number" step="0.1" formControlName="perimetroBracoDireitoRelax" class="form-input" placeholder="cm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Braço D (contraído)</label>
+              <input type="number" step="0.1" formControlName="perimetroBracoDireitoContr" class="form-input" placeholder="cm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Braço E (relaxado)</label>
+              <input type="number" step="0.1" formControlName="perimetroBracoEsquerdoRelax" class="form-input" placeholder="cm">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Braço E (contraído)</label>
+              <input type="number" step="0.1" formControlName="perimetroBracoEsquerdoContr" class="form-input" placeholder="cm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Antebraço D</label>
+              <input type="number" step="0.1" formControlName="perimetroAntebracoDireito" class="form-input" placeholder="cm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Antebraço E</label>
+              <input type="number" step="0.1" formControlName="perimetroAntebracoEsquerdo" class="form-input" placeholder="cm">
+            </div>
+          </div>
+          <h3 class="subsection-title">Pernas</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Coxa D</label>
+              <input type="number" step="0.1" formControlName="perimetroCoxaDireita" class="form-input" placeholder="cm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Coxa E</label>
+              <input type="number" step="0.1" formControlName="perimetroCoxaEsquerda" class="form-input" placeholder="cm">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Panturrilha D</label>
+              <input type="number" step="0.1" formControlName="perimetroPanturrilhaDireita" class="form-input" placeholder="cm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Panturrilha E</label>
+              <input type="number" step="0.1" formControlName="perimetroPanturrilhaEsquerda" class="form-input" placeholder="cm">
+            </div>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Subescapular</label>
-            <input type="number" step="0.1" formControlName="dobraSubescapular" class="form-input" placeholder="mm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Abdominal</label>
-            <input type="number" step="0.1" formControlName="dobraAbdominal" class="form-input" placeholder="mm">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Supra-ilíaca</label>
-            <input type="number" step="0.1" formControlName="dobraSupraIliaca" class="form-input" placeholder="mm">
-          </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+          <h2 class="card-title">Dobras Cutâneas (mm)</h2>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Coxa</label>
-            <input type="number" step="0.1" formControlName="dobraCoxa" class="form-input" placeholder="mm">
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tríceps</label>
+              <input type="number" step="0.1" formControlName="dobraTriceps" class="form-input" placeholder="mm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Peitoral</label>
+              <input type="number" step="0.1" formControlName="dobraPeito" class="form-input" placeholder="mm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Axilar Média</label>
+              <input type="number" step="0.1" formControlName="dobraAxilarMedia" class="form-input" placeholder="mm">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Subescapular</label>
+              <input type="number" step="0.1" formControlName="dobraSubescapular" class="form-input" placeholder="mm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Abdominal</label>
+              <input type="number" step="0.1" formControlName="dobraAbdominal" class="form-input" placeholder="mm">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Supra-ilíaca</label>
+              <input type="number" step="0.1" formControlName="dobraSupraIliaca" class="form-input" placeholder="mm">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Coxa</label>
+              <input type="number" step="0.1" formControlName="dobraCoxa" class="form-input" placeholder="mm">
+            </div>
           </div>
         </div>
       </div>
@@ -395,168 +450,177 @@
   <!-- Tab: Fotos -->
   <div class="tab-content" *ngIf="activeTab === 'fotos'">
     <div class="info-card">
-      <h2 class="section-title">Registro Fotográfico</h2>
-      <p class="section-description">Faça upload das fotos do paciente para acompanhamento visual da evolução</p>
-      
-      <div class="fotos-grid">
-        <!-- Foto Anterior -->
-        <div class="foto-upload-card">
-          <input 
-            type="file" 
-            id="file-anterior" 
-            accept="image/*" 
-            (change)="onFileSelected($event, 'ANTERIOR')"
-            style="display: none;">
-          
-          @if (fotos['ANTERIOR'].preview) {
-            <div class="foto-preview">
-              <img [src]="fotos['ANTERIOR'].preview" alt="Foto Anterior">
-              <div class="foto-overlay">
-                <button class="btn-remove-foto" (click)="removerFoto('ANTERIOR')" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                  </svg>
-                  Remover
-                </button>
-              </div>
-              @if (fotos['ANTERIOR'].uploading) {
-                <div class="upload-loading">
-                  <div class="spinner"></div>
+      <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <circle cx="9" cy="9" r="2"></circle>
+          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+        </svg>
+        <h2 class="card-title">Registro Fotográfico</h2>
+      </div>
+      <div class="card-body">
+        <p class="section-description">Faça upload das fotos do paciente para acompanhamento visual da evolução</p>
+        
+        <div class="fotos-grid">
+          <!-- Foto Anterior -->
+          <div class="foto-upload-card">
+            <input 
+              type="file" 
+              id="file-anterior" 
+              accept="image/*" 
+              (change)="onFileSelected($event, 'ANTERIOR')"
+              style="display: none;">
+            
+            @if (fotos['ANTERIOR'].preview) {
+              <div class="foto-preview">
+                <img [src]="fotos['ANTERIOR'].preview" alt="Foto Anterior">
+                <div class="foto-overlay">
+                  <button class="btn-remove-foto" (click)="removerFoto('ANTERIOR')" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Remover
+                  </button>
                 </div>
-              }
-            </div>
-          } @else {
-            <div class="upload-placeholder" (click)="triggerFileInput('ANTERIOR')">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="9" cy="9" r="2"></circle>
-                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-              </svg>
-              <span class="upload-label">Foto Anterior</span>
-              <button class="upload-button" type="button">Fazer Upload</button>
-            </div>
-          }
-        </div>
+                @if (fotos['ANTERIOR'].uploading) {
+                  <div class="upload-loading">
+                    <div class="spinner"></div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="upload-placeholder" (click)="triggerFileInput('ANTERIOR')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="9" cy="9" r="2"></circle>
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                </svg>
+                <span class="upload-label">Foto Anterior</span>
+                <button class="upload-button" type="button">Fazer Upload</button>
+              </div>
+            }
+          </div>
 
-        <!-- Foto Posterior -->
-        <div class="foto-upload-card">
-          <input 
-            type="file" 
-            id="file-posterior" 
-            accept="image/*" 
-            (change)="onFileSelected($event, 'POSTERIOR')"
-            style="display: none;">
-          
-          @if (fotos['POSTERIOR'].preview) {
-            <div class="foto-preview">
-              <img [src]="fotos['POSTERIOR'].preview" alt="Foto Posterior">
-              <div class="foto-overlay">
-                <button class="btn-remove-foto" (click)="removerFoto('POSTERIOR')" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                  </svg>
-                  Remover
-                </button>
-              </div>
-              @if (fotos['POSTERIOR'].uploading) {
-                <div class="upload-loading">
-                  <div class="spinner"></div>
+          <!-- Foto Posterior -->
+          <div class="foto-upload-card">
+            <input 
+              type="file" 
+              id="file-posterior" 
+              accept="image/*" 
+              (change)="onFileSelected($event, 'POSTERIOR')"
+              style="display: none;">
+            
+            @if (fotos['POSTERIOR'].preview) {
+              <div class="foto-preview">
+                <img [src]="fotos['POSTERIOR'].preview" alt="Foto Posterior">
+                <div class="foto-overlay">
+                  <button class="btn-remove-foto" (click)="removerFoto('POSTERIOR')" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Remover
+                  </button>
                 </div>
-              }
-            </div>
-          } @else {
-            <div class="upload-placeholder" (click)="triggerFileInput('POSTERIOR')">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="9" cy="9" r="2"></circle>
-                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-              </svg>
-              <span class="upload-label">Foto Posterior</span>
-              <button class="upload-button" type="button">Fazer Upload</button>
-            </div>
-          }
-        </div>
+                @if (fotos['POSTERIOR'].uploading) {
+                  <div class="upload-loading">
+                    <div class="spinner"></div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="upload-placeholder" (click)="triggerFileInput('POSTERIOR')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="9" cy="9" r="2"></circle>
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                </svg>
+                <span class="upload-label">Foto Posterior</span>
+                <button class="upload-button" type="button">Fazer Upload</button>
+              </div>
+            }
+          </div>
 
-        <!-- Foto Lateral Esquerda -->
-        <div class="foto-upload-card">
-          <input 
-            type="file" 
-            id="file-lateral-esquerda" 
-            accept="image/*" 
-            (change)="onFileSelected($event, 'LATERAL_ESQUERDA')"
-            style="display: none;">
-          
-          @if (fotos['LATERAL_ESQUERDA'].preview) {
-            <div class="foto-preview">
-              <img [src]="fotos['LATERAL_ESQUERDA'].preview" alt="Foto Lateral Esquerda">
-              <div class="foto-overlay">
-                <button class="btn-remove-foto" (click)="removerFoto('LATERAL_ESQUERDA')" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                  </svg>
-                  Remover
-                </button>
-              </div>
-              @if (fotos['LATERAL_ESQUERDA'].uploading) {
-                <div class="upload-loading">
-                  <div class="spinner"></div>
+          <!-- Foto Lateral Esquerda -->
+          <div class="foto-upload-card">
+            <input 
+              type="file" 
+              id="file-lateral-esquerda" 
+              accept="image/*" 
+              (change)="onFileSelected($event, 'LATERAL_ESQUERDA')"
+              style="display: none;">
+            
+            @if (fotos['LATERAL_ESQUERDA'].preview) {
+              <div class="foto-preview">
+                <img [src]="fotos['LATERAL_ESQUERDA'].preview" alt="Foto Lateral Esquerda">
+                <div class="foto-overlay">
+                  <button class="btn-remove-foto" (click)="removerFoto('LATERAL_ESQUERDA')" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Remover
+                  </button>
                 </div>
-              }
-            </div>
-          } @else {
-            <div class="upload-placeholder" (click)="triggerFileInput('LATERAL_ESQUERDA')">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="9" cy="9" r="2"></circle>
-                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-              </svg>
-              <span class="upload-label">Foto Lateral Esquerda</span>
-              <button class="upload-button" type="button">Fazer Upload</button>
-            </div>
-          }
-        </div>
+                @if (fotos['LATERAL_ESQUERDA'].uploading) {
+                  <div class="upload-loading">
+                    <div class="spinner"></div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="upload-placeholder" (click)="triggerFileInput('LATERAL_ESQUERDA')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="9" cy="9" r="2"></circle>
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                </svg>
+                <span class="upload-label">Foto Lateral Esquerda</span>
+                <button class="upload-button" type="button">Fazer Upload</button>
+              </div>
+            }
+          </div>
 
-        <!-- Foto Lateral Direita -->
-        <div class="foto-upload-card">
-          <input 
-            type="file" 
-            id="file-lateral-direita" 
-            accept="image/*" 
-            (change)="onFileSelected($event, 'LATERAL_DIREITA')"
-            style="display: none;">
-          
-          @if (fotos['LATERAL_DIREITA'].preview) {
-            <div class="foto-preview">
-              <img [src]="fotos['LATERAL_DIREITA'].preview" alt="Foto Lateral Direita">
-              <div class="foto-overlay">
-                <button class="btn-remove-foto" (click)="removerFoto('LATERAL_DIREITA')" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                  </svg>
-                  Remover
-                </button>
-              </div>
-              @if (fotos['LATERAL_DIREITA'].uploading) {
-                <div class="upload-loading">
-                  <div class="spinner"></div>
+          <!-- Foto Lateral Direita -->
+          <div class="foto-upload-card">
+            <input 
+              type="file" 
+              id="file-lateral-direita" 
+              accept="image/*" 
+              (change)="onFileSelected($event, 'LATERAL_DIREITA')"
+              style="display: none;">
+            
+            @if (fotos['LATERAL_DIREITA'].preview) {
+              <div class="foto-preview">
+                <img [src]="fotos['LATERAL_DIREITA'].preview" alt="Foto Lateral Direita">
+                <div class="foto-overlay">
+                  <button class="btn-remove-foto" (click)="removerFoto('LATERAL_DIREITA')" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Remover
+                  </button>
                 </div>
-              }
-            </div>
-          } @else {
-            <div class="upload-placeholder" (click)="triggerFileInput('LATERAL_DIREITA')">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="9" cy="9" r="2"></circle>
-                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-              </svg>
-              <span class="upload-label">Foto Lateral Direita</span>
-              <button class="upload-button" type="button">Fazer Upload</button>
-            </div>
-          }
+                @if (fotos['LATERAL_DIREITA'].uploading) {
+                  <div class="upload-loading">
+                    <div class="spinner"></div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="upload-placeholder" (click)="triggerFileInput('LATERAL_DIREITA')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="9" cy="9" r="2"></circle>
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                </svg>
+                <span class="upload-label">Foto Lateral Direita</span>
+                <button class="upload-button" type="button">Fazer Upload</button>
+              </div>
+            }
+          </div>
         </div>
       </div>
     </div>
@@ -565,14 +629,23 @@
   <!-- Tab: Dieta -->
   <div class="tab-content" *ngIf="activeTab === 'dieta'">
     <div class="info-card">
-      <h2 class="section-title">Plano Alimentar</h2>
-      <p class="section-description">Esta funcionalidade será implementada em breve</p>
-      <div class="coming-soon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M12 6v6l4 2"></path>
+      <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+          <path d="M7 2v20"></path>
+          <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
         </svg>
-        <p>Em desenvolvimento</p>
+        <h2 class="card-title">Plano Alimentar</h2>
+      </div>
+      <div class="card-body">
+        <p class="section-description">Esta funcionalidade será implementada em breve</p>
+        <div class="coming-soon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 6v6l4 2"></path>
+          </svg>
+          <p>Em desenvolvimento</p>
+        </div>
       </div>
     </div>
   </div>
