@@ -218,37 +218,6 @@ export class PacienteFormComponent implements OnInit {
   }
 
   // ===========================================
-  // # abrirCalendario - Abre seletor de data
-  // ===========================================
-  abrirCalendario(hiddenInput: HTMLInputElement): void {
-    const dataAtual = this.pacienteForm.get('dataNascimento')?.value;
-    if (dataAtual && dataAtual.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-      const partes = dataAtual.split('/');
-      const dataISO = `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
-      hiddenInput.value = dataISO;
-    }
-
-    if (typeof hiddenInput.showPicker === 'function') {
-      hiddenInput.showPicker();
-    } else {
-      hiddenInput.click();
-    }
-  }
-
-  // ===========================================
-  // # onDateSelected - Processa seleção de data
-  // ===========================================
-  onDateSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const dataISO = input.value;
-
-    if (dataISO) {
-      const dataFormatada = this.formatarDataString(dataISO);
-      this.pacienteForm.patchValue({ dataNascimento: dataFormatada });
-    }
-  }
-
-  // ===========================================
   // # onSubmit - Processa submissão do formulário
   // ===========================================
   onSubmit(): void {
