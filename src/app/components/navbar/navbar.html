@@ -29,20 +29,22 @@
 
     <!-- User Menu -->
     <div class="navbar-user">
-      <div class="user-info" (click)="toggleUserMenu()" [class.active]="userMenuOpen">
-        <div class="user-avatar">
-          <span>{{ getUserInitials() }}</span>
-          @if (currentUser?.perfil === 'admin') {
-            <div class="admin-badge">
-              <i class="fas fa-star"></i>
-            </div>
+      <div class="user-info" (click)="toggleUserMenu()" [class.active]="userMenuOpen" role="button" aria-haspopup="true" aria-expanded="{{userMenuOpen}}" aria-label="Abrir menu do usuário">
+        <div class="user-avatar" title="{{ currentUser?.name || 'Usuário' }}">
+          @if (currentUser?.photoUrl) {
+            <img src="{{ currentUser?.photoUrl }}" alt="{{ currentUser?.name || 'Usuário' }}" class="avatar-img" />
           }
+          @else {
+            <span class="avatar-initials">{{ getUserInitials() }}</span>
+          }
+          
+          <span class="status-dot" aria-hidden="true"></span>
         </div>
         <div class="user-details">
           <span class="user-name">{{ currentUser?.name || 'Usuário' }}</span>
           <span class="user-role">{{ currentUser?.perfil === 'admin' ? 'Administrador' : 'Usuário' }}</span>
         </div>
-        <svg class="dropdown-arrow" [class.rotated]="userMenuOpen" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="dropdown-arrow" [class.rotated]="userMenuOpen" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
       </div>
@@ -51,8 +53,13 @@
       <div class="user-dropdown" [class.open]="userMenuOpen">
         <div class="dropdown-header">
           <div class="dropdown-avatar">
-            <span>{{ getUserInitials() }}</span>
-          </div>
+              @if (currentUser?.photoUrl) {
+                <img src="{{ currentUser?.photoUrl }}" alt="{{ currentUser?.name || 'Usuário' }}" class="avatar-img" />
+              }
+              @else {
+                <span>{{ getUserInitials() }}</span>
+              }
+            </div>
           <div class="dropdown-user-info">
             <div class="dropdown-name">{{ currentUser?.name || 'Usuário' }}</div>
             <div class="dropdown-email">{{ currentUser?.email || '' }}</div>
@@ -115,11 +122,6 @@
       <div class="mobile-user-info">
         <div class="user-avatar">
           <span>{{ getUserInitials() }}</span>
-          @if (currentUser?.perfil === 'admin') {
-            <div class="admin-badge">
-              <i class="fas fa-star"></i>
-            </div>
-          }
         </div>
         <div class="user-details">
           <span class="user-name">{{ currentUser?.name || 'Usuário' }}</span>

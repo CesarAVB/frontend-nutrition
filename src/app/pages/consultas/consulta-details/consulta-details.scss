@@ -216,7 +216,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
   min-height: 280px;
   display: flex;
   flex-direction: column;
@@ -322,6 +322,7 @@
     max-width: 1400px;
     margin: 0 auto;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   @media (max-width: 480px) {
     .details-container {
@@ -332,7 +333,6 @@
       overflow-x: hidden !important;
     }
   }
-    transition: all 0.3s ease;
 
     &:hover {
       transform: translateY(-4px);
@@ -368,7 +368,7 @@
       object-fit: cover;
       border-radius: 12px;
       border: 2px solid #e5e7eb;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, border-color 0.2s ease, box-shadow 0.2s ease;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
@@ -470,7 +470,7 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.25s ease;
 
     &:hover {
       background: linear-gradient(135deg, #059669 0%, #047857 100%);
@@ -544,7 +544,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.18s ease, box-shadow 0.18s ease;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
       &:hover {
@@ -604,7 +604,7 @@
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.2s ease;
       position: relative;
       overflow: hidden;
 
@@ -1223,7 +1223,7 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.2s ease, border-color 0.2s ease;
   position: relative;
   overflow: hidden;
 
@@ -1272,7 +1272,7 @@
     font-size: 1rem;
     color: #1f2937;
     background: #ffffff;
-    transition: all 0.3s ease;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
     &:focus {
@@ -1437,7 +1437,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
       &:hover {
