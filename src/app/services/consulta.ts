@@ -272,4 +272,14 @@ export class ConsultaService {
     const url = `${apiUrl}/consulta/${consultaId}`;
     return this.http.put<AvaliacaoFisicaDTO>(url, avaliacao);
   }
+
+  // =======================================
+  // # enviarDadosTesteComN8n - Envia a consulta para endpoint de teste N8n
+  // =======================================
+  enviarDadosTesteComN8n(consulta: ConsultaDetalhadaDTO): Observable<void> {
+    const url = `${environment.apiUrl}/api/v1/relatorio/testeComN8n`;
+    return this.http.post<void>(url, consulta, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 }

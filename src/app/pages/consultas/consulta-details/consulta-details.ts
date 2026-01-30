@@ -325,6 +325,39 @@ export class ConsultaDetailsComponent implements OnInit {
   }
 
   // ===========================================
+  // # testeIA - Solicita senha e envia dados para endpoint de teste
+  // ===========================================
+  testeIA(): void {
+    const senha = window.prompt('Informe a senha para Teste I.A.:');
+    if (senha === null) return; // usuário cancelou
+    if (senha !== '550760') {
+      this.toastService.error('Senha incorreta');
+      return;
+    }
+
+    const consulta = this.consulta();
+    if (!consulta) {
+      this.toastService.error('Consulta não encontrada');
+      return;
+    }
+
+    this.isGeneratingReport.set(true);
+    this.toastService.info('Enviando dados para Teste I.A...');
+
+    this.consultaService.enviarDadosTesteComN8n(consulta).subscribe({
+      next: () => {
+        this.toastService.success('Dados enviados com sucesso para Teste I.A.');
+        this.isGeneratingReport.set(false);
+      },
+      error: (err) => {
+        console.error('Erro ao enviar dados para Teste I.A.:', err);
+        this.toastService.error('Erro ao enviar dados. Tente novamente.');
+        this.isGeneratingReport.set(false);
+      }
+    });
+  }
+
+  // ===========================================
   // # gerarNomeArquivoRelatorio - Gera nome do arquivo de relatório
   // ===========================================
   private gerarNomeArquivoRelatorio(nomePaciente: string, tipo: 'padrao' | 'simples' | 'detalhado'): string {
