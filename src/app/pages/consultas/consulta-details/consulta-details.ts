@@ -34,9 +34,8 @@ export class ConsultaDetailsComponent implements OnInit {
   error = signal<string | null>(null);
   mostrarModalExclusao = signal(false);
   mostrarModalRemarcar = signal(false);
-  mostrarModalTemplate = signal(false);
   novaData = signal('');
-  templateType = signal<'padrao' | 'simples' | 'detalhado'>('padrao');
+  isGeneratingReport = signal(false);
   fotoAmpliada = signal<string | null>(null);
   tituloFotoAmpliada = signal<string>('');
 
@@ -274,43 +273,28 @@ export class ConsultaDetailsComponent implements OnInit {
   // # gerarPDF - Inicia geração de PDF
   // ===========================================
   gerarPDF(): void {
-    this.mostrarModalTemplate.set(true);
+    // Gera diretamente o relatório detalhado
+    this.gerarRelatorioDetalhado();
   }
 
   // ===========================================
-  // # abrirModalTemplate - Abre modal de template
+  // # gerarRelatorioDetalhado - Gera relatório detalhado e faz download
   // ===========================================
-  abrirModalTemplate(): void {
-    this.mostrarModalTemplate.set(true);
-  }
-
-  // ===========================================
-  // # cancelarTemplate - Cancela seleção de template
-  // ===========================================
-  cancelarTemplate(): void {
-    this.mostrarModalTemplate.set(false);
-    this.templateType.set('padrao');
-  }
-
-  // ===========================================
-  // # confirmarTemplate - Confirma template e gera relatório
-  // ===========================================
-  confirmarTemplate(): void {
+  gerarRelatorioDetalhado(): void {
     const consulta = this.consulta();
     if (!consulta) {
       this.toastService.error('Consulta não encontrada');
       return;
     }
 
-    this.mostrarModalTemplate.set(false);
-    this.toastService.info('Gerando relatório...');
+    this.isGeneratingReport.set(true);
+    this.toastService.info('Gerando relatório detalhado...');
 
     const url = `${environment.apiUrl}/api/v1/relatorio`;
-
     const payload = {
       pacienteId: consulta.pacienteId,
       consultaId: consulta.id,
-      templateType: this.templateType()
+      templateType: 'detalhado'
     };
 
     this.http.post(url, payload, {
@@ -323,17 +307,19 @@ export class ConsultaDetailsComponent implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = this.gerarNomeArquivoRelatorio(consulta.nomePaciente, this.templateType());
+        link.download = this.gerarNomeArquivoRelatorio(consulta.nomePaciente, 'detalhado');
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
 
         this.toastService.success('Relatório gerado com sucesso!');
+        this.isGeneratingReport.set(false);
       },
       error: (error) => {
         console.error('Erro ao gerar relatório:', error);
         this.toastService.error('Erro ao gerar relatório. Tente novamente.');
+        this.isGeneratingReport.set(false);
       }
     });
   }
