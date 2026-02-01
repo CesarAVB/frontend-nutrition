@@ -345,9 +345,52 @@ export class ConsultaDetailsComponent implements OnInit {
     this.toastService.info('Enviando dados para Teste I.A...');
 
     this.consultaService.enviarDadosTesteComN8n(consulta).subscribe({
-      next: () => {
-        this.toastService.success('Dados enviados com sucesso para Teste I.A.');
-        this.isGeneratingReport.set(false);
+      next: (res) => {
+        console.log('Resposta backend Teste I.A.:', res);
+
+        try {
+          // Se o backend retornou base64, converte e dispara download
+          if (res && res.format === 'base64' && res.response) {
+            const base64 = res.response as string;
+            const filename = res.filename || 'download.pdf';
+            const contentType = (res.meta && (res.meta['content-type'] || res.meta.contentType)) || 'application/pdf';
+
+            const byteCharacters = atob(base64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: contentType });
+            const url = window.URL.createObjectURL(blob);
+
+            // Cria link para download
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Também abre em nova aba (pré-visualização) se o navegador permitir
+            try {
+              window.open(url, '_blank');
+            } catch {}
+
+            // limpa URL
+            window.URL.revokeObjectURL(url);
+
+            this.toastService.success('Arquivo preparado para download.');
+          } else {
+            this.toastService.success('Dados enviados com sucesso para Teste I.A.');
+            console.log('Resposta não é base64 ou está em formato inesperado.');
+          }
+        } catch (e) {
+          console.error('Erro ao processar resposta Teste I.A.:', e);
+          this.toastService.error('Erro ao processar o arquivo retornado.');
+        } finally {
+          this.isGeneratingReport.set(false);
+        }
       },
       error: (err) => {
         console.error('Erro ao enviar dados para Teste I.A.:', err);
