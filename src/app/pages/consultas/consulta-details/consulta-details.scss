@@ -183,6 +183,16 @@
         box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
       }
     }
+
+    .btn-ia {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+
+      &:hover {
+        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+      }
+    }
   }
 }
 
@@ -745,6 +755,19 @@
         border-color: #94a3b8;
         transform: translateY(-2px);
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    .btn-ia {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3);
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(245, 158, 11, 0.4);
       }
     }
 
