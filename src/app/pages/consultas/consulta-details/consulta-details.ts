@@ -39,6 +39,16 @@ export class ConsultaDetailsComponent implements OnInit {
   fotoAmpliada = signal<string | null>(null);
   tituloFotoAmpliada = signal<string>('');
 
+  // Controle de collapse dos cards
+  cardAvaliacaoFisica = signal(false);
+  cardPerimetros = signal(false);
+  cardDobras = signal(false);
+  cardEstiloVida = signal(false);
+  cardHabitos = signal(false);
+  cardAlimentar = signal(false);
+  cardSaude = signal(false);
+  cardFotos = signal(false);
+
   // Controle de expansão das seções
   expandirPerimetros = signal(false);
   expandirDobras = signal(false);

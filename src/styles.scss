@@ -9,6 +9,7 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body {
@@ -17,6 +18,7 @@ body {
   color: #1f2937;
   background: #f9fafb;
   font-weight: 400;
+  overflow-x: hidden;
 }
 
 /* Allow pages (like login) to opt-out of the navbar top padding */
