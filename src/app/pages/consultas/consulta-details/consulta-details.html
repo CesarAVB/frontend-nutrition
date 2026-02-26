@@ -156,20 +156,76 @@
       </div>
       <div class="card-body">
         <div class="info-row">
-          <span class="info-label">Cintura</span>
-          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroCintura || '-' }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Quadril</span>
-          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroQuadril || '-' }}</span>
+          <span class="info-label">Ombro</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroOmbro || '-' }}</span>
         </div>
         <div class="info-row">
           <span class="info-label">Tórax</span>
           <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroTorax || '-' }}</span>
         </div>
         <div class="info-row">
+          <span class="info-label">Cintura</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroCintura || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Abdominal</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroAbdominal || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Quadril</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroQuadril || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Braço D (relaxado)</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroBracoDireitoRelax || '-' }}</span>
+        </div>
+        <div class="info-row">
           <span class="info-label">Braço D (contraído)</span>
           <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroBracoDireitoContr || '-' }}</span>
+        </div>
+        @if (expandirPerimetros()) {
+        <div class="expandable-section">
+          <div class="info-row">
+            <span class="info-label">Braço E (relaxado)</span>
+            <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroBracoEsquerdoRelax || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Braço E (contraído)</span>
+            <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroBracoEsquerdoContr || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Antebraço D</span>
+            <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroAntebracoDireito || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Antebraço E</span>
+            <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroAntebracoEsquerdo || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Coxa D</span>
+            <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroCoxaDireita || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Coxa E</span>
+            <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroCoxaEsquerda || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Panturrilha D</span>
+            <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroPanturrilhaDireita || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Panturrilha E</span>
+            <span class="info-value">{{ consulta()?.avaliacaoFisica?.perimetroPanturrilhaEsquerda || '-' }}</span>
+          </div>
+        </div>
+        }
+        <div class="expandir-footer">
+          <button class="btn-expand" (click)="expandirPerimetros.set(!expandirPerimetros())">
+            <svg class="expand-icon" [class.rotated]="expandirPerimetros()" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+            {{ expandirPerimetros() ? 'Ver menos' : 'Ver mais' }}
+          </button>
         </div>
       </div>
     </div>
@@ -187,16 +243,40 @@
           <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraTriceps || '-' }}</span>
         </div>
         <div class="info-row">
-          <span class="info-label">Abdominal</span>
-          <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraAbdominal || '-' }}</span>
+          <span class="info-label">Peito</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraPeito || '-' }}</span>
         </div>
         <div class="info-row">
           <span class="info-label">Subescapular</span>
           <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraSubescapular || '-' }}</span>
         </div>
         <div class="info-row">
+          <span class="info-label">Abdominal</span>
+          <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraAbdominal || '-' }}</span>
+        </div>
+        <div class="info-row">
           <span class="info-label">Supra-ilíaca</span>
           <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraSupraIliaca || '-' }}</span>
+        </div>
+        @if (expandirDobras()) {
+        <div class="expandable-section">
+          <div class="info-row">
+            <span class="info-label">Axilar Média</span>
+            <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraAxilarMedia || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Coxa</span>
+            <span class="info-value">{{ consulta()?.avaliacaoFisica?.dobraCoxa || '-' }}</span>
+          </div>
+        </div>
+        }
+        <div class="expandir-footer">
+          <button class="btn-expand" (click)="expandirDobras.set(!expandirDobras())">
+            <svg class="expand-icon" [class.rotated]="expandirDobras()" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+            {{ expandirDobras() ? 'Ver menos' : 'Ver mais' }}
+          </button>
         </div>
       </div>
     </div>
@@ -287,6 +367,12 @@
           <span class="info-label">Horário de maior fome</span>
           <span class="info-value">{{ consulta()?.questionario?.horarioMaiorFome || '-' }}</span>
         </div>
+        @if (consulta()?.questionario?.frutasPreferidas) {
+        <div class="info-row full-width">
+          <span class="info-label">Frutas preferidas</span>
+          <p class="info-value">{{ consulta()?.questionario?.frutasPreferidas }}</p>
+        </div>
+        }
         @if (consulta()?.questionario?.alimentosNaoGosta) {
         <div class="info-row full-width">
           <span class="info-label">Alimentos que não gosta</span>
@@ -299,6 +385,80 @@
           <p class="info-value">{{ consulta()?.questionario?.intolerancias }}</p>
         </div>
         }
+      </div>
+    </div>
+
+    <!-- Card de Saúde e Medicamentos -->
+    <div class="info-card">
+      <div class="card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+        </svg>
+        <h2 class="card-title">Saúde e Medicamentos</h2>
+      </div>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">Pressão Arterial</span>
+          <span class="info-value">{{ consulta()?.questionario?.pressaoArterial || '-' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Uso de anabolizantes</span>
+          <span class="info-value">{{ consulta()?.questionario?.usoAnabolizantes || '-' }}</span>
+        </div>
+        @if (consulta()?.questionario?.medicamentos) {
+        <div class="info-row full-width">
+          <span class="info-label">Medicamentos</span>
+          <p class="info-value">{{ consulta()?.questionario?.medicamentos }}</p>
+        </div>
+        }
+        @if (consulta()?.questionario?.suplementos) {
+        <div class="info-row full-width">
+          <span class="info-label">Suplementos</span>
+          <p class="info-value">{{ consulta()?.questionario?.suplementos }}</p>
+        </div>
+        }
+        @if (expandirSaude()) {
+        <div class="expandable-section">
+          @if (consulta()?.questionario?.cirurgias) {
+          <div class="info-row full-width">
+            <span class="info-label">Cirurgias</span>
+            <p class="info-value">{{ consulta()?.questionario?.cirurgias }}</p>
+          </div>
+          }
+          @if (consulta()?.questionario?.doencas) {
+          <div class="info-row full-width">
+            <span class="info-label">Doenças</span>
+            <p class="info-value">{{ consulta()?.questionario?.doencas }}</p>
+          </div>
+          }
+          @if (consulta()?.questionario?.historicoFamiliar) {
+          <div class="info-row full-width">
+            <span class="info-label">Histórico Familiar</span>
+            <p class="info-value">{{ consulta()?.questionario?.historicoFamiliar }}</p>
+          </div>
+          }
+          @if (consulta()?.questionario?.cicloAnabolizantes) {
+          <div class="info-row">
+            <span class="info-label">Ciclo de anabolizantes</span>
+            <span class="info-value">{{ consulta()?.questionario?.cicloAnabolizantes }}</span>
+          </div>
+          }
+          @if (consulta()?.questionario?.duracaoAnabolizantes) {
+          <div class="info-row">
+            <span class="info-label">Duração do uso</span>
+            <span class="info-value">{{ consulta()?.questionario?.duracaoAnabolizantes }}</span>
+          </div>
+          }
+        </div>
+        }
+        <div class="expandir-footer">
+          <button class="btn-expand" (click)="expandirSaude.set(!expandirSaude())">
+            <svg class="expand-icon" [class.rotated]="expandirSaude()" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+            {{ expandirSaude() ? 'Ver menos' : 'Ver mais' }}
+          </button>
+        </div>
       </div>
     </div>
     } @else {

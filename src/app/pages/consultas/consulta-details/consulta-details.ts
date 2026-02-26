@@ -39,6 +39,11 @@ export class ConsultaDetailsComponent implements OnInit {
   fotoAmpliada = signal<string | null>(null);
   tituloFotoAmpliada = signal<string>('');
 
+  // Controle de expansão das seções
+  expandirPerimetros = signal(false);
+  expandirDobras = signal(false);
+  expandirSaude = signal(false);
+
   // ===========================================
   // # ngOnInit - Inicializa o componente
   // ===========================================
