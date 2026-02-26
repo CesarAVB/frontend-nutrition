@@ -1,11 +1,13 @@
 // src/app/pages/pacientes/paciente-details/paciente-details.ts
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PacienteService } from '../../../services/paciente';
 import { ConsultaService } from '../../../services/consulta';
 import { PacienteDTO, ConsultaResumoDTO } from '../../../models/paciente.model';
 import { ToastService } from '../../../services/toast';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-paciente-details',
@@ -16,11 +18,13 @@ import { ToastService } from '../../../services/toast';
 })
 export class PacienteDetailsComponent implements OnInit {
   private toastService = inject(ToastService);
+  private http = inject(HttpClient);
   paciente = signal<PacienteDTO | null>(null);
   consultas = signal<ConsultaResumoDTO[]>([]);
   isLoading = signal(false);
   error = signal('');
   mostrarModalExclusao = signal(false);
+  gerandoComparativo = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -74,6 +78,35 @@ export class PacienteDetailsComponent implements OnInit {
         this.toastService.error('Erro ao carregar histórico de consultas');
       }
     });
+  }
+
+  // ===========================================
+  // # gerarComparativo - Realiza POST para gerar relatório comparativo do paciente
+  // ===========================================
+  gerarComparativo(): void {
+    const pacienteId = this.paciente()?.id;
+    if (!pacienteId) return;
+
+    this.gerandoComparativo.set(true);
+    this.http
+      .post(`${environment.apiUrl}/api/v1/relatorio/comparativo/${pacienteId}`, {}, { responseType: 'blob' })
+      .subscribe({
+        next: (blob) => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `comparativo-paciente-${pacienteId}.pdf`;
+          a.click();
+          URL.revokeObjectURL(url);
+          this.toastService.success('Relatório comparativo gerado com sucesso!');
+          this.gerandoComparativo.set(false);
+        },
+        error: (erro) => {
+          console.error('Erro ao gerar comparativo:', erro);
+          this.toastService.error('Erro ao gerar relatório comparativo. Tente novamente.');
+          this.gerandoComparativo.set(false);
+        }
+      });
   }
 
   // ===========================================
