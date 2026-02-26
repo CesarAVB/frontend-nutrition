@@ -1,6 +1,12 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
 .details-container {
   padding: 2rem;
   max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -411,8 +417,8 @@
 
   @media (max-width: 480px) {
     .details-container {
-      max-width: 100vw !important;
-      width: 100vw !important;
+      max-width: 100% !important;
+      width: 100% !important;
       margin: 0 !important;
       padding: 0.75rem 0 0.75rem 0 !important;
       overflow-x: hidden !important;
@@ -1057,8 +1063,8 @@
     margin: 0;
     padding: 0.75rem 0;
     border-radius: 6px;
-    width: 100vw;
-    max-width: 100vw;
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
   }
 
@@ -1098,8 +1104,8 @@
 
   .info-card {
     padding: 1rem 0.5rem;
-    width: 100vw;
-    max-width: 100vw;
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
 
     h2 {
@@ -1157,14 +1163,14 @@
 
   .medidas-grid {
     gap: 0.5rem;
-    width: 100vw;
-    max-width: 100vw;
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
   }
   .medida-card {
     padding: 0.875rem;
     width: 100%;
-    max-width: 100vw;
+    max-width: 100%;
     overflow-x: hidden;
     .medida-header h3 {
       font-size: 0.9rem;
@@ -1179,8 +1185,6 @@
   // Remove overflow do body em mobile
   :host-context(body) {
     overflow-x: hidden !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
   }
 
   .observacoes-section {
