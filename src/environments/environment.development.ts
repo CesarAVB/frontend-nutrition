@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://api-sysnutritional.cesaravb.com.br',
+  apiUrl: 'http://localhost:8080',
   loginUrl: 'https://api-login.cesaravb.com.br'
 };
