@@ -10,6 +10,7 @@ import {
 import { CriarConsultaDTO } from '../models/consulta-create.model';
 import { TipoFoto } from '../models/tipo-foto';
 import { AvaliacaoFisicaDTO, QuestionarioEstiloVidaDTO } from '../models/paciente.model';
+import { PageResponse, SortDirection } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -112,6 +113,47 @@ export class ConsultaService {
   }
 
   // =======================================
+  // # listarTodasPaginado - Lista consultas paginadas
+  // =======================================
+  listarTodasPaginado(
+    page = 0,
+    size = 10,
+    sort = 'dataConsulta',
+    direction: SortDirection = 'desc'
+  ): Observable<PageResponse<ConsultaResumoDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', sort)
+      .set('direction', direction);
+
+    return this.http
+      .get<any>(`${this.apiUrl}/paginado`, { params })
+      .pipe(map((res) => this.normalizeConsultaPageResponse(res)));
+  }
+
+  // =======================================
+  // # listarPorPacientePaginado - Lista consultas paginadas por paciente
+  // =======================================
+  listarPorPacientePaginado(
+    pacienteId: number,
+    page = 0,
+    size = 10,
+    sort = 'dataConsulta',
+    direction: SortDirection = 'desc'
+  ): Observable<PageResponse<ConsultaResumoDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', sort)
+      .set('direction', direction);
+
+    return this.http
+      .get<any>(`${this.apiUrl}/paciente/${pacienteId}/paginado`, { params })
+      .pipe(map((res) => this.normalizeConsultaPageResponse(res)));
+  }
+
+  // =======================================
   // # atualizarData - Atualiza a data de uma consulta
   // =======================================
   atualizarData(id: number, novaData: string): Observable<ConsultaResumoDTO> {
@@ -160,6 +202,41 @@ export class ConsultaService {
     }
 
     return null;
+  }
+
+  // ===========================================
+  // # normalizeConsultaPageResponse - Normaliza página de consultas
+  // ===========================================
+  private normalizeConsultaPageResponse(res: any): PageResponse<ConsultaResumoDTO> {
+    const contentRaw = Array.isArray(res?.content) ? res.content : [];
+    const content = contentRaw.map((item: any) => {
+      const raw = item.dataConsulta || item.data_consulta || item.createdAt || item.created_at || item.create_at || null;
+      return {
+        ...item,
+        dataConsulta: this.normalizeDateValue(raw),
+        peso:
+          item.peso ?? item.pesoAtual ?? item.avaliacaoFisica?.pesoAtual ?? null,
+        percentualGordura:
+          item.percentualGordura ?? item.percentual_gordura ?? item.avaliacaoFisica?.percentualGordura ?? null,
+        objetivo: item.objetivo ?? item.questionario?.objetivo ?? item.questionarioEstiloVida?.objetivo ?? null,
+      } as ConsultaResumoDTO;
+    });
+
+    const totalElements = Number(res?.totalElements ?? content.length);
+    const size = Number(res?.size ?? content.length ?? 10);
+    const number = Number(res?.number ?? 0);
+    const totalPages = Number(res?.totalPages ?? (size > 0 ? Math.ceil(totalElements / size) : 0));
+
+    return {
+      content,
+      totalElements,
+      size,
+      number,
+      totalPages,
+      first: Boolean(res?.first ?? number === 0),
+      last: Boolean(res?.last ?? (totalPages <= 1 || number >= totalPages - 1)),
+      empty: Boolean(res?.empty ?? content.length === 0),
+    };
   }
 
   // =======================================

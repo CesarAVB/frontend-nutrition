@@ -91,5 +91,35 @@
         </tbody>
       </table>
     </div>
+
+    @if (totalPaginas() > 0) {
+      <div class="pagination-container">
+        <div class="pagination-info">
+          Página {{ paginaAtual() + 1 }} de {{ totalPaginas() }}
+          <span class="total-items">({{ totalItens() }} registros)</span>
+        </div>
+
+        <div class="pagination-controls">
+          <button class="pagination-button" (click)="paginaAnterior()" [disabled]="paginaAtual() === 0 || isLoading()">
+            Anterior
+          </button>
+
+          @for (pagina of paginasVisiveis(); track pagina) {
+            <button
+              class="pagination-button page-number"
+              [class.active]="pagina === paginaAtual()"
+              (click)="irParaPagina(pagina)"
+              [disabled]="isLoading()"
+            >
+              {{ pagina + 1 }}
+            </button>
+          }
+
+          <button class="pagination-button" (click)="proximaPagina()" [disabled]="paginaAtual() >= totalPaginas() - 1 || isLoading()">
+            Próxima
+          </button>
+        </div>
+      </div>
+    }
   }
 </div>

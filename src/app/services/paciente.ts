@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { PacienteDTO } from '../models/paciente.model';
+import { PageResponse, SortDirection } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,48 @@ export class PacienteService {
         })
       )
     );
+  }
+
+  // =======================================
+  // # listarPaginado - Lista pacientes paginados
+  // =======================================
+  listarPaginado(
+    page = 0,
+    size = 10,
+    sort = 'id',
+    direction: SortDirection = 'desc'
+  ): Observable<PageResponse<PacienteDTO>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', sort)
+      .set('direction', direction);
+
+    return this.http
+      .get<any>(`${this.apiUrl}/paginado`, { params })
+      .pipe(map((res) => this.normalizePageResponse(res)));
+  }
+
+  // =======================================
+  // # buscarPorNomePaginado - Busca pacientes por nome paginado
+  // =======================================
+  buscarPorNomePaginado(
+    nome: string,
+    page = 0,
+    size = 10,
+    sort = 'nomeCompleto',
+    direction: SortDirection = 'asc'
+  ): Observable<PageResponse<PacienteDTO>> {
+    const params = new HttpParams()
+      .set('nome', nome)
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', sort)
+      .set('direction', direction);
+
+    return this.http
+      .get<any>(`${this.apiUrl}/buscar/paginado`, { params })
+      .pipe(map((res) => this.normalizePageResponse(res)));
   }
 
   // =======================================
@@ -77,6 +120,36 @@ export class PacienteService {
   buscarPorNome(nome: string): Observable<PacienteDTO[]> {
     const params = new HttpParams().set('nome', nome);
     return this.http.get<PacienteDTO[]>(`${this.apiUrl}/buscar`, { params });
+  }
+
+  // ===========================================
+  // # normalizePageResponse - Normaliza resposta paginada
+  // ===========================================
+  private normalizePageResponse(res: any): PageResponse<PacienteDTO> {
+    const contentRaw = Array.isArray(res?.content) ? res.content : [];
+    const content = contentRaw.map((p: any) => {
+      const raw = p.ultimaConsulta || p.ultima_consulta || p.data_consulta || p.dataConsulta || p.createdAt || p.created_at || null;
+      return {
+        ...p,
+        ultimaConsulta: this.normalizeDateValue(raw),
+      } as PacienteDTO;
+    });
+
+    const totalElements = Number(res?.totalElements ?? content.length);
+    const size = Number(res?.size ?? content.length ?? 10);
+    const number = Number(res?.number ?? 0);
+    const totalPages = Number(res?.totalPages ?? (size > 0 ? Math.ceil(totalElements / size) : 0));
+
+    return {
+      content,
+      totalElements,
+      size,
+      number,
+      totalPages,
+      first: Boolean(res?.first ?? number === 0),
+      last: Boolean(res?.last ?? (totalPages <= 1 || number >= totalPages - 1)),
+      empty: Boolean(res?.empty ?? content.length === 0),
+    };
   }
 
   // =======================================

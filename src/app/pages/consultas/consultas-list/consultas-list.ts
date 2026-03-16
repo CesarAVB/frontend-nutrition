@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultaService } from '../../../services/consulta';
 import { ConsultaResumoDTO } from '../../../models/consulta.model';
 import { ToastService } from '../../../services/toast';
@@ -15,6 +15,7 @@ import { ToastService } from '../../../services/toast';
 })
 export class ConsultasListComponent implements OnInit {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private consultaService = inject(ConsultaService);
   private toastService = inject(ToastService);
 
@@ -22,6 +23,11 @@ export class ConsultasListComponent implements OnInit {
   searchTerm = signal('');
   isLoading = signal(true);
   error = signal<string | null>(null);
+  paginaAtual = signal(0);
+  tamanhoPagina = signal(10);
+  totalPaginas = signal(0);
+  totalItens = signal(0);
+  pacienteIdFiltro = signal<number | null>(null);
 
   consultasFiltradas = computed(() => {
     const termo = this.searchTerm().toLowerCase().trim();
@@ -39,19 +45,29 @@ export class ConsultasListComponent implements OnInit {
   // # ngOnInit - Inicializa o componente
   // ===========================================
   ngOnInit(): void {
-    this.carregarConsultas();
+    const pacienteId = Number(this.route.snapshot.queryParamMap.get('pacienteId'));
+    this.pacienteIdFiltro.set(Number.isFinite(pacienteId) ? pacienteId : null);
+    this.carregarConsultas(0);
   }
 
   // ===========================================
   // # carregarConsultas - Carrega lista de consultas
   // ===========================================
-  carregarConsultas(): void {
+  carregarConsultas(page = this.paginaAtual()): void {
     this.isLoading.set(true);
     this.error.set(null);
+
+    const pacienteId = this.pacienteIdFiltro();
+    const request$ = pacienteId
+      ? this.consultaService.listarPorPacientePaginado(pacienteId, page, this.tamanhoPagina(), 'dataConsulta', 'desc')
+      : this.consultaService.listarTodasPaginado(page, this.tamanhoPagina(), 'dataConsulta', 'desc');
     
-    this.consultaService.listarTodas().subscribe({
-      next: (consultas) => {
-        this.consultas.set(consultas);
+    request$.subscribe({
+      next: (resposta) => {
+        this.consultas.set(resposta.content);
+        this.paginaAtual.set(resposta.number);
+        this.totalPaginas.set(resposta.totalPages);
+        this.totalItens.set(resposta.totalElements);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -60,6 +76,49 @@ export class ConsultasListComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  // ===========================================
+  // # paginaAnterior - Navega para a página anterior
+  // ===========================================
+  paginaAnterior(): void {
+    if (this.paginaAtual() <= 0 || this.isLoading()) return;
+    this.carregarConsultas(this.paginaAtual() - 1);
+  }
+
+  // ===========================================
+  // # proximaPagina - Navega para a próxima página
+  // ===========================================
+  proximaPagina(): void {
+    if (this.paginaAtual() >= this.totalPaginas() - 1 || this.isLoading()) return;
+    this.carregarConsultas(this.paginaAtual() + 1);
+  }
+
+  // ===========================================
+  // # irParaPagina - Navega para página específica
+  // ===========================================
+  irParaPagina(page: number): void {
+    if (page < 0 || page >= this.totalPaginas() || page === this.paginaAtual() || this.isLoading()) return;
+    this.carregarConsultas(page);
+  }
+
+  // ===========================================
+  // # paginasVisiveis - Retorna páginas para navegação
+  // ===========================================
+  paginasVisiveis(): number[] {
+    const total = this.totalPaginas();
+    if (total <= 0) return [];
+
+    const atual = this.paginaAtual();
+    const inicio = Math.max(0, atual - 2);
+    const fim = Math.min(total - 1, atual + 2);
+    const paginas: number[] = [];
+
+    for (let i = inicio; i <= fim; i += 1) {
+      paginas.push(i);
+    }
+
+    return paginas;
   }
 
   // ===========================================

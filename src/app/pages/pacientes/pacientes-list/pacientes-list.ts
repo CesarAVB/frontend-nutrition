@@ -23,6 +23,10 @@ export class PacientesListComponent implements OnInit {
   pacientes = signal<PacienteView[]>([]);
   isLoading = signal(false);
   error = signal('');
+  paginaAtual = signal(0);
+  tamanhoPagina = signal(10);
+  totalPaginas = signal(0);
+  totalItens = signal(0);
 
   pacientesFiltrados = computed(() => {
     const raw = this.searchTerm() ?? '';
@@ -56,11 +60,6 @@ export class PacientesListComponent implements OnInit {
       return String(p.cpf ?? '').toLowerCase().includes(termo);
     });
 
-    try {
-      // eslint-disable-next-line no-console
-      console.debug('[PacientesList] search', { raw, termo, normQuery, countAll: lista.length, countFiltered: filtered.length });
-    } catch (e) {}
-
     return filtered;
   });
 
@@ -78,27 +77,89 @@ export class PacientesListComponent implements OnInit {
   // # ngOnInit - Inicializa o componente
   // ===========================================
   ngOnInit(): void {
-    this.carregarPacientes();
+    this.carregarPacientes(0);
   }
 
   // ===========================================
   // # carregarPacientes - Carrega lista de pacientes
   // ===========================================
-  carregarPacientes(): void {
+  carregarPacientes(page = this.paginaAtual()): void {
     this.isLoading.set(true);
     this.error.set('');
 
-    this.pacienteService.listarTodos().subscribe({
-      next: (pacientes) => {
-        const pacientesView = pacientes.map(p => this.mapearParaView(p));
+    const termo = this.searchTerm().trim();
+    const sort = termo ? 'nomeCompleto' : 'id';
+    const direction = termo ? 'asc' : 'desc';
+
+    const request$ = termo
+      ? this.pacienteService.buscarPorNomePaginado(termo, page, this.tamanhoPagina(), sort, direction)
+      : this.pacienteService.listarPaginado(page, this.tamanhoPagina(), sort, direction);
+
+    request$.subscribe({
+      next: (resposta) => {
+        const pacientesView = resposta.content.map((p) => this.mapearParaView(p));
         this.pacientes.set(pacientesView);
+        this.paginaAtual.set(resposta.number);
+        this.totalPaginas.set(resposta.totalPages);
+        this.totalItens.set(resposta.totalElements);
         this.isLoading.set(false);
       },
-      error: (erro) => {
+      error: () => {
         this.toastService.error('Erro ao carregar pacientes. Tente novamente.');
         this.isLoading.set(false);
       }
     });
+  }
+
+  // ===========================================
+  // # onSearchTermChange - Atualiza busca e reinicia paginação
+  // ===========================================
+  onSearchTermChange(value: string): void {
+    this.searchTerm.set(value);
+    this.carregarPacientes(0);
+  }
+
+  // ===========================================
+  // # paginaAnterior - Navega para a página anterior
+  // ===========================================
+  paginaAnterior(): void {
+    if (this.paginaAtual() <= 0 || this.isLoading()) return;
+    this.carregarPacientes(this.paginaAtual() - 1);
+  }
+
+  // ===========================================
+  // # proximaPagina - Navega para a próxima página
+  // ===========================================
+  proximaPagina(): void {
+    if (this.paginaAtual() >= this.totalPaginas() - 1 || this.isLoading()) return;
+    this.carregarPacientes(this.paginaAtual() + 1);
+  }
+
+  // ===========================================
+  // # irParaPagina - Navega para página específica
+  // ===========================================
+  irParaPagina(page: number): void {
+    if (page < 0 || page >= this.totalPaginas() || page === this.paginaAtual() || this.isLoading()) return;
+    this.carregarPacientes(page);
+  }
+
+  // ===========================================
+  // # paginasVisiveis - Retorna páginas para navegação
+  // ===========================================
+  paginasVisiveis(): number[] {
+    const total = this.totalPaginas();
+    if (total <= 0) return [];
+
+    const atual = this.paginaAtual();
+    const inicio = Math.max(0, atual - 2);
+    const fim = Math.min(total - 1, atual + 2);
+    const paginas: number[] = [];
+
+    for (let i = inicio; i <= fim; i += 1) {
+      paginas.push(i);
+    }
+
+    return paginas;
   }
 
   // ===========================================
