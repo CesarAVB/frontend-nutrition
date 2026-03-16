@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { ToastService } from '../../../services/toast';
   templateUrl: './consultas-list.html',
   styleUrl: './consultas-list.scss'
 })
-export class ConsultasListComponent implements OnInit {
+export class ConsultasListComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private consultaService = inject(ConsultaService);
@@ -21,6 +21,7 @@ export class ConsultasListComponent implements OnInit {
 
   consultas = signal<ConsultaResumoDTO[]>([]);
   searchTerm = signal('');
+  searchTermAplicado = signal('');
   isLoading = signal(true);
   error = signal<string | null>(null);
   paginaAtual = signal(0);
@@ -28,9 +29,10 @@ export class ConsultasListComponent implements OnInit {
   totalPaginas = signal(0);
   totalItens = signal(0);
   pacienteIdFiltro = signal<number | null>(null);
+  private debounceHandle: ReturnType<typeof setTimeout> | null = null;
 
   consultasFiltradas = computed(() => {
-    const termo = this.searchTerm().toLowerCase().trim();
+    const termo = this.searchTermAplicado().toLowerCase().trim();
     const lista = this.consultas();
     
     if (!termo) return lista;
@@ -48,6 +50,13 @@ export class ConsultasListComponent implements OnInit {
     const pacienteId = Number(this.route.snapshot.queryParamMap.get('pacienteId'));
     this.pacienteIdFiltro.set(Number.isFinite(pacienteId) ? pacienteId : null);
     this.carregarConsultas(0);
+  }
+
+  ngOnDestroy(): void {
+    if (this.debounceHandle) {
+      clearTimeout(this.debounceHandle);
+      this.debounceHandle = null;
+    }
   }
 
   // ===========================================
@@ -76,6 +85,21 @@ export class ConsultasListComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  // ===========================================
+  // # onSearchTermChange - Atualiza termo aplicado com debounce
+  // ===========================================
+  onSearchTermChange(value: string): void {
+    this.searchTerm.set(value);
+
+    if (this.debounceHandle) {
+      clearTimeout(this.debounceHandle);
+    }
+
+    this.debounceHandle = setTimeout(() => {
+      this.searchTermAplicado.set(value);
+    }, 350);
   }
 
   // ===========================================

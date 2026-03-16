@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,7 +18,7 @@ interface PacienteView extends PacienteDTO {
   templateUrl: './pacientes-list.html',
   styleUrls: ['./pacientes-list.scss']
 })
-export class PacientesListComponent implements OnInit {
+export class PacientesListComponent implements OnInit, OnDestroy {
   searchTerm = signal('');
   pacientes = signal<PacienteView[]>([]);
   isLoading = signal(false);
@@ -27,6 +27,7 @@ export class PacientesListComponent implements OnInit {
   tamanhoPagina = signal(10);
   totalPaginas = signal(0);
   totalItens = signal(0);
+  private debounceHandle: ReturnType<typeof setTimeout> | null = null;
 
   pacientesFiltrados = computed(() => {
     const raw = this.searchTerm() ?? '';
@@ -80,6 +81,13 @@ export class PacientesListComponent implements OnInit {
     this.carregarPacientes(0);
   }
 
+  ngOnDestroy(): void {
+    if (this.debounceHandle) {
+      clearTimeout(this.debounceHandle);
+      this.debounceHandle = null;
+    }
+  }
+
   // ===========================================
   // # carregarPacientes - Carrega lista de pacientes
   // ===========================================
@@ -88,10 +96,11 @@ export class PacientesListComponent implements OnInit {
     this.error.set('');
 
     const termo = this.searchTerm().trim();
-    const sort = termo ? 'nomeCompleto' : 'id';
-    const direction = termo ? 'asc' : 'desc';
+    const usarBuscaPorNome = termo.length >= 3;
+    const sort = usarBuscaPorNome ? 'nomeCompleto' : 'id';
+    const direction = usarBuscaPorNome ? 'asc' : 'desc';
 
-    const request$ = termo
+    const request$ = usarBuscaPorNome
       ? this.pacienteService.buscarPorNomePaginado(termo, page, this.tamanhoPagina(), sort, direction)
       : this.pacienteService.listarPaginado(page, this.tamanhoPagina(), sort, direction);
 
@@ -116,7 +125,14 @@ export class PacientesListComponent implements OnInit {
   // ===========================================
   onSearchTermChange(value: string): void {
     this.searchTerm.set(value);
-    this.carregarPacientes(0);
+
+    if (this.debounceHandle) {
+      clearTimeout(this.debounceHandle);
+    }
+
+    this.debounceHandle = setTimeout(() => {
+      this.carregarPacientes(0);
+    }, 350);
   }
 
   // ===========================================
