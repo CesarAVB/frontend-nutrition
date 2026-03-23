@@ -20,6 +20,12 @@ interface FotoInfo {
   uploading: boolean;
 }
 
+interface ConsultaFormData {
+  avaliacaoFisica?: ConsultaDetalhadaDTO['avaliacaoFisica'];
+  questionario?: ConsultaDetalhadaDTO['questionario'];
+  questionarioEstiloVida?: ConsultaDetalhadaDTO['questionario'];
+}
+
 @Component({
   selector: 'app-consulta-form',
   standalone: true,
@@ -67,6 +73,8 @@ export class ConsultaFormComponent implements OnInit {
   usoAnabolizantes = ['Não utiliza', 'Utiliza atualmente', 'Já utilizou'];
   numeroRefeicoes = [3, 4, 5, 6];
   horariosFome = ['Manhã', 'Tarde', 'Noite', 'Madrugada'];
+
+  private readonly draftNotFoundStatus = 404;
 
   constructor(
     private consultaService: ConsultaService,
@@ -147,6 +155,8 @@ export class ConsultaFormComponent implements OnInit {
       this.consultaId = Number(consultaIdFromRoute);
       this.isEditMode = true;
       this.carregarConsulta(this.consultaId);
+    } else if (this.pacienteId) {
+      this.carregarRascunhoPaciente(this.pacienteId);
     }
 
     // Calcular IMC automaticamente ao alterar altura ou peso
@@ -177,65 +187,7 @@ export class ConsultaFormComponent implements OnInit {
   carregarConsulta(consultaId: number): void {
     this.consultaService.buscarCompleta(consultaId).subscribe({
       next: (consulta: ConsultaDetalhadaDTO) => {
-        // Preencher formulário de estilo de vida
-        if (consulta.questionario) {
-          this.estiloVidaForm.patchValue({
-            objetivo: consulta.questionario.objetivo || '',
-            frequenciaTreino: consulta.questionario.frequenciaTreino || '',
-            tempoTreino: consulta.questionario.tempoTreino || '',
-            cirurgias: consulta.questionario.cirurgias || '',
-            doencas: consulta.questionario.doencas || '',
-            historicoFamiliar: consulta.questionario.historicoFamiliar || '',
-            medicamentos: consulta.questionario.medicamentos || '',
-            suplementos: consulta.questionario.suplementos || '',
-            usoAnabolizantes: consulta.questionario.usoAnabolizantes || '',
-            fuma: consulta.questionario.fuma || false,
-            frequenciaAlcool: consulta.questionario.frequenciaAlcool || '',
-            funcionamentoIntestino: consulta.questionario.funcionamentoIntestino || '',
-            qualidadeSono: consulta.questionario.qualidadeSono || '',
-            ingestaoAguaDiaria: consulta.questionario.ingestaoAguaDiaria || '',
-            alimentosNaoGosta: consulta.questionario.alimentosNaoGosta || '',
-            frutasPreferidas: consulta.questionario.frutasPreferidas || '',
-            numeroRefeicoesDesejadas: consulta.questionario.numeroRefeicoesDesejadas || '',
-            horarioMaiorFome: consulta.questionario.horarioMaiorFome || '',
-            pressaoArterial: consulta.questionario.pressaoArterial || '',
-            intolerancias: consulta.questionario.intolerancias || '',
-          });
-        }
-
-        // Preencher formulário de medidas
-        if (consulta.avaliacaoFisica) {
-          this.medidasForm.patchValue({
-            altura: consulta.avaliacaoFisica.altura || '',
-            perimetroOmbro: consulta.avaliacaoFisica.perimetroOmbro || '',
-            perimetroTorax: consulta.avaliacaoFisica.perimetroTorax || '',
-            perimetroCintura: consulta.avaliacaoFisica.perimetroCintura || '',
-            perimetroAbdominal: consulta.avaliacaoFisica.perimetroAbdominal || '',
-            perimetroQuadril: consulta.avaliacaoFisica.perimetroQuadril || '',
-            perimetroBracoDireitoRelax: consulta.avaliacaoFisica.perimetroBracoDireitoRelax || '',
-            perimetroBracoDireitoContr: consulta.avaliacaoFisica.perimetroBracoDireitoContr || '',
-            perimetroBracoEsquerdoRelax: consulta.avaliacaoFisica.perimetroBracoEsquerdoRelax || '',
-            perimetroBracoEsquerdoContr: consulta.avaliacaoFisica.perimetroBracoEsquerdoContr || '',
-            perimetroCoxaDireita: consulta.avaliacaoFisica.perimetroCoxaDireita || '',
-            perimetroCoxaEsquerda: consulta.avaliacaoFisica.perimetroCoxaEsquerda || '',
-            perimetroPanturrilhaDireita: consulta.avaliacaoFisica.perimetroPanturrilhaDireita || '',
-            perimetroPanturrilhaEsquerda: consulta.avaliacaoFisica.perimetroPanturrilhaEsquerda || '',
-            perimetroAntebracoDireito: consulta.avaliacaoFisica.perimetroAntebracoDireito || '',
-            perimetroAntebracoEsquerdo: consulta.avaliacaoFisica.perimetroAntebracoEsquerdo || '',
-            dobraTriceps: consulta.avaliacaoFisica.dobraTriceps || '',
-            dobraPeito: consulta.avaliacaoFisica.dobraPeito || '',
-            dobraAxilarMedia: consulta.avaliacaoFisica.dobraAxilarMedia || '',
-            dobraSubescapular: consulta.avaliacaoFisica.dobraSubescapular || '',
-            dobraAbdominal: consulta.avaliacaoFisica.dobraAbdominal || '',
-            dobraSupraIliaca: consulta.avaliacaoFisica.dobraSupraIliaca || '',
-            dobraCoxa: consulta.avaliacaoFisica.dobraCoxa || '',
-            pesoAtual: consulta.avaliacaoFisica.pesoAtual || '',
-            massaMagra: consulta.avaliacaoFisica.massaMagra || '',
-            massaGorda: consulta.avaliacaoFisica.massaGorda || '',
-            percentualGordura: consulta.avaliacaoFisica.percentualGordura || '',
-            imc: consulta.avaliacaoFisica.imc || '',
-          });
-        }
+        this.preencherFormularios(consulta);
 
         // Carregar fotos se houver
         if (consulta.registroFotografico) {
@@ -246,6 +198,87 @@ export class ConsultaFormComponent implements OnInit {
         this.toastService.error('Erro ao carregar dados da consulta');
       }
     });
+  }
+
+  // ===========================================
+  // # carregarRascunhoPaciente - Busca rascunho da nova consulta para o paciente
+  // ===========================================
+  private carregarRascunhoPaciente(pacienteId: number): void {
+    this.consultaService.buscarRascunhoPorPaciente(pacienteId).subscribe({
+      next: (rascunho) => {
+        this.preencherFormularios(rascunho);
+      },
+      error: (err) => {
+        if (err?.status !== this.draftNotFoundStatus) {
+          this.toastService.warning('Nao foi possivel carregar o rascunho da consulta');
+        }
+      },
+    });
+  }
+
+  // ===========================================
+  // # preencherFormularios - Preenche formulários com dados da consulta/rascunho
+  // ===========================================
+  private preencherFormularios(consulta: Partial<ConsultaDetalhadaDTO>): void {
+    const consultaData = consulta as ConsultaFormData;
+    const questionario = consultaData.questionario || consultaData.questionarioEstiloVida;
+    if (questionario) {
+      this.estiloVidaForm.patchValue({
+        objetivo: questionario.objetivo || '',
+        frequenciaTreino: questionario.frequenciaTreino || '',
+        tempoTreino: questionario.tempoTreino || '',
+        cirurgias: questionario.cirurgias || '',
+        doencas: questionario.doencas || '',
+        historicoFamiliar: questionario.historicoFamiliar || '',
+        medicamentos: questionario.medicamentos || '',
+        suplementos: questionario.suplementos || '',
+        usoAnabolizantes: questionario.usoAnabolizantes || '',
+        fuma: questionario.fuma || false,
+        frequenciaAlcool: questionario.frequenciaAlcool || '',
+        funcionamentoIntestino: questionario.funcionamentoIntestino || '',
+        qualidadeSono: questionario.qualidadeSono || '',
+        ingestaoAguaDiaria: questionario.ingestaoAguaDiaria || '',
+        alimentosNaoGosta: questionario.alimentosNaoGosta || '',
+        frutasPreferidas: questionario.frutasPreferidas || '',
+        numeroRefeicoesDesejadas: questionario.numeroRefeicoesDesejadas || '',
+        horarioMaiorFome: questionario.horarioMaiorFome || '',
+        pressaoArterial: questionario.pressaoArterial || '',
+        intolerancias: questionario.intolerancias || '',
+      });
+    }
+
+    if (consulta.avaliacaoFisica) {
+      this.medidasForm.patchValue({
+        altura: consulta.avaliacaoFisica.altura || '',
+        perimetroOmbro: consulta.avaliacaoFisica.perimetroOmbro || '',
+        perimetroTorax: consulta.avaliacaoFisica.perimetroTorax || '',
+        perimetroCintura: consulta.avaliacaoFisica.perimetroCintura || '',
+        perimetroAbdominal: consulta.avaliacaoFisica.perimetroAbdominal || '',
+        perimetroQuadril: consulta.avaliacaoFisica.perimetroQuadril || '',
+        perimetroBracoDireitoRelax: consulta.avaliacaoFisica.perimetroBracoDireitoRelax || '',
+        perimetroBracoDireitoContr: consulta.avaliacaoFisica.perimetroBracoDireitoContr || '',
+        perimetroBracoEsquerdoRelax: consulta.avaliacaoFisica.perimetroBracoEsquerdoRelax || '',
+        perimetroBracoEsquerdoContr: consulta.avaliacaoFisica.perimetroBracoEsquerdoContr || '',
+        perimetroCoxaDireita: consulta.avaliacaoFisica.perimetroCoxaDireita || '',
+        perimetroCoxaEsquerda: consulta.avaliacaoFisica.perimetroCoxaEsquerda || '',
+        perimetroPanturrilhaDireita: consulta.avaliacaoFisica.perimetroPanturrilhaDireita || '',
+        perimetroPanturrilhaEsquerda: consulta.avaliacaoFisica.perimetroPanturrilhaEsquerda || '',
+        perimetroAntebracoDireito: consulta.avaliacaoFisica.perimetroAntebracoDireito || '',
+        perimetroAntebracoEsquerdo: consulta.avaliacaoFisica.perimetroAntebracoEsquerdo || '',
+        dobraTriceps: consulta.avaliacaoFisica.dobraTriceps || '',
+        dobraPeito: consulta.avaliacaoFisica.dobraPeito || '',
+        dobraAxilarMedia: consulta.avaliacaoFisica.dobraAxilarMedia || '',
+        dobraSubescapular: consulta.avaliacaoFisica.dobraSubescapular || '',
+        dobraAbdominal: consulta.avaliacaoFisica.dobraAbdominal || '',
+        dobraSupraIliaca: consulta.avaliacaoFisica.dobraSupraIliaca || '',
+        dobraCoxa: consulta.avaliacaoFisica.dobraCoxa || '',
+        pesoAtual: consulta.avaliacaoFisica.pesoAtual || '',
+        massaMagra: consulta.avaliacaoFisica.massaMagra || '',
+        massaGorda: consulta.avaliacaoFisica.massaGorda || '',
+        percentualGordura: consulta.avaliacaoFisica.percentualGordura || '',
+        imc: consulta.avaliacaoFisica.imc || '',
+      });
+    }
   }
 
   // ===========================================

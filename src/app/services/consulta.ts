@@ -65,6 +65,15 @@ export class ConsultaService {
   }
 
   // =======================================
+  // # buscarRascunhoPorPaciente - Busca rascunho da nova consulta por paciente
+  // =======================================
+  buscarRascunhoPorPaciente(pacienteId: number): Observable<Partial<ConsultaDetalhadaDTO>> {
+    return this.http
+      .get<Partial<ConsultaDetalhadaDTO>>(`${this.apiUrl}/paciente/${pacienteId}/rascunho`)
+      .pipe(map((res: any) => this.normalizeConsultaDetalhada(res)));
+  }
+
+  // =======================================
   // # comparar - Compara duas consultas de um paciente
   // =======================================
   comparar(
